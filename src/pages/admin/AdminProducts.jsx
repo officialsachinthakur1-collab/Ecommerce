@@ -1,0 +1,174 @@
+import { useState } from 'react';
+import { Plus, Edit2, Trash2, X } from 'lucide-react';
+// import { products } from '../../data/products'; // Remove static import
+import { useProducts } from '../../hooks/useProducts';
+
+const AdminProducts = () => {
+    const { products, loading, refetch } = useProducts(); // Use the hook with refetch
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '' });
+
+    const handleInputChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:5000/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                alert('Product Added!');
+                setIsModalOpen(false);
+                setFormData({ name: '', price: '', category: 'Men', description: '', image: '' });
+                refetch(); // Refetch products to update the list
+            }
+        } catch (error) {
+            console.error('Error adding product:', error);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                refetch();
+            } else {
+                alert("Failed to delete product");
+            }
+        } catch (error) {
+            console.error("Error deleting product:", error);
+        }
+    };
+
+    return (
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                <h1 style={{ fontSize: '2rem', fontWeight: '800' }}>Products</h1>
+                <button
+                    className="btn-primary"
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    <Plus size={20} /> Add Product
+                </button>
+            </div>
+
+            {loading ? <div style={{ color: 'white' }}>Loading...</div> : (
+                <div style={{ background: '#111', borderRadius: '12px', overflow: 'hidden', border: '1px solid #222' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                        <thead>
+                            <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                                <th style={{ padding: '1rem 1.5rem' }}>Product Name</th>
+                                <th style={{ padding: '1rem 1.5rem' }}>Category</th>
+                                <th style={{ padding: '1rem 1.5rem' }}>Price</th>
+                                <th style={{ padding: '1rem 1.5rem' }}>Status</th>
+                                <th style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {products.map((product) => (
+                                <tr key={product.id} style={{ borderBottom: '1px solid #222' }}>
+                                    <td style={{ padding: '1rem 1.5rem', fontWeight: '600' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                            {/* Simple color block for image placeholder if no image */}
+                                            {/* Image placeholder or actual image */}
+                                            <div style={{ width: '40px', height: '40px', borderRadius: '4px', background: '#333', overflow: 'hidden' }}>
+                                                {product.image ? (
+                                                    <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                ) : null}
+                                            </div>
+                                            {product.name}
+                                        </div>
+                                    </td>
+                                    <td style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)' }}>{product.category}</td>
+                                    <td style={{ padding: '1rem 1.5rem' }}>{product.price}</td>
+                                    <td style={{ padding: '1rem 1.5rem' }}>
+                                        <span style={{
+                                            padding: '0.25rem 0.75rem',
+                                            borderRadius: '999px',
+                                            fontSize: '0.75rem',
+                                            background: 'rgba(74, 222, 128, 0.1)',
+                                            color: '#4ade80'
+                                        }}>
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                                            <button style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                                                <Edit2 size={18} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(product.id)}
+                                                style={{ background: 'transparent', border: 'none', color: '#ff3333', cursor: 'pointer' }}
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {/* Simple Modal */}
+            {isModalOpen && (
+                <div style={{
+                    position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100
+                }}>
+                    <div style={{
+                        background: '#111', padding: '2rem', borderRadius: '12px',
+                        width: '100%', maxWidth: '500px', border: '1px solid #333'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Add Product</h2>
+                            <button onClick={() => setIsModalOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X /></button>
+                        </div>
+                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <input
+                                name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange}
+                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
+                            />
+                            <input
+                                name="image" placeholder="Image URL (optional)" value={formData.image} onChange={handleInputChange}
+                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                            />
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <input
+                                    name="price" placeholder="Price ($100)" value={formData.price} onChange={handleInputChange}
+                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
+                                />
+                                <select
+                                    name="category" value={formData.category} onChange={handleInputChange}
+                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                >
+                                    <option value="Men">Men</option>
+                                    <option value="Women">Women</option>
+                                    <option value="Unisex">Unisex</option>
+                                </select>
+                            </div>
+                            <textarea
+                                name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} rows={3}
+                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                            />
+                            <button type="submit" className="btn-primary" style={{ marginTop: '1rem', justifyContent: 'center' }}>Create Product</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default AdminProducts;
