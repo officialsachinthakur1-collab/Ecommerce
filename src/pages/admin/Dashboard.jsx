@@ -15,7 +15,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/orders');
+                const response = await fetch('https://ecommerce-eo7c.onrender.com/api/orders');
                 if (response.ok) {
                     const orders = await response.json();
 

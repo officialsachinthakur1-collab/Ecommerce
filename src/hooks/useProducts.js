@@ -10,7 +10,7 @@ export const useProducts = () => {
         try {
             // Use absolute URL for now to ensure it hits the backend port 5000
             // In production, this would be relative or configured via env
-            const response = await fetch('http://localhost:5000/api/products');
+            const response = await fetch('https://ecommerce-eo7c.onrender.com/api/products');
 
             if (!response.ok) {
                 throw new Error('Failed to fetch products');

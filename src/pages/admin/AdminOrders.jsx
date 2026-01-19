@@ -8,7 +8,7 @@ const AdminOrders = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/orders');
+            const response = await fetch('https://ecommerce-eo7c.onrender.com/api/orders');
             if (response.ok) {
                 const data = await response.json();
                 setOrders(data);
@@ -31,7 +31,7 @@ const AdminOrders = () => {
         ));
 
         try {
-            await fetch(`http://localhost:5000/api/orders/${id}`, {
+            await fetch(`https://ecommerce-eo7c.onrender.com/api/orders/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
@@ -64,7 +64,7 @@ const AdminOrders = () => {
         try {
             // Encode ID because it contains '#'
             const encodedId = encodeURIComponent(id);
-            const response = await fetch(`http://localhost:5000/api/orders/${encodedId}`, {
+            const response = await fetch(`https://ecommerce-eo7c.onrender.com/api/orders/${encodedId}`, {
                 method: 'DELETE'
             });
 
