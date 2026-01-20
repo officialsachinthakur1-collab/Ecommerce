@@ -33,7 +33,6 @@
   align-items: center;
   overflow: hidden;
   width: 100%;
-  width: 100%;
 }
 
 .hero-countdown {
@@ -63,6 +62,12 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  width: 100%;
+}
+
+html {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 a {
@@ -117,6 +122,75 @@ img {
   padding: 6rem 0;
 }
 
+/* Base Utility Classes replacing inline styles */
+.shop-container {
+  padding: 4rem 2rem;
+  display: flex;
+  gap: 3rem;
+}
+
+.shop-sidebar {
+  width: 250px;
+  display: block;
+}
+
+.hero-text-content {
+  z-index: 10;
+}
+
+.hero-canvas-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.desktop-nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.mobile-menu-btn {
+  display: none;
+  cursor: pointer;
+}
+
+/* Footer Desktop - Missing Styles Restored */
+.footer-section {
+  background: var(--bg-secondary);
+  padding-top: 6rem;
+  padding-bottom: 2rem;
+  border-top: 1px solid #222;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 3fr;
+  /* Newsletter gets less width than links */
+  gap: 6rem;
+  margin-bottom: 6rem;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.footer-brand {
+  font-size: 15vw;
+  font-weight: 900;
+  line-height: 0.8;
+  text-align: center;
+  background: linear-gradient(to bottom, #333, #050505);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.05em;
+  margin-top: 4rem;
+  user-select: none;
+}
+
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -131,119 +205,28 @@ img {
   border-radius: 4px;
 }
 
-/* Responsive Media Queries */
-@media (max-width: 768px) {
-  :root {
-    --header-height: 60px;
-  }
+/* Split Featured Desktop Styles */
+.split-image {
+  position: relative;
+  background: #0a0a0a;
+  overflow: hidden;
+  height: 100%;
+  min-height: 100%;
+}
 
-  .container {
-    padding: 0 1.25rem;
-  }
+.split-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem;
+}
 
-
-
-  /* Navigation Mobile */
-  .desktop-nav {
-    display: none !important;
-  }
-
-  .mobile-menu-btn {
-    display: block !important;
-  }
-
-  /* Hero Section Mobile */
-  .hero-section {
-    height: auto !important;
-    min-height: 100vh;
-    overflow: visible !important;
-    align-items: flex-start;
-    padding-bottom: 4rem;
-    flex-direction: column;
-    padding-top: var(--header-height);
-  }
-
-  .hero-container {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-    text-align: center;
-    height: auto !important;
-  }
-
-  .hero-text {
-    order: 1;
-    z-index: 20;
-  }
-
-  .hero-canvas {
-    order: 2;
-    height: 50vh !important;
-    width: 100% !important;
-  }
-
-  h1 {
-    font-size: clamp(3rem, 10vw, 4rem) !important;
-  }
-
-  /* Grid Stacking */
-  .grid-4,
-  .grid-3 {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-  }
-
-  /* Product Details Desktop Override */
-  @media (min-width: 769px) {
-    .product-canvas-container {
-      height: auto !important;
-      /* Fill full height of grid cell */
-      position: sticky !important;
-      top: var(--header-height);
-    }
-  }
-
-  /* Split Featured Stacking */
-  .split-section {
-    grid-template-columns: 1fr !important;
-  }
-
-  .split-image {
-    order: 1 !important;
-    height: 400px !important;
-  }
-
-  .split-content {
-    order: 2 !important;
-    padding: 3rem 1.5rem !important;
-  }
-
-  .hero-countdown {
-    right: 50%;
-    transform: translateX(50%);
-    bottom: 1rem;
-    width: 90%;
-    justify-content: center;
-    gap: 1.5rem;
-  }
-
-  .hero-countdown {
-    right: 50%;
-    transform: translateX(50%);
-    bottom: 1rem;
-    width: 90%;
-    justify-content: center;
-    gap: 1.5rem;
-  }
-
-  /* Footer Mobile */
-  .footer-grid {
-    grid-template-columns: 1fr !important;
-    gap: 3rem !important;
-  }
-
-  .footer-links {
-    grid-template-columns: 1fr 1fr !important;
-  }
+.split-title {
+  font-size: 4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.9;
+  margin-bottom: 2rem;
 }
 
 /* Utility Classes for Grid (to replace inline styles) */
@@ -274,14 +257,211 @@ img {
   min-height: 800px;
 }
 
-/* Shop Sidebar Mobile */
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: #ff3333;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(255, 51, 51, 0.3);
+}
+
+
+/* Responsive Media Queries */
 @media (max-width: 768px) {
+  :root {
+    --header-height: 60px;
+  }
+
+  /* Footer Mobile */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 4rem;
+    margin-bottom: 6rem;
+  }
+
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+    /* 2x2 grid for improved readability on mobile */
+    gap: 2rem;
+  }
+
+  .footer-brand {
+    font-size: 15vw;
+    margin-top: 4rem;
+  }
+
+  /* Split Featured Mobile */
+  .split-section-container {
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+  }
+
+  .split-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem;
+  }
+
+  .split-image {
+    background: #111;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .split-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.9;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Navigation Mobile */
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  /* Hero Section Mobile */
+  .hero-section {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+    overflow: visible !important;
+    align-items: center;
+    padding-bottom: 4rem;
+    flex-direction: column;
+    padding-top: var(--header-height);
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    text-align: center;
+    height: auto !important;
+  }
+
+  .hero-text-content {
+    order: 1;
+    z-index: 20;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-canvas {
+    order: 2;
+    height: 50vh !important;
+    width: 100% !important;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 10vw, 4rem) !important;
+  }
+
+  /* Grid Stacking */
+  .grid-4,
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* Shop Sidebar Mobile */
   .shop-sidebar {
     width: 100% !important;
     margin-bottom: 2rem;
   }
 
   .shop-container {
-    flex-direction: column !important;
+    flex-direction: column;
+  }
+
+  /* Scroll Button Mobile */
+  .scroll-to-top-btn {
+    right: 1rem;
+    bottom: 5rem;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  /* Split Featured Stacking */
+  .split-section {
+    grid-template-columns: 1fr !important;
+  }
+
+  .split-image {
+    order: 1 !important;
+    height: 400px !important;
+  }
+
+  .split-content {
+    order: 2 !important;
+    padding: 3rem 1.5rem !important;
+  }
+
+  .hero-countdown {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 1rem;
+    width: 95%;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  /* Scroll Button Mobile */
+  .scroll-to-top-btn {
+    right: 1rem;
+    bottom: 5rem;
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+/* Product Details Responsive Layout */
+.product-page-wrapper {
+  padding-top: var(--header-height);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-main-grid {
+  display: flex;
+  flex-direction: column;
+  /* Mobile Default: Stacked */
+  flex: 1;
+}
+
+/* Desktop Grid Override */
+@media (min-width: 769px) {
+  .product-main-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* Product Details Desktop Override for Sticky Canvas */
+@media (min-width: 769px) {
+  .product-canvas-container {
+    height: auto !important;
+    position: sticky !important;
+    top: var(--header-height);
   }
 }

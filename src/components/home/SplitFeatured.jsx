@@ -4,19 +4,10 @@ import { Link } from 'react-router-dom';
 const SplitFeatured = ({ title, subtitle, buttonText, imageLeft = false, linkTo = "/shop" }) => {
     return (
         <section>
-            <div className="split-section" style={{
-                borderTop: '1px solid #222',
-                borderBottom: '1px solid #222'
-            }}>
+            <div className="split-section split-section-container">
                 {/* Content Side */}
-                <div className="split-content" style={{
-                    order: imageLeft ? 2 : 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    padding: '6rem'
-                }}>
-                    <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '800', textTransform: 'uppercase', lineHeight: '0.9', marginBottom: '1.5rem' }}>
+                <div className="split-content" style={{ order: imageLeft ? 2 : 1 }}>
+                    <h2 className="split-title">
                         {title}
                     </h2>
                     <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', marginBottom: '3rem', maxWidth: '400px' }}>
@@ -28,12 +19,7 @@ const SplitFeatured = ({ title, subtitle, buttonText, imageLeft = false, linkTo 
                 </div>
 
                 {/* Image Side */}
-                <div className="split-image" style={{
-                    order: imageLeft ? 1 : 2,
-                    background: '#111',
-                    position: 'relative',
-                    overflow: 'hidden'
-                }}>
+                <div className="split-image" style={{ order: imageLeft ? 1 : 2 }}>
                     {/* Placeholder visual */}
                     <div style={{
                         position: 'absolute',

@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
-        <footer style={{ background: 'var(--bg-secondary)', paddingTop: '6rem', paddingBottom: '2rem', borderTop: '1px solid #222' }}>
+        <footer className="footer-section">
             <div className="container">
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '6rem' }}>
+                <div className="footer-grid">
                     {/* Newsletter */}
                     <div>
                         <h3 style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase' }}>Join the Movement</h3>
@@ -27,7 +27,7 @@ const Footer = () => {
                     </div>
 
                     {/* Links */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+                    <div className="footer-links">
                         <div>
                             <h4 style={{ marginBottom: '1.5rem', fontWeight: '600' }}>Shop</h4>
                             <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
@@ -65,18 +65,7 @@ const Footer = () => {
                 </div>
 
                 {/* Big Brand Text */}
-                <div style={{
-                    fontSize: '15vw',
-                    fontWeight: '900',
-                    lineHeight: '0.8',
-                    textAlign: 'center',
-                    background: 'linear-gradient(to bottom, #333, #050505)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    letterSpacing: '-0.05em',
-                    marginTop: '4rem',
-                    userSelect: 'none'
-                }}>
+                <div className="footer-brand">
                     NIVEST
                 </div>
 

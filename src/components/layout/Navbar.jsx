@@ -50,14 +50,14 @@ const Navbar = () => {
                     width: '100%'
                 }}>
                     {/* Left: Navigation (Desktop) */}
-                    <div className="desktop-nav" style={{ display: 'flex', gap: '2rem' }}>
+                    <div className="desktop-nav">
                         <Link to="/shop" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Shop</Link>
                         <Link to="/about" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Company</Link>
                         <Link to="/blog" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Insights</Link>
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="mobile-menu-btn" style={{ display: 'none', cursor: 'pointer' }} onClick={() => setMobileMenuOpen(true)}>
+                    <div className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
                         <Menu size={24} />
                     </div>
 

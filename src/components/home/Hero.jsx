@@ -4,7 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { Float, Stars, PerspectiveCamera } from '@react-three/drei';
 import TechCore from '../canvas/TechCore';
 import SceneEffects from '../canvas/SceneEffects';
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 
 const Hero = () => {
     return (
@@ -12,7 +12,7 @@ const Hero = () => {
             <div className="container hero-container">
 
                 {/* Left: Text Content */}
-                <div className="hero-text" style={{ zIndex: 10 }}>
+                <div className="hero-text-content">
                     <motion.h1
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -55,7 +55,7 @@ const Hero = () => {
                 </div>
 
                 {/* Right: 3D Tech Core */}
-                <div className="hero-canvas" style={{ height: '100%', width: '100%', position: 'relative' }}>
+                <div className="hero-canvas hero-canvas-container">
                     <Canvas dpr={[1, 2]} gl={{ antialias: false }}>
                         <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={45} />
                         <color attach="background" args={['#050505']} />
@@ -95,17 +95,79 @@ const Hero = () => {
                 transition={{ delay: 1, duration: 0.5 }}
                 className="hero-countdown"
             >
-                {['02', '14', '35', '58'].map((num, i) => (
-                    <div key={i} style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{num}</div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-                            {['Days', 'Hours', 'Mins', 'Secs'][i]}
-                        </div>
-                    </div>
-                ))}
+                <CountdownTimer />
             </motion.div>
         </section>
     );
 };
+
+const CountdownTimer = () => {
+    const [timeLeft, setTimeLeft] = useState({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    });
+
+    useEffect(() => {
+        // Set target date to 2 days from now for demo purposes
+        const targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() + 2);
+        targetDate.setHours(0, 0, 0, 0);
+
+        const interval = setInterval(() => {
+            const now = new Date();
+            const difference = targetDate.getTime() - now.getTime();
+
+            if (difference > 0) {
+                setTimeLeft({
+                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                    minutes: Math.floor((difference / 1000 / 60) % 60),
+                    seconds: Math.floor((difference / 1000) % 60)
+                });
+            } else {
+                // If timer ends, just reset to something or stay at 0
+                clearInterval(interval);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const timeUnits = [
+        { label: 'Days', value: timeLeft.days },
+        { label: 'Hours', value: timeLeft.hours },
+        { label: 'Mins', value: timeLeft.minutes },
+        { label: 'Secs', value: timeLeft.seconds }
+    ];
+
+    return (
+        <div style={{ display: 'flex', gap: '2rem', width: '100%', justifyContent: 'center' }}>
+            {timeUnits.map((unit, i) => (
+                <div key={i} style={{ textAlign: 'center', minWidth: '60px' }}>
+                    <div style={{
+                        fontSize: '1.5rem',
+                        fontWeight: 'bold',
+                        fontVariantNumeric: 'tabular-nums',
+                        lineHeight: 1
+                    }}>
+                        {String(unit.value).padStart(2, '0')}
+                    </div>
+                    <div style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--text-muted)',
+                        textTransform: 'uppercase',
+                        marginTop: '0.25rem',
+                        letterSpacing: '0.5px'
+                    }}>
+                        {unit.label}
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
 
 export default Hero;

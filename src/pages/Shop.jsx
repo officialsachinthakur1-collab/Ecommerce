@@ -54,9 +54,10 @@ const Shop = () => {
                 </p>
             </section>
 
-            <div className="container shop-container" style={{ display: 'flex', gap: '3rem', padding: '4rem 2rem' }}>
+            {/* Main Container */}
+            <div className="container shop-container">
                 {/* Sidebar (Filters) */}
-                <aside style={{ width: '250px', display: 'block' }} className="shop-sidebar">
+                <aside className="shop-sidebar">
                     <div style={{ marginBottom: '2rem' }}>
                         <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Category</h3>
                         <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-muted)' }}>

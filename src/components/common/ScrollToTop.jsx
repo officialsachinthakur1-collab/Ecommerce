@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 const ScrollToTop = () => {
     const [isVisible, setIsVisible] = useState(false);
+    const { pathname, search } = useLocation();
+
+    // Scroll to top on route change
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname, search]);
 
     useEffect(() => {
         const toggleVisibility = () => {
@@ -34,23 +41,7 @@ const ScrollToTop = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     onClick={scrollToTop}
-                    style={{
-                        position: 'fixed',
-                        bottom: '2rem',
-                        right: '2rem',
-                        backgroundColor: '#ff3333',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '3.5rem',
-                        height: '3.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        zIndex: 1000,
-                        boxShadow: '0 4px 12px rgba(255, 51, 51, 0.3)'
-                    }}
+                    className="scroll-to-top-btn"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                 >
