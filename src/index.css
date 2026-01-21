@@ -340,7 +340,8 @@ img {
   .hero-section {
     height: auto !important;
     min-height: 100vh;
-    overflow: visible !important;
+    min-height: 100dvh;
+    justify-content: center;
     overflow: visible !important;
     align-items: center;
     padding-bottom: 4rem;
