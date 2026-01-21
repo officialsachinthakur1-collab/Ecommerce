@@ -290,7 +290,8 @@ img {
 
   /* Global Container & Section Fixes */
   .container {
-    padding: 0 1rem;
+    padding: 0 1.5rem;
+    /* Increased padding for side gaps */
     width: 100%;
     overflow-x: hidden;
   }
@@ -303,9 +304,9 @@ img {
   .grid-4,
   .grid-3 {
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
-    /* One rem is usually 16px, 0.75 is 12px for tighter gap */
+    grid-template-columns: 1fr !important;
+    /* Single column */
+    gap: 2rem !important;
     width: 100%;
   }
 
