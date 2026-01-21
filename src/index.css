@@ -299,7 +299,41 @@ img {
     --header-height: 60px;
   }
 
-  /* Global Container & Section Fixes */
+  /* Mobile Typography & Core Resets */
+  body {
+    font-size: 16px;
+    /* Base size for readability */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 10vw, 3rem) !important;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 1.75rem !important;
+    /* Standardized mobile h2 */
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 1.25rem !important;
+    /* Standardized mobile h3 */
+  }
+
+  p {
+    font-size: 1rem !important;
+    line-height: 1.6;
+  }
+
+  /* Mobile Images */
+  img {
+    height: auto;
+    /* Ensure aspect ratio is preserved */
+    max-width: 100%;
+  }
+
   .container {
     padding: 0 2rem;
     /* Increased to 2rem to match Shop header alignment */
