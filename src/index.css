@@ -452,6 +452,8 @@
      width: 100% !important;
      order: 2;
      margin-top: 1rem;
+     pointer-events: none !important;
+     /* Allow scroll to pass through the 3D model */
    }
 
    h1 {
