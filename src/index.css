@@ -301,7 +301,15 @@ img {
 
   /* Grid Stacking - Global Fix */
   .grid-4,
-  .grid-3,
+  .grid-3 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+    /* Smaller gap for 2-column look */
+    width: 100%;
+  }
+
+  /* Keep other containers flex/stack if needed, or specific grids */
   .footer-links,
   .footer-grid,
   .shop-container,
@@ -309,7 +317,6 @@ img {
   .split-section {
     display: flex !important;
     flex-direction: column !important;
-    grid-template-columns: 1fr !important;
     gap: 3rem !important;
   }
 
