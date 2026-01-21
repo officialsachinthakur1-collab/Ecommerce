@@ -1,68 +1,69 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Sphere, Icosahedron, MeshDistortMaterial, Wireframe } from '@react-three/drei';
+import { useTexture, Image } from '@react-three/drei';
+import * as THREE from 'three';
 
 const TechCore = () => {
-    const coreRef = useRef();
-    const shellRef = useRef();
-    const outerRef = useRef();
+    const groupRef = useRef();
 
-    useFrame((state) => {
-        const t = state.clock.getElapsedTime();
+    // Load textures
+    const textures = useTexture([
+        '/assets/products/black_tshirt.png',
+        '/assets/products/white_hoodie.png',
+        '/assets/products/denim_jacket.png'
+    ]);
 
-        // Core rotation (slow)
-        if (coreRef.current) {
-            coreRef.current.rotation.y = t * 0.2;
-            coreRef.current.rotation.z = t * 0.1;
-        }
-
-        // Shell rotation (faster, opposite)
-        if (shellRef.current) {
-            shellRef.current.rotation.x = t * 0.3;
-            shellRef.current.rotation.y = -t * 0.5;
-        }
-
-        // Outer ring rotation
-        if (outerRef.current) {
-            outerRef.current.rotation.z = t * 0.1;
-            outerRef.current.rotation.x = Math.sin(t * 0.2) * 0.5;
+    useFrame((state, delta) => {
+        if (groupRef.current) {
+            // Rotate the entire carousel
+            groupRef.current.rotation.y += delta * 0.5;
         }
     });
 
     return (
-        <group scale={1.2}>
-            {/* INNER MOLTEN CORE */}
-            <Sphere ref={coreRef} args={[1, 32, 32]}>
-                <MeshDistortMaterial
-                    color="#ff0000"
-                    emissive="#550000"
-                    emissiveIntensity={2}
-                    distort={0.4}
-                    speed={3}
-                    roughness={0}
-                    metalness={1}
-                />
-            </Sphere>
+        <group ref={groupRef} rotation={[0, 0, 0.1]}>
+            {/* 3 Products arranged in a circle */}
+            {textures.map((texture, i) => {
+                const angle = (i / 3) * Math.PI * 2;
+                const radius = 2.5;
+                const x = Math.sin(angle) * radius;
+                const z = Math.cos(angle) * radius;
 
-            {/* TECH SHELL (Wireframe) */}
-            <Icosahedron ref={shellRef} args={[1.5, 1]}>
-                <meshStandardMaterial
-                    color="#333"
-                    wireframe
-                    transparent
-                    opacity={0.3}
-                    roughness={0.2}
-                    metalness={1}
-                />
-            </Icosahedron>
+                return (
+                    <group key={i} position={[x, 0, z]} rotation={[0, angle, 0]}>
+                        {/* Card Background */}
+                        <mesh position={[0, 0, -0.1]}>
+                            <planeGeometry args={[2.2, 2.8]} />
+                            <meshStandardMaterial
+                                color="#111"
+                                metalness={0.8}
+                                roughness={0.2}
+                                side={THREE.DoubleSide}
+                                transparent
+                                opacity={0.8}
+                            />
+                        </mesh>
 
-            {/* OUTER ORBITAL RINGS */}
-            <group ref={outerRef}>
-                <mesh rotation={[Math.PI / 2, 0, 0]}>
-                    <torusGeometry args={[2.2, 0.02, 16, 100]} />
-                    <meshBasicMaterial color="#ff3333" transparent opacity={0.5} />
-                </mesh>
-            </group>
+                        {/* Product Image */}
+                        <Image
+                            url={[
+                                '/assets/products/black_tshirt.png',
+                                '/assets/products/white_hoodie.png',
+                                '/assets/products/denim_jacket.png'
+                            ][i]}
+                            scale={[2, 2]}
+                            transparent
+                            opacity={1}
+                        />
+
+                        {/* Border/Glow */}
+                        <mesh position={[0, 0, -0.15]}>
+                            <planeGeometry args={[2.3, 2.9]} />
+                            <meshBasicMaterial color={i === 0 ? "red" : "#333"} />
+                        </mesh>
+                    </group>
+                );
+            })}
         </group>
     );
 };

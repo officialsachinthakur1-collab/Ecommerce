@@ -1,6 +1,7 @@
 import { Eye, Trash2 } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
+import API_URL from '../../config';
 
 const AdminOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -8,7 +9,7 @@ const AdminOrders = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch('https://ecommerce-eo7c.onrender.com/api/orders');
+            const response = await fetch(`${API_URL}/api/orders`);
             if (response.ok) {
                 const data = await response.json();
                 setOrders(data);

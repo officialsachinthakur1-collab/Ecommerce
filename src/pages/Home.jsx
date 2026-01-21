@@ -18,6 +18,7 @@ const Home = () => {
                 buttonText="Shop Men"
                 linkTo="/shop?category=Men"
                 imageLeft={false}
+                image="/assets/banners/men_fashion.png"
             />
             <Marquee />
             <SplitFeatured
@@ -26,6 +27,7 @@ const Home = () => {
                 buttonText="Shop Women"
                 linkTo="/shop?category=Women"
                 imageLeft={true}
+                image="/assets/banners/women_fashion.png"
             />
             <Testimonials />
             <BlogGrid />

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import API_URL from '../config';
 
 export const useProducts = () => {
     const [products, setProducts] = useState([]);
@@ -8,9 +9,8 @@ export const useProducts = () => {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            // Use absolute URL for now to ensure it hits the backend port 5000
-            // In production, this would be relative or configured via env
-            const response = await fetch('https://ecommerce-eo7c.onrender.com/api/products');
+            // Use centralized API URL to switch between local and production automatically
+            const response = await fetch(`${API_URL}/api/products`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch products');

@@ -59,20 +59,17 @@ const ProductCard = ({ product }) => {
                         />
                     </div>
 
-                    {/* Red Glow on Hover (handled via CSS sibling usually, but inline here for simplicity) */}
-                    <div style={{
-                        width: '100%',
-                        height: '100%',
-                        background: 'radial-gradient(circle at center, rgba(30,30,30,1) 0%, rgba(10,10,10,1) 100%)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#333',
-                        fontSize: '2rem',
-                        fontWeight: 'bold'
-                    }}>
-                        PRODUCT {product.id}
-                    </div>
+                    {/* Product Image */}
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            transition: 'transform 0.5s ease'
+                        }}
+                    />
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

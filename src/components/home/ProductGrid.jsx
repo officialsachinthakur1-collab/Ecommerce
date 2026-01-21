@@ -7,7 +7,7 @@ const ProductGrid = () => {
 
     if (loading) return null; // Or a skeleton loader
 
-    const products = allProducts.filter(p => ["Popular", "New", "Exclusive"].includes(p.tag)).slice(0, 3);
+    const products = allProducts.filter(p => ["Popular", "New", "Exclusive", "Bestseller", "Trending", "Hot"].includes(p.tag)).slice(0, 3);
     return (
         <section className="container section-padding">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>

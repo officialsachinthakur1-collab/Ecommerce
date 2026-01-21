@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
 // import { products } from '../../data/products'; // Remove static import
 import { useProducts } from '../../hooks/useProducts';
+import API_URL from '../../config';
 
 const AdminProducts = () => {
     const { products, loading, refetch } = useProducts(); // Use the hook with refetch
@@ -15,7 +16,7 @@ const AdminProducts = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('https://ecommerce-eo7c.onrender.com/api/products', {
+            const response = await fetch(`${API_URL}/api/products`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -35,7 +36,7 @@ const AdminProducts = () => {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
 
         try {
-            const response = await fetch(`https://ecommerce-eo7c.onrender.com/api/products/${id}`, {
+            const response = await fetch(`${API_URL}/api/products/${id}`, {
                 method: 'DELETE'
             });
             if (response.ok) {

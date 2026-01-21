@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import API_URL from '../config';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
@@ -32,13 +33,13 @@ const Checkout = () => {
                 customer: `${formData.firstName} ${formData.lastName}`,
                 email: formData.email,
                 items: cart,
-                total: `$${cartTotal.toLocaleString()}`,
+                total: `₹${cartTotal.toLocaleString()}`,
                 address: formData.address,
                 city: formData.city,
                 zip: formData.zip
             };
 
-            const response = await fetch('https://ecommerce-eo7c.onrender.com/api/orders', {
+            const response = await fetch(`${API_URL}/api/orders`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
@@ -125,7 +126,7 @@ const Checkout = () => {
                                 cursor: loading ? 'wait' : 'pointer'
                             }}
                         >
-                            {loading ? 'Processing...' : `Pay $${cartTotal.toLocaleString()}`}
+                            {loading ? 'Processing...' : `Pay ₹${cartTotal.toLocaleString()}`}
                         </button>
 
                     </form>
@@ -146,6 +147,7 @@ const Checkout = () => {
                                     <span style={{ position: 'absolute', top: -5, right: -5, background: '#666', color: 'white', width: '20px', height: '20px', borderRadius: '50%', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                         {item.quantity}
                                     </span>
+                                    <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <h4 style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>{item.name}</h4>
@@ -159,7 +161,7 @@ const Checkout = () => {
                     <div style={{ borderTop: '1px solid #333', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
                             <span>Subtotal</span>
-                            <span>${cartTotal.toLocaleString()}</span>
+                            <span>₹{cartTotal.toLocaleString()}</span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
                             <span>Shipping</span>
@@ -167,7 +169,7 @@ const Checkout = () => {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.25rem', fontWeight: 'bold', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #333' }}>
                             <span>Total</span>
-                            <span>${cartTotal.toLocaleString()}</span>
+                            <span>₹{cartTotal.toLocaleString()}</span>
                         </div>
                     </div>
                 </motion.div>

@@ -55,7 +55,9 @@ export const CartProvider = ({ children }) => {
     const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
     const cartTotal = cart.reduce((acc, item) => {
-        const price = parseFloat(item.price.replace('$', ''));
+        // Remove anything that is not a digit, dot, or minus sign
+        // This handles '$', '₹', 'USD', etc.
+        const price = parseFloat(item.price.toString().replace(/[^0-9.-]+/g, ""));
         return acc + (price * item.quantity);
     }, 0);
 

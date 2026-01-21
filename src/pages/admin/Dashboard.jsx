@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { DollarSign, ShoppingBag, Users, TrendingUp } from 'lucide-react';
 import StatCard from '../../components/admin/StatCard';
+import API_URL from '../../config';
 
 const Dashboard = () => {
     const [stats, setStats] = useState({
@@ -15,7 +16,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch('https://ecommerce-eo7c.onrender.com/api/orders');
+                const response = await fetch(`${API_URL}/api/orders`);
                 if (response.ok) {
                     const orders = await response.json();
 
@@ -28,7 +29,7 @@ const Dashboard = () => {
 
                     setStats(prev => ({
                         ...prev,
-                        revenue: totalRevenue.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+                        revenue: totalRevenue.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }),
                         orders: orders.length
                     }));
                 }
