@@ -415,15 +415,45 @@ img {
     margin-bottom: 1rem;
   }
 
-  .hero-countdown {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    transform: none;
+  /* Split Featured Stacking */
+  .split-section {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2rem !important;
+    /* Reduced gap slightly */
+    padding: 0 1.5rem !important;
+    /* Enforce global gap */
+  }
+
+  .split-image {
+    order: 1 !important;
+    height: 300px !important;
+    min-height: 300px !important;
     width: 100%;
-    margin-top: 2rem;
+    border-radius: 4px;
+    /* Optional: Soften corners if not touching edge */
+  }
+
+  .split-content {
+    order: 2 !important;
+    padding: 0 !important;
+    /* Remove internal padding since parent has it */
+    text-align: center;
+  }
+
+  .split-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+    /* Adjust title for clean stacking */
+    margin-bottom: 1rem;
+  }
+
+  .hero-countdown {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 1rem;
+    width: 95%;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.03);
+    gap: 0.5rem;
     padding: 0.5rem;
   }
 
