@@ -424,8 +424,8 @@
      overflow: visible !important;
      /* Fix independent scrolling issue */
      flex-direction: column;
-     padding-top: 8rem;
-     /* Significant gap to prevent "touching" header */
+     padding-top: 5rem;
+     /* Balanced gap: Not touching, not huge */
      padding-bottom: 6rem;
    }
 
