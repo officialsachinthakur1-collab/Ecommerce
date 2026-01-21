@@ -30,7 +30,7 @@ const BlogGrid = ({ posts }) => {
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem', lineHeight: '1.6' }}>
                             {post.excerpt}
                         </p>
-                        <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <div className="section-header-link" style={{ color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             Read Article <ArrowRight size={16} />
                         </div>
                     </div>

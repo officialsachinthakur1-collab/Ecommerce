@@ -516,9 +516,18 @@ img {
     /* Slight nudge towards center as requested */
   }
 
-  /* Align Home Product Grid with Title */
+  /* Right Align Link Indent */
+  .section-header-link {
+    margin-right: 1rem;
+  }
+
+  /* Align Home Product Grid with Layout */
   .home-product-grid {
     margin-left: 1rem !important;
+    margin-right: 1rem !important;
+    /* Symmetrical indent for grid content */
+    width: auto !important;
+    /* Allow margins to work */
   }
 
   /* Scroll Button Mobile */
