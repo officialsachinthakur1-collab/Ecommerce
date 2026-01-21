@@ -290,7 +290,7 @@ img {
 
   /* Global Container & Section Fixes */
   .container {
-    padding: 0 1.5rem;
+    padding: 0 1rem;
     width: 100%;
     overflow-x: hidden;
   }
@@ -303,9 +303,9 @@ img {
   .grid-4,
   .grid-3 {
     display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
-    /* Smaller gap for 2-column look */
+    grid-template-columns: 1fr !important;
+    /* Revert to single column */
+    gap: 2rem !important;
     width: 100%;
   }
 
