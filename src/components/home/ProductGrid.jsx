@@ -15,7 +15,7 @@ const ProductGrid = () => {
                 <Link to="/shop" style={{ textDecoration: 'underline', color: 'var(--text-muted)' }}>View All</Link>
             </div>
 
-            <div className="grid-3">
+            <div className="grid-3 home-product-grid">
                 {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                 ))}

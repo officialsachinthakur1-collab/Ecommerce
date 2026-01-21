@@ -514,6 +514,11 @@ img {
     /* Slight nudge towards center as requested */
   }
 
+  /* Align Home Product Grid with Title */
+  .home-product-grid {
+    margin-left: 1rem !important;
+  }
+
   /* Scroll Button Mobile */
   .scroll-to-top-btn {
     right: 1.5rem;
