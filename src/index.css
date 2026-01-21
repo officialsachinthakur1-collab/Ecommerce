@@ -424,7 +424,8 @@
      overflow-x: hidden !important;
      overflow-y: visible !important;
      flex-direction: column;
-     padding-top: var(--header-height);
+     padding-top: 0;
+     /* Removed double spacing */
      padding-bottom: 6rem;
    }
 
