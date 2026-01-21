@@ -301,8 +301,8 @@ img {
 
   /* Global Container & Section Fixes */
   .container {
-    padding: 0 1.5rem;
-    /* Increased padding for side gaps */
+    padding: 0 2rem;
+    /* Increased to 2rem to match Shop header alignment */
     width: 100%;
     overflow-x: hidden;
   }
