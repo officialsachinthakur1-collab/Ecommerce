@@ -6,8 +6,8 @@ const BlogGrid = ({ posts }) => {
 
     return (
         <section className="container section-padding">
-            <h2 style={{ fontSize: '2rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '3rem' }}>Latest Insights</h2>
-            <div className="grid-3">
+            <h2 className="section-header-title" style={{ fontSize: '2rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '3rem' }}>Latest Insights</h2>
+            <div className="grid-3 home-product-grid">
                 {displayPosts.map((post) => (
                     <div key={post.id} style={{ cursor: 'pointer', group: 'hover' }}>
                         <div style={{
