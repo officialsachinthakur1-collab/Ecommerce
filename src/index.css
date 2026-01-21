@@ -239,6 +239,17 @@ img {
   height: 100%;
 }
 
+/* Product Card Image */
+.product-image-container {
+  height: 400px;
+}
+
+@media (max-width: 768px) {
+  .product-image-container {
+    height: 300px !important;
+  }
+}
+
 .grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
