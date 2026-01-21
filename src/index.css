@@ -277,27 +277,53 @@ img {
 
 
 /* Responsive Media Queries */
+/* Responsive Media Queries */
 @media (max-width: 768px) {
   :root {
     --header-height: 60px;
   }
 
-  /* Footer Mobile */
-  .footer-grid {
+  /* Global Container & Section Fixes */
+  .container {
+    padding: 0 1.5rem;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .section-padding {
+    padding: 4rem 0;
+  }
+
+  /* Grid Stacking - Global Fix */
+  .grid-4,
+  .grid-3,
+  .footer-links,
+  .footer-grid,
+  .shop-container,
+  .hero-container,
+  .split-section {
+    display: flex !important;
+    flex-direction: column !important;
     grid-template-columns: 1fr !important;
-    gap: 4rem;
-    margin-bottom: 6rem;
+    gap: 3rem !important;
+  }
+
+  /* Footer Specifics */
+  .footer-grid {
+    margin-bottom: 4rem;
   }
 
   .footer-links {
-    grid-template-columns: repeat(2, 1fr);
-    /* 2x2 grid for improved readability on mobile */
-    gap: 2rem;
+    gap: 2rem !important;
+    display: grid !important;
+    /* Keep grid for links to save space if needed */
+    grid-template-columns: 1fr 1fr !important;
+    /* 2 columns for links looks better on mobile */
   }
 
   .footer-brand {
     font-size: 15vw;
-    margin-top: 4rem;
+    margin-top: 3rem;
   }
 
   /* Split Featured Mobile */
@@ -307,23 +333,18 @@ img {
   }
 
   .split-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6rem;
+    padding: 4rem 1.5rem !important;
+    order: 2 !important;
   }
 
   .split-image {
-    background: #111;
-    position: relative;
-    overflow: hidden;
+    height: 300px !important;
+    min-height: 300px !important;
+    order: 1 !important;
   }
 
   .split-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 800;
-    text-transform: uppercase;
-    line-height: 0.9;
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
     margin-bottom: 1.5rem;
   }
 
@@ -336,7 +357,7 @@ img {
     display: block;
   }
 
-  /* Hero Section Mobile */
+  /* Hero Section Mobile - Refined */
   .hero-section {
     height: auto !important;
     min-height: 100vh;
@@ -344,14 +365,12 @@ img {
     justify-content: center;
     overflow-x: hidden !important;
     overflow-y: visible !important;
-    align-items: center;
-    padding-bottom: 4rem;
     flex-direction: column;
     padding-top: var(--header-height);
+    padding-bottom: 6rem;
   }
 
   .hero-container {
-    grid-template-columns: 1fr !important;
     gap: 2rem !important;
     text-align: center;
     height: auto !important;
@@ -370,24 +389,29 @@ img {
   }
 
   .hero-canvas {
-    order: 2;
-    height: 50vh !important;
+    height: 40vh !important;
     width: 100% !important;
+    order: 2;
+    margin-top: 1rem;
   }
 
   h1 {
     font-size: clamp(1.8rem, 10vw, 3rem) !important;
     white-space: nowrap;
-    /* Force single line */
     width: 100%;
     margin-bottom: 1rem;
   }
 
-  /* Grid Stacking */
-  .grid-4,
-  .grid-3 {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
+  .hero-countdown {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    margin-top: 2rem;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.5rem;
   }
 
   /* Shop Sidebar Mobile */
@@ -396,47 +420,10 @@ img {
     margin-bottom: 2rem;
   }
 
-  .shop-container {
-    flex-direction: column;
-  }
-
   /* Scroll Button Mobile */
   .scroll-to-top-btn {
-    right: 1rem;
-    bottom: 5rem;
-    width: 3rem;
-    height: 3rem;
-  }
-
-  /* Split Featured Stacking */
-  .split-section {
-    grid-template-columns: 1fr !important;
-  }
-
-  .split-image {
-    order: 1 !important;
-    height: 400px !important;
-  }
-
-  .split-content {
-    order: 2 !important;
-    padding: 3rem 1.5rem !important;
-  }
-
-  .hero-countdown {
-    right: 50%;
-    transform: translateX(50%);
-    bottom: 1rem;
-    width: 95%;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-  }
-
-  /* Scroll Button Mobile */
-  .scroll-to-top-btn {
-    right: 1rem;
-    bottom: 5rem;
+    right: 1.5rem;
+    bottom: 2rem;
     width: 3rem;
     height: 3rem;
   }

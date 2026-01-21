@@ -17,11 +17,24 @@ export const useProducts = () => {
             }
 
             const data = await response.json();
-            setProducts(data);
+            if (Array.isArray(data) && data.length > 0) {
+                setProducts(data);
+            } else {
+                // Fallback if empty array returned
+                console.log("API returned empty, using local fallback");
+                const { products: localProducts } = await import('../data/products.js');
+                setProducts(localProducts);
+            }
             setLoading(false);
         } catch (err) {
-            console.error("Error fetching products:", err);
-            setError(err.message);
+            console.warn("API fetch failed, using local fallback:", err);
+            try {
+                const { products: localProducts } = await import('../data/products.js');
+                setProducts(localProducts);
+                setError(null); // Clear error since we have fallback data
+            } catch (importErr) {
+                setError("Failed to load products");
+            }
             setLoading(false);
         }
     };
