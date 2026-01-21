@@ -424,8 +424,8 @@
      overflow-x: hidden !important;
      overflow-y: visible !important;
      flex-direction: column;
-     padding-top: 0;
-     /* Removed double spacing */
+     padding-top: 4rem;
+     /* Restore breathing room */
      padding-bottom: 6rem;
    }
 
