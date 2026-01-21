@@ -474,6 +474,12 @@ img {
     margin-bottom: 2rem;
   }
 
+  /* Feature Section Title Nudge */
+  .section-header-title {
+    margin-left: 1rem;
+    /* Slight nudge towards center as requested */
+  }
+
   /* Scroll Button Mobile */
   .scroll-to-top-btn {
     right: 1.5rem;
