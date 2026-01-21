@@ -421,8 +421,8 @@
      min-height: 100vh;
      min-height: 100dvh;
      justify-content: center;
-     overflow-x: hidden !important;
-     overflow-y: visible !important;
+     overflow: visible !important;
+     /* Fix independent scrolling issue */
      flex-direction: column;
      padding-top: 8rem;
      /* Significant gap to prevent "touching" header */
