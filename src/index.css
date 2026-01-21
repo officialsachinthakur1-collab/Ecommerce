@@ -424,8 +424,8 @@
      overflow-x: hidden !important;
      overflow-y: visible !important;
      flex-direction: column;
-     padding-top: 4rem;
-     /* Restore breathing room */
+     padding-top: 8rem;
+     /* Significant gap to prevent "touching" header */
      padding-bottom: 6rem;
    }
 
