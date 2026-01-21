@@ -7,7 +7,7 @@ const SplitFeatured = ({ title, subtitle, buttonText, imageLeft = false, linkTo 
             <div className="split-section split-section-container">
                 {/* Content Side */}
                 <div className="split-content" style={{ order: imageLeft ? 2 : 1 }}>
-                    <h2 className="split-title">
+                    <h2 className="split-title section-header-title" style={{ marginLeft: 0 }}>
                         {title}
                     </h2>
                     <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', marginBottom: '3rem', maxWidth: '400px' }}>

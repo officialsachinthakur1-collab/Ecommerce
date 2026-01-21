@@ -483,7 +483,9 @@ img {
     order: 2 !important;
     padding: 0 !important;
     /* Remove internal padding since parent has it */
-    text-align: center;
+    text-align: left !important;
+    /* Force left alignment to match other sections */
+    align-items: flex-start !important;
   }
 
   .split-title {
