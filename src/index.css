@@ -961,3 +961,16 @@
     display: none; /* Hide 'Actions' label */
   }
 }
+
+/* Fix Mobile Table Width Overflow */
+@media (max-width: 768px) {
+  .admin-table-container table {
+    min-width: 0 !important; /* Override inline min-width */
+    width: 100% !important;
+    display: block; /* Make table behave like block container */
+  }
+  .admin-table-container tbody {
+    display: block;
+    width: 100%;
+  }
+}
