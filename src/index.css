@@ -615,3 +615,11 @@
     width: auto !important;
   }
 }
+
+/* FINAL MOBILE ALIGNMENT OVERRIDE */
+@media (max-width: 768px) {
+  .hero-container { padding: 0 2rem !important; }
+  .grid-4 { margin-left: 1rem !important; margin-right: 1rem !important; width: auto !important; }
+  /* Ensure Footer Content Indentation matches */
+  .mobile-symmetric-aligned { margin-left: 1rem !important; margin-right: 1rem !important; }
+}
