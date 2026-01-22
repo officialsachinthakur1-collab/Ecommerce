@@ -587,3 +587,11 @@
     margin-right: 1rem !important;
   }
 }
+
+/* Mobile Footer Symmetric Alignment (Left & Right) */
+@media (max-width: 768px) {
+  .footer-grid, .footer-links {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+  }
+}
