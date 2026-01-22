@@ -655,3 +655,11 @@
     padding-right: 2rem !important;
   }
 }
+
+/* Middle Ground Alignment: 1.5rem (Thoda side, not too much) */
+@media (max-width: 768px) {
+  .footer-section .container {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
