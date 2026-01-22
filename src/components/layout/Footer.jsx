@@ -29,10 +29,10 @@ const Footer = () => {
                     </div>
 
                     {/* Links */}
-                    <div className="footer-links mobile-symmetric-aligned" style={{ marginLeft: '1rem', marginRight: '1rem' }}>
+                    <div className="footer-links mobile-symmetric-aligned">
                         <div>
-                            <h4 style={{ marginBottom: '1.5rem', fontWeight: '600' }}>Shop</h4>
-                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem' }}>Shop</h4>
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: '1rem', marginRight: '1rem' }}>
                                 <li><Link to="/shop?category=Men">Men</Link></li>
                                 <li><Link to="/shop?category=Women">Women</Link></li>
                                 <li><Link to="/shop?category=Unisex">Unisex</Link></li>
@@ -40,24 +40,24 @@ const Footer = () => {
                             </ul>
                         </div>
                         <div>
-                            <h4 style={{ marginBottom: '1.5rem', fontWeight: '600' }}>Company</h4>
-                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem' }}>Company</h4>
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: '1rem', marginRight: '1rem' }}>
                                 <li><a href="#">About</a></li>
                                 <li><a href="#">Careers</a></li>
                                 <li><a href="#">Press</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 style={{ marginBottom: '1.5rem', fontWeight: '600' }}>Support</h4>
-                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem' }}>Support</h4>
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: '1rem', marginRight: '1rem' }}>
                                 <li><a href="#">Contact</a></li>
                                 <li><a href="#">Shipping</a></li>
                                 <li><a href="#">Returns</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 style={{ marginBottom: '1.5rem', fontWeight: '600' }}>Social</h4>
-                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem' }}>Social</h4>
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: '1rem', marginRight: '1rem' }}>
                                 <li><a href="#">Instagram</a></li>
                                 <li><a href="#">Twitter</a></li>
                                 <li><a href="#">TikTok</a></li>
