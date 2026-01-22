@@ -51,7 +51,7 @@ const AdminProducts = () => {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+            <div className="admin-page-header">
                 <h1 style={{ fontSize: '2rem', fontWeight: '800' }}>Products</h1>
                 <button
                     className="btn-primary"
