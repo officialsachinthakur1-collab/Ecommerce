@@ -76,8 +76,8 @@ const AdminProducts = () => {
                         </thead>
                         <tbody>
                             {products.map((product) => (
-                                <tr key={product.id} style={{ borderBottom: '1px solid #222' }}>
-                                    <td style={{ padding: '1rem 1.5rem', fontWeight: '600' }}>
+                                <tr key={product.id} className="admin-table-row">
+                                    <td data-label="Product Name" style={{ padding: '1rem 1.5rem', fontWeight: '600' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             {/* Simple color block for image placeholder if no image */}
                                             {/* Image placeholder or actual image */}
@@ -89,9 +89,9 @@ const AdminProducts = () => {
                                             {product.name}
                                         </div>
                                     </td>
-                                    <td style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)' }}>{product.category}</td>
-                                    <td style={{ padding: '1rem 1.5rem' }}>{product.price}</td>
-                                    <td style={{ padding: '1rem 1.5rem' }}>
+                                    <td data-label="Category" style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)' }}>{product.category}</td>
+                                    <td data-label="Price" style={{ padding: '1rem 1.5rem' }}>{product.price}</td>
+                                    <td data-label="Status" style={{ padding: '1rem 1.5rem' }}>
                                         <span style={{
                                             padding: '0.25rem 0.75rem',
                                             borderRadius: '999px',
@@ -102,7 +102,7 @@ const AdminProducts = () => {
                                             Active
                                         </span>
                                     </td>
-                                    <td style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
+                                    <td data-label="Actions" style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
                                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
                                             <button style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
                                                 <Edit2 size={18} />
