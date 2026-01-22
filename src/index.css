@@ -640,3 +640,10 @@
      margin-right: 0 !important;
    }
  }
+/* Footer Specific: Move closer to edge (User Request 'or side') */
+@media (max-width: 768px) {
+  .footer-section .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
