@@ -595,3 +595,11 @@
     margin-right: 1rem !important;
   }
 }
+
+/* RESET GLOBAL FOOTER MARGINS (Handled in Component now) */
+@media (max-width: 768px) {
+  .footer-grid {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}

@@ -6,28 +6,30 @@ const Footer = () => {
             <div className="container">
                 <div className="footer-grid">
                     {/* Newsletter */}
-                    <div>
-                        <h3 style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase' }}>Join the Movement</h3>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Sign up for exclusive drops and early access.</p>
-                        <div style={{ display: 'flex', gap: '1rem', maxWidth: '400px' }}>
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                style={{
-                                    flex: 1,
-                                    padding: '1rem',
-                                    background: 'transparent',
-                                    border: '1px solid #333',
-                                    color: 'white',
-                                    borderRadius: '4px'
-                                }}
-                            />
-                            <button className="btn-primary">Subscribe</button>
+                    <div className="mobile-symmetric-aligned">
+                        <h3 className="section-header-title" style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase', marginLeft: 0 }}>Join the Movement</h3>
+                        <div style={{ marginLeft: '1rem', marginRight: '1rem' }}>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Sign up for exclusive drops and early access.</p>
+                            <div style={{ display: 'flex', gap: '1rem', maxWidth: '400px' }}>
+                                <input
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    style={{
+                                        flex: 1,
+                                        padding: '1rem',
+                                        background: 'transparent',
+                                        border: '1px solid #333',
+                                        color: 'white',
+                                        borderRadius: '4px'
+                                    }}
+                                />
+                                <button className="btn-primary">Subscribe</button>
+                            </div>
                         </div>
                     </div>
 
                     {/* Links */}
-                    <div className="footer-links">
+                    <div className="footer-links mobile-symmetric-aligned" style={{ marginLeft: '1rem', marginRight: '1rem' }}>
                         <div>
                             <h4 style={{ marginBottom: '1.5rem', fontWeight: '600' }}>Shop</h4>
                             <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
