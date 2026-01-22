@@ -581,45 +581,62 @@
      top: var(--header-height);
    }
  }
-/* Mobile Footer Alignment Fix */
-@media (max-width: 768px) {
-  .footer-grid, .footer-links {
-    margin-right: 1rem !important;
-  }
-}
 
-/* Mobile Footer Symmetric Alignment (Left & Right) */
-@media (max-width: 768px) {
-  .footer-grid, .footer-links {
-    margin-left: 1rem !important;
-    margin-right: 1rem !important;
-  }
-}
+ /* Mobile Footer Alignment Fix */
+ @media (max-width: 768px) {
 
-/* RESET GLOBAL FOOTER MARGINS (Handled in Component now) */
-@media (max-width: 768px) {
-  .footer-grid {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-}
+   .footer-grid,
+   .footer-links {
+     margin-right: 1rem !important;
+   }
+ }
 
-/* Unified Global Vertical Alignment (Hero & ValueProps) */
-@media (max-width: 768px) {
-  .hero-container {
-    padding: 0 2rem !important;
-  }
-  .grid-4 {
-    margin-left: 1rem !important;
-    margin-right: 1rem !important;
-    width: auto !important;
-  }
-}
+ /* Mobile Footer Symmetric Alignment (Left & Right) */
+ @media (max-width: 768px) {
 
-/* FINAL MOBILE ALIGNMENT OVERRIDE */
-@media (max-width: 768px) {
-  .hero-container { padding: 0 2rem !important; }
-  .grid-4 { margin-left: 1rem !important; margin-right: 1rem !important; width: auto !important; }
-  /* Ensure Footer Content Indentation matches */
-  .mobile-symmetric-aligned { margin-left: 1rem !important; margin-right: 1rem !important; }
-}
+   .footer-grid,
+   .footer-links {
+     margin-left: 1rem !important;
+     margin-right: 1rem !important;
+   }
+ }
+
+ /* RESET GLOBAL FOOTER MARGINS (Handled in Component now) */
+ @media (max-width: 768px) {
+   .footer-grid {
+     margin-left: 0 !important;
+     margin-right: 0 !important;
+   }
+ }
+
+ /* Unified Global Vertical Alignment (Hero & ValueProps) */
+ @media (max-width: 768px) {
+   .hero-container {
+     padding: 0 2rem !important;
+   }
+
+   .grid-4 {
+     margin-left: 1rem !important;
+     margin-right: 1rem !important;
+     width: auto !important;
+   }
+ }
+
+ /* FINAL MOBILE ALIGNMENT OVERRIDE */
+ @media (max-width: 768px) {
+   .hero-container {
+     padding: 0 2rem !important;
+   }
+
+   .grid-4 {
+     margin-left: 1rem !important;
+     margin-right: 1rem !important;
+     width: auto !important;
+   }
+
+   /* Wrapper should NOT add margin if children already have it. Reset to 0 to prevent double-indent. */
+   .mobile-symmetric-aligned {
+     margin-left: 0 !important;
+     margin-right: 0 !important;
+   }
+ }
