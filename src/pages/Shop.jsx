@@ -32,7 +32,6 @@ const Shop = () => {
         <div style={{ paddingTop: 'var(--header-height)' }}>
             {/* Page Header */}
             <section className="shop-header" style={{
-                padding: '6rem 2rem',
                 textAlign: 'center',
                 background: 'linear-gradient(to bottom, #111, var(--bg-color))',
                 borderBottom: '1px solid #222'

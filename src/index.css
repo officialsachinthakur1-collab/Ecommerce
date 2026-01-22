@@ -708,3 +708,15 @@
     font-size: 2rem !important; /* Reduce font size to fit 'Men Collection' */
   }
 }
+
+/* Shop Header Defaults (Desktop) */
+.shop-header {
+  padding: 6rem 2rem;
+}
+
+/* Shop Header Mobile Override */
+@media (max-width: 768px) {
+  .shop-header {
+    padding: 6rem 1rem !important;
+  }
+}
