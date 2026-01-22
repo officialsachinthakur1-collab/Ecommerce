@@ -663,3 +663,11 @@
     padding-right: 1.5rem !important;
   }
 }
+
+/* Final Footer Alignment: 1rem (Explicit User Choice) */
+@media (max-width: 768px) {
+  .footer-section .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
