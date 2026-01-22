@@ -6,11 +6,11 @@ const Footer = () => {
             <div className="container">
                 <div className="footer-grid">
                     {/* Newsletter */}
-                    <div className="mobile-symmetric-aligned">
+                    <div className="mobile-symmetric-aligned" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
                         <h3 className="section-header-title" style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase', marginLeft: 0 }}>Join the Movement</h3>
-                        <div style={{ marginLeft: '1rem', marginRight: '1rem' }}>
-                            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Sign up for exclusive drops and early access.</p>
-                            <div style={{ display: 'flex', gap: '1rem', maxWidth: '400px' }}>
+                        <div style={{ marginLeft: '1rem', marginRight: '1rem', width: 'auto' }}>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', textAlign: 'left' }}>Sign up for exclusive drops and early access.</p>
+                            <div style={{ display: 'flex', gap: '1rem', maxWidth: '400px', width: '100%' }}>
                                 <input
                                     type="email"
                                     placeholder="Enter your email"
@@ -20,7 +20,8 @@ const Footer = () => {
                                         background: 'transparent',
                                         border: '1px solid #333',
                                         color: 'white',
-                                        borderRadius: '4px'
+                                        borderRadius: '4px',
+                                        minWidth: 0
                                     }}
                                 />
                                 <button className="btn-primary">Subscribe</button>
@@ -29,7 +30,7 @@ const Footer = () => {
                     </div>
 
                     {/* Links */}
-                    <div className="footer-links mobile-symmetric-aligned">
+                    <div className="footer-links mobile-symmetric-aligned" style={{ textAlign: 'left', alignItems: 'flex-start' }}>
                         <div>
                             <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem' }}>Shop</h4>
                             <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: '1rem', marginRight: '1rem' }}>
