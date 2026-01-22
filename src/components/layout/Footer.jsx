@@ -7,7 +7,7 @@ const Footer = () => {
                 <div className="footer-grid">
                     {/* Newsletter */}
                     <div className="mobile-symmetric-aligned" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left', width: '100%' }}>
-                        <h3 className="section-header-title" style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase', marginLeft: 0, textAlign: 'left', width: '100%' }}>Join the Movement</h3>
+                        <h3 className="section-header-title" style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase', textAlign: 'left', width: '100%' }}>Join the Movement</h3>
                         <div style={{ marginLeft: '1rem', marginRight: '1rem', width: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                             <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', textAlign: 'left', width: '100%' }}>Sign up for exclusive drops and early access.</p>
                             <div style={{ display: 'flex', gap: '1rem', maxWidth: '400px', width: '100%' }}>
