@@ -671,3 +671,29 @@
     padding-right: 1rem !important;
   }
 }
+
+/* Shop Sidebar Mobile Categories Alignment */
+@media (max-width: 768px) {
+  .shop-sidebar {
+    text-align: center !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  .shop-sidebar h3 {
+    text-align: center !important;
+    width: 100%;
+  }
+  .shop-sidebar ul {
+    align-items: center !important;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .shop-sidebar li {
+    width: 100%;
+    text-align: center;
+  }
+  .shop-sidebar a {
+    font-size: 0.9rem; /* Reduce font size as requested ('kam karna pade to') */
+  }
+}
