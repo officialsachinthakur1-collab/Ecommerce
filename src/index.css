@@ -868,3 +868,19 @@
   max-width: 100% !important;
 }
 
+
+/* Fix Admin Toggle Button */
+@media (max-width: 768px) {
+  .admin-mobile-toggle {
+    width: 44px !important;
+    height: 44px !important;
+    right: auto !important; /* Don't span to right */
+    border-radius: 8px !important;
+  }
+
+  /* Fix Admin Page Titles */
+  .admin-main h1 {
+    font-size: 1.5rem !important;
+    margin-top: 1rem;
+  }
+}
