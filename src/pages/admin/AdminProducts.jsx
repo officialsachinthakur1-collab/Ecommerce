@@ -63,8 +63,8 @@ const AdminProducts = () => {
             </div>
 
             {loading ? <div style={{ color: 'white' }}>Loading...</div> : (
-                <div style={{ background: '#111', borderRadius: '12px', overflow: 'hidden', border: '1px solid #222' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <div className="admin-table-container">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}> {/* added minWidth to force scroll */}
                         <thead>
                             <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                                 <th style={{ padding: '1rem 1.5rem' }}>Product Name</th>

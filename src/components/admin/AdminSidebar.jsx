@@ -1,8 +1,8 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ isOpen, onClose }) => {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
@@ -19,20 +19,25 @@ const AdminSidebar = () => {
     };
 
     return (
-        <aside style={{
-            width: '250px',
-            background: '#111',
-            borderRight: '1px solid #222',
-            height: '100vh',
-            position: 'fixed',
-            left: 0,
-            top: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '2rem'
-        }}>
-            <div style={{ marginBottom: '3rem', fontSize: '1.5rem', fontWeight: '900', letterSpacing: '-0.05em' }}>
-                NIVEST <span style={{ color: 'var(--primary-red)' }}>ADMIN</span>
+        <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: '900', letterSpacing: '-0.05em' }}>
+                    NIVEST <span style={{ color: 'var(--primary-red)' }}>ADMIN</span>
+                </div>
+                {/* Mobile Close Button */}
+                <button
+                    onClick={onClose}
+                    className="mobile-close-btn"
+                    style={{
+                        display: 'none', /* Hidden by default, explicit CSS can override */
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'white',
+                        cursor: 'pointer'
+                    }}
+                >
+                    <X size={24} />
+                </button>
             </div>
 
             <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
@@ -40,7 +45,8 @@ const AdminSidebar = () => {
                     <NavLink
                         key={item.path}
                         to={item.path}
-                        end={item.path === '/admin'} // Exact match for root
+                        onClick={onClose} // Close sidebar on mobile nav
+                        end={item.path === '/admin'}
                         className={({ isActive }) =>
                             isActive ? "admin-nav-item active" : "admin-nav-item"
                         }
@@ -63,17 +69,20 @@ const AdminSidebar = () => {
                 ))}
             </nav>
 
-            <button style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                padding: '0.75rem 1rem',
-                background: 'transparent',
-                border: 'none',
-                color: 'var(--text-muted)',
-                cursor: 'pointer',
-                marginTop: 'auto'
-            }}>
+            <button
+                onClick={handleLogout}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    padding: '0.75rem 1rem',
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    marginTop: 'auto'
+                }}
+            >
                 <LogOut size={20} />
                 Logout
             </button>

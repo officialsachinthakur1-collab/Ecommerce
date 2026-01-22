@@ -83,13 +83,13 @@ const AdminOrders = () => {
         <div>
             <h1 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '2rem' }}>Orders</h1>
 
-            <div style={{ background: '#111', borderRadius: '12px', overflow: 'hidden', border: '1px solid #222' }}>
+            <div className="admin-table-container">
                 {loading ? (
                     <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Loading orders...</div>
                 ) : orders.length === 0 ? (
                     <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>No orders found.</div>
                 ) : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '900px' }}> {/* added minWidth to force scroll */}
                         <thead>
                             <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
                                 <th style={{ padding: '1rem 1.5rem' }}>Order ID</th>
