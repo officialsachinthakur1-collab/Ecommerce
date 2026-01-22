@@ -581,3 +581,9 @@
      top: var(--header-height);
    }
  }
+/* Mobile Footer Alignment Fix */
+@media (max-width: 768px) {
+  .footer-grid, .footer-links {
+    margin-right: 1rem !important;
+  }
+}
