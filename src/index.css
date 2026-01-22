@@ -814,3 +814,32 @@
   background: #333;
   border-radius: 4px;
 }
+
+/* Product Details Responsive Styles */
+.product-info-section {
+  padding: 4rem 2rem;
+}
+.product-title {
+  font-size: 3rem;
+}
+.product-price {
+  font-size: 1.5rem;
+}
+.product-back-btn-container {
+  padding: 2rem 2rem 0 2rem;
+}
+
+@media (max-width: 768px) {
+  .product-info-section {
+    padding: 2rem 1rem !important; /* Mobile 1rem alignment */
+  }
+  .product-title {
+    font-size: 2rem !important; /* Reduce title size */
+  }
+  .product-price {
+    font-size: 1.25rem !important;
+  }
+ .product-back-btn-container {
+    padding: 2rem 1rem 0 1rem !important;
+  }
+}

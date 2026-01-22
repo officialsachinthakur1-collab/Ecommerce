@@ -35,7 +35,7 @@ const ProductDetails = () => {
     return (
         <div className="product-page-wrapper">
             {/* Back Button - In Flow */}
-            <div style={{ padding: '2rem 2rem 0 2rem' }}>
+            <div className="product-back-btn-container">
                 <Link to="/shop" style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -83,12 +83,11 @@ const ProductDetails = () => {
                 </div>
 
                 {/* Right: Product Info */}
-                <div style={{
-                    padding: '4rem 2rem',
+                <div className="product-info-section" style={{
                     display: 'flex',
                     alignItems: 'center'
                 }}>
-                    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '600px', margin: '0 auto', width: '100%' }}>
                         <motion.div
                             initial={{ opacity: 0, x: 50 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -101,8 +100,8 @@ const ProductDetails = () => {
                                 <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginLeft: '0.5rem' }}>({product.reviews} Reviews)</span>
                             </div>
 
-                            <h1 style={{ fontSize: '3rem', fontWeight: '800', lineHeight: 1, marginBottom: '0.5rem' }}>{product.name}</h1>
-                            <p style={{ fontSize: '1.5rem', color: 'var(--primary-red)', fontWeight: '600', marginBottom: '2rem' }}>{product.price}</p>
+                            <h1 className="product-title" style={{ fontWeight: '800', lineHeight: 1, marginBottom: '0.5rem' }}>{product.name}</h1>
+                            <p className="product-price" style={{ color: 'var(--primary-red)', fontWeight: '600', marginBottom: '2rem' }}>{product.price}</p>
 
                             <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', marginBottom: '3rem' }}>
                                 {product.description}
