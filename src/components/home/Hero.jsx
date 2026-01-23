@@ -48,8 +48,8 @@ const Hero = () => {
                             letterSpacing: '-0.05em'
                         }}
                     >
-                        Future <br />
-                        <span className="text-gradient">Defined</span>
+                        Performance <br />
+                        <span className="text-gradient">Undefined</span>
                     </motion.h1>
 
                     <motion.p
@@ -64,7 +64,7 @@ const Hero = () => {
                             marginInline: 'auto'
                         }}
                     >
-                        The next generation of high-performance logic and style. Engineered for the future.
+                        Experience the future of footwear. Engineered for speed, designed for the streets.
                     </motion.p>
 
                     <Link to="/shop">
@@ -75,7 +75,7 @@ const Hero = () => {
                             className="btn-primary"
                             style={{ padding: '1.2rem 3.5rem', fontSize: '1.1rem', borderRadius: '4px' }}
                         >
-                            Explore VEXLO
+                            Shop Collection
                         </motion.button>
                     </Link>
                 </div>
