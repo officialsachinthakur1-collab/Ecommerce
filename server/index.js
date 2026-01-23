@@ -94,6 +94,26 @@ app.post('/api/products', (req, res) => {
     res.status(201).json({ success: true, product: newProduct });
 });
 
+app.put('/api/products/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, price, category, description, image } = req.body;
+
+    const index = products.findIndex(p => p.id == id);
+    if (index !== -1) {
+        products[index] = {
+            ...products[index],
+            name: name || products[index].name,
+            price: price || products[index].price,
+            category: category || products[index].category,
+            description: description || products[index].description,
+            image: image || products[index].image
+        };
+        res.json({ success: true, product: products[index] });
+    } else {
+        res.status(404).json({ success: false, message: 'Product not found' });
+    }
+});
+
 app.delete('/api/products/:id', (req, res) => {
     const { id } = req.params;
     const initialLength = products.length;

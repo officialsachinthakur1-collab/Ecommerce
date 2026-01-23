@@ -7,28 +7,47 @@ import API_URL from '../../config';
 const AdminProducts = () => {
     const { products, loading, refetch } = useProducts(); // Use the hook with refetch
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingProduct, setEditingProduct] = useState(null);
     const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '' });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleEdit = (product) => {
+        setEditingProduct(product);
+        setFormData({
+            name: product.name,
+            price: product.price,
+            category: product.category,
+            description: product.description || '',
+            image: product.image || ''
+        });
+        setIsModalOpen(true);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${API_URL}/api/products`, {
-                method: 'POST',
+            const url = editingProduct
+                ? `${API_URL}/api/products/${editingProduct.id}`
+                : `${API_URL}/api/products`;
+            const method = editingProduct ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
             if (response.ok) {
-                alert('Product Added!');
+                alert(editingProduct ? 'Product Updated!' : 'Product Added!');
                 setIsModalOpen(false);
+                setEditingProduct(null);
                 setFormData({ name: '', price: '', category: 'Men', description: '', image: '' });
                 refetch(); // Refetch products to update the list
             }
         } catch (error) {
-            console.error('Error adding product:', error);
+            console.error('Error handling product submit:', error);
         }
     };
 
@@ -104,7 +123,10 @@ const AdminProducts = () => {
                                     </td>
                                     <td data-label="Actions" style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
                                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-                                            <button style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                                            <button
+                                                onClick={() => handleEdit(product)}
+                                                style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+                                            >
                                                 <Edit2 size={18} />
                                             </button>
                                             <button
@@ -133,8 +155,12 @@ const AdminProducts = () => {
                         width: '100%', maxWidth: '500px', border: '1px solid #333'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Add Product</h2>
-                            <button onClick={() => setIsModalOpen(false)} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X /></button>
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{editingProduct ? 'Edit Product' : 'Add Product'}</h2>
+                            <button onClick={() => {
+                                setIsModalOpen(false);
+                                setEditingProduct(null);
+                                setFormData({ name: '', price: '', category: 'Men', description: '', image: '' });
+                            }} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X /></button>
                         </div>
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             <input
@@ -163,7 +189,9 @@ const AdminProducts = () => {
                                 name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} rows={3}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                             />
-                            <button type="submit" className="btn-primary" style={{ marginTop: '1rem', justifyContent: 'center' }}>Create Product</button>
+                            <button type="submit" className="btn-primary" style={{ marginTop: '1rem', justifyContent: 'center' }}>
+                                {editingProduct ? 'Update Product' : 'Create Product'}
+                            </button>
                         </form>
                     </div>
                 </div>
