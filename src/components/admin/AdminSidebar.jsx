@@ -21,7 +21,12 @@ const AdminSidebar = ({ isOpen, onClose }) => {
     return (
         <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '900', letterSpacing: '-0.05em' }}>
+                <div style={{
+                    fontSize: '1.25rem',
+                    fontWeight: '900',
+                    letterSpacing: '-0.05em',
+                    whiteSpace: 'nowrap'
+                }}>
                     NIVEST <span style={{ color: 'var(--primary-red)' }}>ADMIN</span>
                 </div>
                 {/* Mobile Close Button */}
