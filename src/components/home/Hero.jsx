@@ -31,7 +31,7 @@ const Hero = () => {
 
             <div className="container hero-container" style={{ position: 'relative', zIndex: 10 }}>
                 {/* Centered Text Content */}
-                <div className="hero-text-content" style={{ maxWidth: '800px', textAlign: 'center', margin: '0 auto' }}>
+                <div className="hero-text-content" style={{ maxWidth: '1200px', width: '100%', textAlign: 'center', margin: '0 auto' }}>
                     <motion.h1
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
