@@ -9,12 +9,14 @@ const AdminLayout = () => {
     return (
         <div className="admin-layout">
             {/* Mobile Toggle Button */}
-            <button
-                className="admin-mobile-toggle"
-                onClick={() => setSidebarOpen(true)}
-            >
-                <Menu size={24} />
-            </button>
+            {!sidebarOpen && (
+                <button
+                    className="admin-mobile-toggle"
+                    onClick={() => setSidebarOpen(true)}
+                >
+                    <Menu size={24} />
+                </button>
+            )}
 
             {/* Sidebar with Props */}
             <AdminSidebar
