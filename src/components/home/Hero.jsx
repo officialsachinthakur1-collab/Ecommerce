@@ -37,15 +37,15 @@ const Hero = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
                         style={{
-                            fontSize: 'clamp(3rem, 12vw, 8rem)',
-                            lineHeight: 0.85,
+                            fontSize: 'clamp(2.5rem, 10vw, 8rem)',
+                            lineHeight: 1.1,
                             fontWeight: 900,
                             textTransform: 'uppercase',
                             marginBottom: '2rem',
                             backgroundImage: 'linear-gradient(to bottom, #fff, #666)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
-                            letterSpacing: '-0.05em'
+                            letterSpacing: '-0.02em'
                         }}
                     >
                         Performance <br />
