@@ -177,7 +177,7 @@
  }
 
  .footer-brand {
-   font-size: 15vw;
+   font-size: clamp(2.5rem, 8vw, 12rem); overflow: visible;
    font-weight: 900;
    line-height: 0.8;
    text-align: center;
@@ -185,7 +185,7 @@
    -webkit-background-clip: text;
    background-clip: text;
    -webkit-text-fill-color: transparent;
-   letter-spacing: -0.05em;
+   letter-spacing: -0.01em;
    margin-top: 4rem;
    user-select: none;
  }
@@ -380,7 +380,7 @@
    }
 
    .footer-brand {
-     font-size: 15vw;
+     font-size: clamp(2.5rem, 8vw, 12rem); overflow: visible;
      margin-top: 3rem;
    }
 
