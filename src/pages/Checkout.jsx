@@ -24,35 +24,106 @@ const Checkout = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const loadScript = (src) => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
-        try {
-            const orderData = {
-                customer: `${formData.firstName} ${formData.lastName}`,
-                email: formData.email,
-                items: cart,
-                total: `₹${cartTotal.toLocaleString()}`,
-                address: formData.address,
-                city: formData.city,
-                zip: formData.zip
-            };
+        const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
 
-            const response = await fetch(`${API_URL}/api/orders`, {
+        if (!res) {
+            alert('Razorpay SDK failed to load. Are you online?');
+            setLoading(false);
+            return;
+        }
+
+        try {
+            // 1. Create Order on Backend
+            const orderResponse = await fetch(`${API_URL}/api/razorpay/order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
+                body: JSON.stringify({
+                    amount: cartTotal,
+                    currency: 'INR'
+                })
             });
 
-            if (response.ok) {
-                clearCart();
+            const orderData = await orderResponse.json();
+
+            if (!orderData.success) {
+                alert("Order creation failed");
                 setLoading(false);
-                navigate('/order-success');
-            } else {
-                console.error("Order failed");
-                setLoading(false);
+                return;
             }
+
+            // 2. Open Razorpay Modal
+            const options = {
+                key: 'rzp_live_S7fi6DftRGCZQo',
+                amount: orderData.order.amount,
+                currency: orderData.order.currency,
+                name: 'GETSETMART',
+                description: 'Order Payment',
+                order_id: orderData.order.id,
+                handler: async (response) => {
+                    try {
+                        const verifyRes = await fetch(`${API_URL}/api/razorpay/verify`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(response)
+                        });
+
+                        const verifyData = await verifyRes.json();
+
+                        if (verifyData.success) {
+                            // 3. Create Local Order Record
+                            const finalOrderData = {
+                                customer: `${formData.firstName} ${formData.lastName}`,
+                                email: formData.email,
+                                items: cart,
+                                total: `₹${cartTotal.toLocaleString()}`,
+                                address: formData.address,
+                                city: formData.city,
+                                zip: formData.zip,
+                                payment_id: response.razorpay_payment_id
+                            };
+
+                            await fetch(`${API_URL}/api/orders`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(finalOrderData)
+                            });
+
+                            clearCart();
+                            navigate('/order-success');
+                        } else {
+                            alert("Payment verification failed");
+                        }
+                    } catch (err) {
+                        console.error("Verification error:", err);
+                    }
+                },
+                prefill: {
+                    name: `${formData.firstName} ${formData.lastName}`,
+                    email: formData.email
+                },
+                theme: {
+                    color: '#FF0000'
+                }
+            };
+
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+            setLoading(false);
+
         } catch (error) {
             console.error("Error submitting order:", error);
             setLoading(false);

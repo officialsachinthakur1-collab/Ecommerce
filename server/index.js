@@ -1,9 +1,17 @@
 import express from 'express';
 import cors from 'cors';
+import Razorpay from 'razorpay';
+import crypto from 'crypto';
 import { products as initialProducts } from '../src/data/products.js';
 
 const app = express();
 const PORT = 5000;
+
+// Razorpay Instance
+const razorpay = new Razorpay({
+    key_id: 'rzp_live_S7fi6DftRGCZQo',
+    key_secret: 'l5UTCj7s9NG7keJ0YoiA4TdZ'
+});
 
 // In-memory database (reset on restart)
 // In-memory database (reset on restart)
@@ -146,6 +154,48 @@ app.post('/api/auth/login', (req, res) => {
             success: false,
             message: 'Invalid email or password'
         });
+    }
+});
+
+// Razorpay: Create Order
+app.post('/api/razorpay/order', async (req, res) => {
+    try {
+        const { amount, currency = 'INR' } = req.body;
+
+        const options = {
+            amount: Math.round(amount * 100), // convert to paise
+            currency,
+            receipt: `receipt_${Date.now()}`
+        };
+
+        const order = await razorpay.orders.create(options);
+        res.json({ success: true, order });
+    } catch (error) {
+        console.error("Razorpay Order Error:", error);
+        res.status(500).json({ success: false, message: 'Could not create order' });
+    }
+});
+
+// Razorpay: Verify Payment
+app.post('/api/razorpay/verify', (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+        const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+        const expectedSignature = crypto
+            .createHmac('sha256', 'l5UTCj7s9NG7keJ0YoiA4TdZ')
+            .update(body.toString())
+            .digest('hex');
+
+        if (expectedSignature === razorpay_signature) {
+            res.json({ success: true, message: 'Payment verified successfully' });
+        } else {
+            res.status(400).json({ success: false, message: 'Invalid signature' });
+        }
+    } catch (error) {
+        console.error("Verification Error:", error);
+        res.status(500).json({ success: false, message: 'Server error during verification' });
     }
 });
 
