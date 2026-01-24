@@ -72,12 +72,12 @@ const Footer = () => {
 
                 {/* Big Brand Text */}
                 <div className="footer-brand">
-                    NIVEST
+                    GETSETMART
                 </div>
 
                 {/* Sub Footer */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', fontSize: '0.8rem', color: '#444', borderTop: '1px solid #111', paddingTop: '2rem' }}>
-                    <div>© 2026 Nivest Inc. All rights reserved.</div>
+                    <div>© 2026 GETSETMART Inc. All rights reserved.</div>
                     <div style={{ display: 'flex', gap: '1rem' }}>
                         <span>Privacy Policy</span>
                         <span>Terms of Service</span>

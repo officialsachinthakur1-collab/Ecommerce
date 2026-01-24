@@ -64,7 +64,7 @@ const Navbar = () => {
                     {/* Center: Logo */}
                     <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
                         <Link to="/" style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.05em' }}>
-                            NIVEST
+                            GETSETMART
                         </Link>
                     </div>
 
@@ -123,7 +123,7 @@ const Navbar = () => {
                         <div style={{ position: 'absolute', top: '2rem', right: '2rem', cursor: 'pointer' }} onClick={() => setMobileMenuOpen(false)}>
                             <X size={32} />
                         </div>
-                        <Link to="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem' }}>NIVEST</Link>
+                        <Link to="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem' }}>GETSETMART</Link>
 
                         <Link to="/shop" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SHOP</Link>
                         <Link to="/about" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>COMPANY</Link>

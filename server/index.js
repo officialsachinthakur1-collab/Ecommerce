@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Basic Route
 app.get('/', (req, res) => {
-    res.send('Nivest E-commerce API is running...');
+    res.send('GetSetMart E-commerce API is running...');
 });
 
 app.get('/api/products', (req, res) => {
@@ -131,7 +131,7 @@ app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
 
     // Simple Mock Auth Logic
-    if (email === 'admin@nivest.com' && password === 'admin') {
+    if (email === 'admin@getsetmart.com' && password === 'admin') {
         res.json({
             success: true,
             user: {

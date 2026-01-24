@@ -27,7 +27,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                     letterSpacing: '-0.05em',
                     whiteSpace: 'nowrap'
                 }}>
-                    NIVEST <span style={{ color: 'var(--primary-red)' }}>ADMIN</span>
+                    GETSETMART <span style={{ color: 'var(--primary-red)' }}>ADMIN</span>
                 </div>
                 {/* Mobile Close Button */}
                 <button

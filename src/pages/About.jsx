@@ -60,7 +60,7 @@ const About = () => {
                     <div>
                         <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1.5rem', textTransform: 'uppercase' }}>Our Mission</h2>
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', marginBottom: '1.5rem' }}>
-                            Born in 2024, Nivest was founded on a simple premise: motion is life. We noticed that while technology was evolving rapidly, footwear design was stagnant. We set out to change that.
+                            Born in 2024, GetSetMart was founded on a simple premise: motion is life. We noticed that while technology was evolving rapidly, footwear design was stagnant. We set out to change that.
                         </p>
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.8' }}>
                             Our team of designers, engineers, and athletes work in unison to create products that don't just look fast—they make you feel fast. Every curve, every material, and every stitch is calculated for maximum performance and minimal drag.
