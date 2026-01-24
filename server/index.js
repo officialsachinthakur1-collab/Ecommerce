@@ -83,23 +83,33 @@ app.delete('/api/orders/:id', (req, res) => {
 });
 
 app.post('/api/products', (req, res) => {
-    const { name, price, category, description, image } = req.body;
+    try {
+        const { name, price, category, description, image } = req.body;
 
-    const newProduct = {
-        id: products.length + 1, // Simple ID generation
-        name,
-        price,
-        category,
-        description: description || "Engineered for performance.",
-        image, // Add image URL
-        tag: "New", // Default tag
-        sizes: [7, 8, 9, 10, 11, 12], // Default sizes
-        reviews: 0,
-        rating: 5
-    };
+        if (!name || !price) {
+            return res.status(400).json({ success: false, message: 'Name and Price are required' });
+        }
 
-    products.push(newProduct);
-    res.status(201).json({ success: true, product: newProduct });
+        const newProduct = {
+            id: Date.now(), // More reliable ID generation
+            name,
+            price,
+            category: category || 'Men',
+            description: description || "Engineered for performance.",
+            image: image || "",
+            tag: "New",
+            sizes: [7, 8, 9, 10, 11, 12],
+            reviews: 0,
+            rating: 5
+        };
+
+        products.push(newProduct);
+        console.log("Product added successfully:", newProduct.name);
+        res.status(201).json({ success: true, product: newProduct });
+    } catch (error) {
+        console.error("Backend Error adding product:", error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
 });
 
 app.put('/api/products/:id', (req, res) => {

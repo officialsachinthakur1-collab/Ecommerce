@@ -45,9 +45,13 @@ const AdminProducts = () => {
                 setEditingProduct(null);
                 setFormData({ name: '', price: '', category: 'Men', description: '', image: '' });
                 refetch(); // Refetch products to update the list
+            } else {
+                const errorData = await response.json();
+                alert(`Error: ${errorData.message || 'Operation failed'}`);
             }
         } catch (error) {
             console.error('Error handling product submit:', error);
+            alert(`Network Error: ${error.message}. Is the backend server running?`);
         }
     };
 
