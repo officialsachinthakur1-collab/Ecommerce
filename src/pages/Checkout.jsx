@@ -48,7 +48,7 @@ const Checkout = () => {
 
         try {
             // 1. Create Order on Backend
-            const orderResponse = await fetch(`${API_URL}/razorpay?action=order`, {
+            const orderResponse = await fetch(`${API_URL}/api/razorpay?action=order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -75,7 +75,7 @@ const Checkout = () => {
                 order_id: orderData.order.id,
                 handler: async (response) => {
                     try {
-                        const verifyRes = await fetch(`${API_URL}/razorpay?action=verify`, {
+                        const verifyRes = await fetch(`${API_URL}/api/razorpay?action=verify`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(response)
