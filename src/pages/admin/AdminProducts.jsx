@@ -30,7 +30,7 @@ const AdminProducts = () => {
         e.preventDefault();
         try {
             const url = editingProduct
-                ? `${API_URL}/api/products/${editingProduct.id}`
+                ? `${API_URL}/api/products?id=${editingProduct.id}`
                 : `${API_URL}/api/products`;
             const method = editingProduct ? 'PUT' : 'POST';
 
@@ -59,7 +59,7 @@ const AdminProducts = () => {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
 
         try {
-            const response = await fetch(`${API_URL}/api/products/${id}`, {
+            const response = await fetch(`${API_URL}/api/products?id=${id}`, {
                 method: 'DELETE'
             });
             if (response.ok) {
