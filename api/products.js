@@ -1,6 +1,5 @@
-import { products as initialProducts } from '../src/data/products.js';
+import { initialProducts } from './_data.js';
 
-// In-memory products for Serverless (Reset on cold start)
 let products = [...initialProducts];
 
 export default function handler(req, res) {
