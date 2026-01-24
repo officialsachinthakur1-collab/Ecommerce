@@ -12,7 +12,12 @@ const AdminOrders = () => {
             const response = await fetch(`${API_URL}/api/orders`);
             if (response.ok) {
                 const data = await response.json();
-                setOrders(data);
+                // Map MongoDB _id to id
+                const mappedData = data.map(o => ({
+                    ...o,
+                    id: o.id || o._id
+                }));
+                setOrders(mappedData);
             }
         } catch (error) {
             console.error("Error fetching orders:", error);
@@ -32,7 +37,7 @@ const AdminOrders = () => {
         ));
 
         try {
-            await fetch(`https://ecommerce-eo7c.onrender.com/api/orders/${id}`, {
+            await fetch(`${API_URL}/api/orders?id=${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
@@ -63,9 +68,7 @@ const AdminOrders = () => {
         if (!window.confirm("Are you sure you want to delete this order?")) return;
 
         try {
-            // Encode ID because it contains '#'
-            const encodedId = encodeURIComponent(id);
-            const response = await fetch(`https://ecommerce-eo7c.onrender.com/api/orders/${encodedId}`, {
+            const response = await fetch(`${API_URL}/api/orders?id=${id}`, {
                 method: 'DELETE'
             });
 

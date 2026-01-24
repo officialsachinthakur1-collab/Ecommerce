@@ -17,11 +17,15 @@ export const useProducts = () => {
             }
 
             const data = await response.json();
-            if (Array.isArray(data) && data.length > 0) {
-                setProducts(data);
+            if (Array.isArray(data)) {
+                // Map MongoDB _id to id for frontend compatibility
+                const mappedData = data.map(p => ({
+                    ...p,
+                    id: p.id || p._id || p.id // Priority: Existing ID > Mongoose _id > fallback
+                }));
+                setProducts(mappedData);
             } else {
-                // Fallback if empty array returned
-                console.log("API returned empty, using local fallback");
+                // Fallback if not an array
                 const { products: localProducts } = await import('../data/products.js');
                 setProducts(localProducts);
             }
