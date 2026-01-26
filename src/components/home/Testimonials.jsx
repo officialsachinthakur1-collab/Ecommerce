@@ -2,8 +2,13 @@ const Testimonials = () => {
     return (
         <section style={{ padding: '8rem 0', textAlign: 'center', background: '#080808' }}>
             <div className="container" style={{ maxWidth: '800px' }}>
-                <h2 className="testimonial-quote" style={{ fontWeight: '900', textTransform: 'uppercase', marginBottom: '2rem', lineHeight: '1.1' }}>
-                    "The most comfortable <span className="text-gradient">performance</span> gear I've ever worn."
+                <h2 className="testimonial-quote" style={{
+                    fontWeight: '900',
+                    textTransform: 'uppercase',
+                    marginBottom: '2rem',
+                    lineHeight: '1.1'
+                }}>
+                    "The most comfortable <span className="text-gradient" style={{ backgroundClip: 'initial', WebkitBackgroundClip: 'initial', WebkitTextFillColor: 'initial', color: 'var(--primary-red)' }}>performance</span> gear I've ever worn."
                 </h2>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ width: '64px', height: '64px', background: '#333', borderRadius: '50%' }} />
