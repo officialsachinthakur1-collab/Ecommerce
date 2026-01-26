@@ -2,8 +2,10 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MeshTransmissionMaterial, Float, Torus } from '@react-three/drei';
 import * as THREE from 'three';
+import useMobile from '../../hooks/useMobile';
 
 const TechCore = () => {
+    const isMobile = useMobile();
     const groupRef = useRef();
     const coreRef = useRef();
     const ring1Ref = useRef();
@@ -16,8 +18,8 @@ const TechCore = () => {
 
         // Main group reaction to mouse
         if (groupRef.current) {
-            groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, x * 0.2, 0.1);
-            groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -y * 0.2, 0.1);
+            groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, x * (isMobile ? 0.1 : 0.2), 0.1);
+            groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, -y * (isMobile ? 0.1 : 0.2), 0.1);
         }
 
         if (coreRef.current) {
@@ -49,13 +51,13 @@ const TechCore = () => {
                     backside
                     backsideThickness={5}
                     thickness={2}
-                    samples={10}
+                    samples={isMobile ? 4 : 10}
                     transmission={1}
                     clearcoat={1}
                     clearcoatRoughness={0}
                     ior={1.5}
                     chromaticAberration={0.06}
-                    anisotropy={0.1}
+                    anisotration={0.1}
                     distortion={0.1}
                     distortionScale={0.3}
                     temporalDistortion={0.5}
@@ -65,41 +67,41 @@ const TechCore = () => {
 
             {/* Glowing Center */}
             <mesh>
-                <sphereGeometry args={[0.6, 32, 32]} />
+                <sphereGeometry args={[0.6, isMobile ? 16 : 32, isMobile ? 16 : 32]} />
                 <meshBasicMaterial color="#ff0000" toneMapped={false} />
                 <pointLight intensity={2} color="#ff0000" />
             </mesh>
 
             {/* Outer Tech Rings */}
             <group ref={ring1Ref}>
-                <Torus args={[3.5, 0.02, 16, 100]} rotation={[Math.PI / 2, 0, 0]}>
+                <Torus args={[3.5, 0.02, 16, isMobile ? 50 : 100]} rotation={[Math.PI / 2, 0, 0]}>
                     <meshBasicMaterial color="#333" transparent opacity={0.5} />
                 </Torus>
                 {/* Orbital particles on ring */}
-                {[...Array(8)].map((_, i) => (
-                    <mesh key={i} position={[Math.cos((i / 8) * Math.PI * 2) * 3.5, 0, Math.sin((i / 8) * Math.PI * 2) * 3.5]}>
-                        <sphereGeometry args={[0.06, 16, 16]} />
+                {[...Array(isMobile ? 4 : 8)].map((_, i) => (
+                    <mesh key={i} position={[Math.cos((i / (isMobile ? 4 : 8)) * Math.PI * 2) * 3.5, 0, Math.sin((i / (isMobile ? 4 : 8)) * Math.PI * 2) * 3.5]}>
+                        <sphereGeometry args={[0.06, 8, 8]} />
                         <meshBasicMaterial color="#ff0000" />
                     </mesh>
                 ))}
             </group>
 
             <group ref={ring2Ref} rotation={[Math.PI / 4, 0, 0]}>
-                <Torus args={[4.2, 0.01, 16, 100]} rotation={[Math.PI / 2, 0, 0]}>
+                <Torus args={[4.2, 0.01, 16, isMobile ? 50 : 100]} rotation={[Math.PI / 2, 0, 0]}>
                     <meshBasicMaterial color="#444" transparent opacity={0.3} />
                 </Torus>
             </group>
 
-            <Float speed={4} rotationIntensity={1} floatIntensity={2}>
+            <Float speed={isMobile ? 2 : 4} rotationIntensity={isMobile ? 0.5 : 1} floatIntensity={isMobile ? 1 : 2}>
                 <group ref={ring3Ref} rotation={[-Math.PI / 4, 0, 0]}>
-                    <Torus args={[2.8, 0.01, 16, 100]} rotation={[Math.PI / 2, 0, 0]}>
+                    <Torus args={[2.8, 0.01, 16, isMobile ? 50 : 100]} rotation={[Math.PI / 2, 0, 0]}>
                         <meshBasicMaterial color="#ff0000" transparent opacity={0.2} />
                     </Torus>
                 </group>
             </Float>
 
             {/* Background Particles/Dust */}
-            <Particles count={60} />
+            <Particles count={isMobile ? 20 : 60} />
         </group>
     );
 };

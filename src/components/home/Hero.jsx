@@ -5,13 +5,16 @@ import { Float, Stars, PerspectiveCamera } from '@react-three/drei';
 import TechCore from '../canvas/TechCore';
 import SceneEffects from '../canvas/SceneEffects';
 import { Suspense, useState, useEffect } from 'react';
+import useMobile from '../../hooks/useMobile';
 
 const Hero = () => {
+    const isMobile = useMobile();
+
     return (
         <section className="hero-section">
             {/* Full-Screen 3D Background */}
             <div className="hero-background-canvas">
-                <Canvas dpr={[1, 2]} gl={{ antialias: false }}>
+                <Canvas dpr={isMobile ? 1 : [1, 2]} gl={{ antialias: !isMobile, powerPreference: "high-performance" }}>
                     <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
                     <color attach="background" args={['#050505']} />
 
@@ -20,11 +23,11 @@ const Hero = () => {
                     <pointLight position={[-10, -5, -10]} intensity={0.5} color="#555" />
 
                     <Suspense fallback={null}>
-                        <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
+                        <Float speed={isMobile ? 1 : 2} rotationIntensity={isMobile ? 0.2 : 0.5} floatIntensity={isMobile ? 0.5 : 1}>
                             <TechCore />
                         </Float>
-                        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-                        <SceneEffects />
+                        <Stars radius={100} depth={50} count={isMobile ? 1000 : 5000} factor={4} saturation={0} fade speed={1} />
+                        {!isMobile && <SceneEffects />}
                     </Suspense>
                 </Canvas>
             </div>
