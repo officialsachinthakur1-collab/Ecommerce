@@ -1,8 +1,10 @@
 import { ArrowRight } from 'lucide-react';
 import { blogPosts } from '../../data/blogData';
+import useMobile from '../../hooks/useMobile';
 
 const BlogGrid = ({ posts }) => {
-    const displayPosts = posts || blogPosts.slice(0, 3);
+    const isMobile = useMobile();
+    const displayPosts = posts || blogPosts.slice(0, isMobile ? 2 : 3);
 
     return (
         <section className="container section-padding">
@@ -12,13 +14,18 @@ const BlogGrid = ({ posts }) => {
                     <div key={post.id} style={{ cursor: 'pointer', group: 'hover' }}>
                         <div style={{
                             height: '250px',
-                            background: `url(${post.image}) center/cover no-repeat`,
                             borderRadius: '8px',
                             marginBottom: '1.5rem',
                             border: '1px solid #222',
                             position: 'relative',
                             overflow: 'hidden'
                         }}>
+                            <img
+                                src={post.image}
+                                alt={post.title}
+                                loading="lazy"
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
                             <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', transition: 'background 0.3s' }} className="hover-overlay" />
                         </div>
                         <div style={{ color: 'var(--primary-red)', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.5rem', textTransform: 'uppercase' }}>

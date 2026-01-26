@@ -65,11 +65,12 @@ const ProductCard = ({ product }) => {
                     <img
                         src={product.image}
                         alt={product.name}
+                        loading="lazy"
                         style={{
                             width: '100%',
                             height: '100%',
                             objectFit: 'cover',
-                            transition: 'transform 0.5s ease'
+                            transition: isMobile ? 'none' : 'transform 0.5s ease'
                         }}
                     />
                 </div>
