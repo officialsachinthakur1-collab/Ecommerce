@@ -3,13 +3,16 @@ import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useWishlist } from '../../context/WishlistContext';
 
+import useMobile from '../../hooks/useMobile';
+
 const ProductCard = ({ product }) => {
+    const isMobile = useMobile();
     const { toggleWishlist, isInWishlist } = useWishlist();
 
     return (
         <Link to={`/product/${product.id}`} style={{ display: 'block' }}>
             <motion.div
-                whileHover={{ y: -10 }}
+                whileHover={isMobile ? {} : { y: -10 }}
                 style={{ position: 'relative', cursor: 'pointer' }}
             >
                 {/* Image Placeholder */}

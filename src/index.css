@@ -177,7 +177,8 @@
  }
 
  .footer-brand {
-   font-size: clamp(2.5rem, 8vw, 12rem); overflow: visible;
+   font-size: clamp(2.5rem, 8vw, 12rem);
+   overflow: visible;
    font-weight: 900;
    line-height: 0.8;
    text-align: center;
@@ -380,7 +381,8 @@
    }
 
    .footer-brand {
-     font-size: clamp(2.5rem, 8vw, 12rem); overflow: visible;
+     font-size: clamp(2.5rem, 8vw, 12rem);
+     overflow: visible;
      margin-top: 3rem;
    }
 
@@ -1008,22 +1010,75 @@
      width: 100%;
    }
  }
-/* Restore Admin Overlay */
-@media (max-width: 768px) {
-  .admin-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 99;
-    backdrop-filter: blur(2px);
-  }
-}
 
-/* Immersive 3D Hero Styles */
-.hero-background-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-.hero-container { position: relative; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; width: 100%; pointer-events: none; }
-.hero-text-content { pointer-events: auto; }
-@media (max-width: 768px) {
-  .hero-background-canvas { height: 100% !important; }
-  .hero-container { padding: 0 1.5rem !important; justify-content: center !important; align-items: center !important; text-align: center !important; }
-}
+ /* Restore Admin Overlay */
+ @media (max-width: 768px) {
+   .admin-overlay {
+     position: fixed;
+     inset: 0;
+     background: rgba(0, 0, 0, 0.5);
+     z-index: 99;
+     backdrop-filter: blur(2px);
+   }
+ }
+
+ /* Immersive 3D Hero Styles */
+ .hero-background-canvas {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 1;
+ }
+
+ .hero-container {
+   position: relative;
+   z-index: 10;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height: 100%;
+   width: 100%;
+   pointer-events: none;
+ }
+
+ .hero-text-content {
+   pointer-events: auto;
+ }
+
+ @media (max-width: 768px) {
+   .hero-background-canvas {
+     height: 100% !important;
+   }
+
+   .hero-container {
+     padding: 0 1.5rem !important;
+     justify-content: center !important;
+     align-items: center !important;
+     text-align: center !important;
+   }
+
+   /* PERFORMANCE OPTIMIZATIONS FOR MOBILE */
+   * {
+     /* Disable expensive filters globally on mobile if lagging */
+     backdrop-filter: none !important;
+     -webkit-backdrop-filter: none !important;
+   }
+
+   /* Reset some specific backgrounds that relied on blur */
+   .hero-countdown,
+   .glass-card,
+   .navbar,
+   .cart-drawer {
+     background: rgba(10, 10, 10, 0.98) !important;
+   }
+
+   /* Simplify transitions */
+   a,
+   button,
+   div {
+     transition-duration: 0.1s !important;
+   }
+ }

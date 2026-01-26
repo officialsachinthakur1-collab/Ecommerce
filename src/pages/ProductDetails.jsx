@@ -6,8 +6,10 @@ import { Float, OrbitControls, Environment, Sphere, MeshDistortMaterial } from '
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { ArrowLeft, Star, ShoppingBag, Truck, ShieldCheck } from 'lucide-react';
+import useMobile from '../hooks/useMobile';
 
 const ProductDetails = () => {
+    const isMobile = useMobile();
     const { id } = useParams();
     const [selectedSize, setSelectedSize] = useState(null);
     const { addToCart } = useCart();
@@ -60,18 +62,18 @@ const ProductDetails = () => {
 
 
 
-                    <Canvas camera={{ position: [0, 0, 4] }}>
+                    <Canvas camera={{ position: [0, 0, 4] }} dpr={isMobile ? 1 : [1, 2]} gl={{ antialias: !isMobile }}>
                         <ambientLight intensity={0.5} />
                         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
                         <OrbitControls enableZoom={false} />
 
                         {/* Placeholder 3D Object */}
-                        <Float speed={2} rotationIntensity={1} floatIntensity={1}>
-                            <Sphere args={[1.2, 32, 32]}>
+                        <Float speed={isMobile ? 1 : 2} rotationIntensity={isMobile ? 0.5 : 1} floatIntensity={isMobile ? 0.5 : 1}>
+                            <Sphere args={[1.2, isMobile ? 16 : 32, isMobile ? 16 : 32]}>
                                 <MeshDistortMaterial
                                     color="#ff0000"
-                                    distort={0.6}
-                                    speed={1.5}
+                                    distort={isMobile ? 0.3 : 0.6}
+                                    speed={isMobile ? 1 : 1.5}
                                     roughness={0.1}
                                     metalness={0.8}
                                 />

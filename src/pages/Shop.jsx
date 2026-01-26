@@ -4,7 +4,10 @@ import { motion } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 
+import useMobile from '../hooks/useMobile';
+
 const Shop = () => {
+    const isMobile = useMobile();
     const [searchParams] = useSearchParams();
     const { products: allProducts, loading } = useProducts();
     const category = searchParams.get('category');
@@ -37,7 +40,7 @@ const Shop = () => {
                 borderBottom: '1px solid #222'
             }}>
                 <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     style={{
                         fontSize: 'clamp(2.5rem, 5vw, 4rem)',

@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import useMobile from '../../hooks/useMobile';
+
 const Navbar = () => {
+    const isMobile = useMobile();
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -35,10 +38,10 @@ const Navbar = () => {
                 position: 'sticky',
                 top: 0,
                 zIndex: 100,
-                background: scrolled ? 'var(--glass-bg)' : 'transparent',
-                backdropFilter: scrolled ? 'blur(10px)' : 'none',
+                background: scrolled ? 'rgba(5, 5, 5, 0.95)' : 'transparent',
+                backdropFilter: (scrolled && !isMobile) ? 'blur(10px)' : 'none',
                 borderBottom: scrolled ? '1px solid var(--glass-border)' : 'none',
-                transition: 'all 0.3s ease',
+                transition: isMobile ? 'none' : 'all 0.3s ease',
                 height: 'var(--header-height)',
                 display: 'flex',
                 alignItems: 'center'
