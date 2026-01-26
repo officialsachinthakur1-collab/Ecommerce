@@ -21,15 +21,16 @@ const SplitFeatured = ({ title, subtitle, buttonText, imageLeft = false, linkTo 
                 {/* Image Side */}
                 <div className="split-image" style={{ order: imageLeft ? 1 : 2 }}>
                     {image ? (
-                        src = { image }
+                        <img
+                            src={image}
                             alt={title}
-                    loading="lazy"
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block'
-                    }}
+                            loading="lazy"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                display: 'block'
+                            }}
                         />
                     ) : (
                     <>
