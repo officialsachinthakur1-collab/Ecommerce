@@ -57,25 +57,44 @@ const ProductDetails = () => {
                     position: 'relative',
                     height: '60vh', // Default for mobile
                     minHeight: '400px',
-                    marginTop: '2rem'
+                    marginTop: '2rem',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                 }} className="product-canvas-container">
 
+                    {/* Fixed Image Display */}
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        style={{
+                            position: 'absolute',
+                            width: '80%',
+                            height: '80%',
+                            objectFit: 'contain',
+                            zIndex: 1,
+                            pointerEvents: 'none'
+                        }}
+                    />
 
-
-                    <Canvas camera={{ position: [0, 0, 4] }} dpr={isMobile ? 1 : [1, 2]} gl={{ antialias: !isMobile }}>
+                    <Canvas camera={{ position: [0, 0, 4] }} dpr={isMobile ? 1 : [1, 2]} gl={{ antialias: !isMobile }} style={{ position: 'relative', zIndex: 2 }}>
                         <ambientLight intensity={0.5} />
                         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
                         <OrbitControls enableZoom={false} />
 
-                        {/* Placeholder 3D Object */}
+                        {/* Placeholder 3D Object - Made Transparent to see image through it */}
                         <Float speed={isMobile ? 1 : 2} rotationIntensity={isMobile ? 0.5 : 1} floatIntensity={isMobile ? 0.5 : 1}>
                             <Sphere args={[1.2, isMobile ? 16 : 32, isMobile ? 16 : 32]}>
                                 <MeshDistortMaterial
                                     color="#ff0000"
                                     distort={isMobile ? 0.3 : 0.6}
                                     speed={isMobile ? 1 : 1.5}
-                                    roughness={0.1}
-                                    metalness={0.8}
+                                    roughness={1}
+                                    metalness={1}
+                                    opacity={0.3}
+                                    transparent={true}
                                 />
                             </Sphere>
                         </Float>
