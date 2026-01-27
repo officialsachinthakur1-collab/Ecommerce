@@ -33,7 +33,7 @@ export const products = [
         sizes: ["One Size"],
         reviews: 76,
         rating: 5,
-        image: "/assets/products/earrings_red.png"
+        image: "/assets/products/earrings_red_user.jpg"
     },
     {
         id: 1,
