@@ -1,4 +1,6 @@
-import Hero from '../components/home/Hero';
+import { Suspense, lazy } from 'react';
+const Hero = lazy(() => import('../components/home/Hero'));
+
 import ValueProps from '../components/home/ValueProps';
 import ProductGrid from '../components/home/ProductGrid';
 import SplitFeatured from '../components/home/SplitFeatured';
@@ -9,7 +11,9 @@ import BlogGrid from '../components/home/BlogGrid';
 const Home = () => {
     return (
         <>
-            <Hero />
+            <Suspense fallback={<div style={{ height: '80vh', background: '#050505' }} />}>
+                <Hero />
+            </Suspense>
             <ValueProps />
             <ProductGrid />
             <SplitFeatured

@@ -11,9 +11,14 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         // Check local storage for persisted session
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+        try {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                setUser(JSON.parse(storedUser));
+            }
+        } catch (error) {
+            console.error("Auth context load error:", error);
+            localStorage.removeItem('user'); // Clear corrupted data
         }
         setLoading(false);
     }, []);

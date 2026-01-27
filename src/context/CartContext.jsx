@@ -10,9 +10,14 @@ export const CartProvider = ({ children }) => {
 
     // Load cart from local storage on mount
     useEffect(() => {
-        const storedCart = localStorage.getItem('cart');
-        if (storedCart) {
-            setCart(JSON.parse(storedCart));
+        try {
+            const storedCart = localStorage.getItem('cart');
+            if (storedCart) {
+                setCart(JSON.parse(storedCart));
+            }
+        } catch (error) {
+            console.error("Cart context load error:", error);
+            localStorage.removeItem('cart'); // Clear corrupted data
         }
     }, []);
 
