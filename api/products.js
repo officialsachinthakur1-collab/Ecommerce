@@ -6,11 +6,12 @@ import { initialProducts } from './_data.js';
 export default async function handler(req, res) {
     await dbConnect();
 
-    // Auto-seed if database is empty
-    const count = await Product.countDocuments();
-    if (count === 0) {
-        console.log("Seeding database with initial products...");
-        // Add the earrings to the initial products for seeding
+    // Auto-seed required products if missing
+    const requiredIds = [4, 5, 6];
+    const existingIds = await Product.find({ id: { $in: requiredIds } }).distinct('id');
+
+    if (existingIds.length < requiredIds.length) {
+        console.log("Seeding missing products...");
         const fullProducts = [
             ...initialProducts,
             {
@@ -41,7 +42,13 @@ export default async function handler(req, res) {
                 image: "/assets/products/earrings_red_user.jpg"
             }
         ];
-        await Product.insertMany(fullProducts);
+
+        for (const item of fullProducts) {
+            const exists = await Product.findOne({ $or: [{ id: item.id }, { name: item.name }] });
+            if (!exists) {
+                await Product.create(item);
+            }
+        }
     }
 
     if (req.method === 'GET') {
