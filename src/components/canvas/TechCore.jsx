@@ -47,22 +47,32 @@ const TechCore = () => {
             {/* Inner Crystalline Core */}
             <mesh ref={coreRef}>
                 <octahedronGeometry args={[2.2, 0]} />
-                <MeshTransmissionMaterial
-                    backside
-                    backsideThickness={5}
-                    thickness={2}
-                    samples={isMobile ? 4 : 10}
-                    transmission={1}
-                    clearcoat={1}
-                    clearcoatRoughness={0}
-                    ior={1.5}
-                    chromaticAberration={0.06}
-                    anisotration={0.1}
-                    distortion={0.1}
-                    distortionScale={0.3}
-                    temporalDistortion={0.5}
-                    color="#ffffff"
-                />
+                {isMobile ? (
+                    <meshPhysicalMaterial
+                        color="#ffffff"
+                        metalness={0.9}
+                        roughness={0.1}
+                        transmission={0.5}
+                        thickness={1}
+                    />
+                ) : (
+                    <MeshTransmissionMaterial
+                        backside
+                        backsideThickness={5}
+                        thickness={2}
+                        samples={10}
+                        transmission={1}
+                        clearcoat={1}
+                        clearcoatRoughness={0}
+                        ior={1.5}
+                        chromaticAberration={0.06}
+                        anisotration={0.1}
+                        distortion={0.1}
+                        distortionScale={0.3}
+                        temporalDistortion={0.5}
+                        color="#ffffff"
+                    />
+                )}
             </mesh>
 
             {/* Glowing Center */}

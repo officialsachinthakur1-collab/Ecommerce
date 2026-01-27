@@ -24,7 +24,7 @@ const Hero = () => {
     return (
         <section className="hero-section">
             {/* Full-Screen 3D Background */}
-            <div className="hero-background-canvas" style={{ display: isVisible ? 'block' : 'none' }}>
+            <div className="hero-background-canvas">
                 <Canvas
                     dpr={isMobile ? 1 : [1, 2]}
                     gl={{ antialias: !isMobile, powerPreference: "high-performance" }}
