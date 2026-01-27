@@ -17,16 +17,26 @@ export const useProducts = () => {
             }
 
             const data = await response.json();
+            const { products: localProducts } = await import('../data/products.js');
+
             if (Array.isArray(data)) {
                 // Map MongoDB _id to id for frontend compatibility
                 const mappedData = data.map(p => ({
                     ...p,
-                    id: p.id || p._id || p.id // Priority: Existing ID > Mongoose _id > fallback
+                    id: p.id || p._id || p.id
                 }));
-                setProducts(mappedData);
+
+                // HYBRID STRATEGY: Merge API data with local items that are missing from the API
+                const mergedProducts = [...mappedData];
+                localProducts.forEach(lp => {
+                    const exists = mergedProducts.some(mp => mp.name === lp.name || mp.id === lp.id);
+                    if (!exists) {
+                        mergedProducts.unshift(lp); // Add new local items to the top
+                    }
+                });
+
+                setProducts(mergedProducts);
             } else {
-                // Fallback if not an array
-                const { products: localProducts } = await import('../data/products.js');
                 setProducts(localProducts);
             }
             setLoading(false);
