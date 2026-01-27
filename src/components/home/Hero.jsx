@@ -23,30 +23,28 @@ const Hero = () => {
 
     return (
         <section className="hero-section">
-            {/* Full-Screen 3D Background - DISABLED ON MOBILE FOR SAFE MODE */}
+            {/* Full-Screen 3D Background */}
             <div className="hero-background-canvas">
-                {!isMobile && (
-                    <Canvas
-                        dpr={[1, 2]}
-                        gl={{ antialias: true, powerPreference: "high-performance" }}
-                        frameloop={isVisible ? 'always' : 'never'}
-                    >
-                        <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
-                        <color attach="background" args={['#050505']} />
+                <Canvas
+                    dpr={isMobile ? 1 : [1, 2]}
+                    gl={{ antialias: !isMobile, powerPreference: "high-performance" }}
+                    frameloop={isVisible ? 'always' : 'never'}
+                >
+                    <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
+                    <color attach="background" args={['#050505']} />
 
-                        <ambientLight intensity={0.2} />
-                        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} color="#ff0000" />
-                        <pointLight position={[-10, -5, -10]} intensity={0.5} color="#555" />
+                    <ambientLight intensity={0.2} />
+                    <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} color="#ff0000" />
+                    <pointLight position={[-10, -5, -10]} intensity={0.5} color="#555" />
 
-                        <Suspense fallback={null}>
-                            <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-                                <TechCore />
-                            </Float>
-                            <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-                            <SceneEffects />
-                        </Suspense>
-                    </Canvas>
-                )}
+                    <Suspense fallback={null}>
+                        <Float speed={isMobile ? 1 : 2} rotationIntensity={isMobile ? 0.2 : 0.5} floatIntensity={isMobile ? 0.5 : 1}>
+                            <TechCore />
+                        </Float>
+                        <Stars radius={100} depth={50} count={isMobile ? 1000 : 5000} factor={4} saturation={0} fade speed={1} />
+                        {!isMobile && <SceneEffects />}
+                    </Suspense>
+                </Canvas>
             </div>
 
             <div className="container hero-container" style={{ position: 'relative', zIndex: 10 }}>
