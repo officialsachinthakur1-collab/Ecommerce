@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 const Hero = lazy(() => import('../components/home/Hero'));
+import useMobile from '../hooks/useMobile';
 
 import ValueProps from '../components/home/ValueProps';
 import ProductGrid from '../components/home/ProductGrid';
