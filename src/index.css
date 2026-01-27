@@ -1,4 +1,4 @@
- @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+﻿ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
  :root {
    --bg-color: #050505;
@@ -89,7 +89,7 @@
  .container {
    max-width: var(--container-width);
    margin: 0 auto;
-   padding: 0 2rem;
+   padding: 0 1.25rem;
  }
 
  .text-gradient {
@@ -336,7 +336,7 @@
    }
 
    .container {
-     padding: 0 2rem;
+     padding: 0 1.25rem;
      /* Increased to 2rem to match Shop header alignment */
      width: 100%;
      overflow-x: hidden;
@@ -460,7 +460,7 @@
 
    h1 {
      font-size: clamp(1.8rem, 10vw, 3rem) !important;
-     white-space: nowrap;
+     word-wrap: break-word;
      width: 100%;
      margin-bottom: 1rem;
    }
@@ -614,7 +614,7 @@
  /* Unified Global Vertical Alignment (Hero & ValueProps) */
  @media (max-width: 768px) {
    .hero-container {
-     padding: 0 2rem !important;
+     padding: 0 1.25rem !important;
    }
 
    .grid-4 {
@@ -627,7 +627,7 @@
  /* FINAL MOBILE ALIGNMENT OVERRIDE */
  @media (max-width: 768px) {
    .hero-container {
-     padding: 0 2rem !important;
+     padding: 0 1.25rem !important;
    }
 
    .grid-4 {
@@ -1082,83 +1082,89 @@
      transition-duration: 0.1s !important;
    }
  }
-/* Marquee Animation */
-.marquee-wrapper {
-  overflow: hidden;
-  width: 100%;
-  display: flex;
-  white-space: nowrap;
-}
 
-.marquee-content {
-  display: flex;
-  animation: marquee-scroll 20s linear infinite;
-}
+ /* Marquee Animation */
+ .marquee-wrapper {
+   overflow: hidden;
+   width: 100%;
+   display: flex;
+   white-space: nowrap;
+ }
 
-@media (max-width: 768px) {
-  .marquee-content {
-      animation-duration: 12s;
-  }
-}
+ .marquee-content {
+   display: flex;
+   animation: marquee-scroll 20s linear infinite;
+ }
 
-.marquee-item {
-  display: flex;
-  align-items: center;
-  padding-right: 4rem;
-}
+ @media (max-width: 768px) {
+   .marquee-content {
+     animation-duration: 12s;
+   }
+ }
 
-.marquee-item span {
-  font-size: clamp(1.25rem, 5vw, 2.5rem);
-  font-weight: 900;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #222;
-}
+ .marquee-item {
+   display: flex;
+   align-items: center;
+   padding-right: 4rem;
+ }
 
-.marquee-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--primary-red);
-  border-radius: 50%;
-  margin-right: 1.5rem;
-}
+ .marquee-item span {
+   font-size: clamp(1.25rem, 5vw, 2.5rem);
+   font-weight: 900;
+   letter-spacing: 2px;
+   text-transform: uppercase;
+   color: #222;
+ }
 
-@keyframes marquee-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+ .marquee-dot {
+   width: 8px;
+   height: 8px;
+   background: var(--primary-red);
+   border-radius: 50%;
+   margin-right: 1.5rem;
+ }
 
-/* AGGRESSIVE MOBILE PERFORMANCE OVERRIDES */
-@media (max-width: 768px) {
-  * {
-      -webkit-tap-highlight-color: transparent;
-      text-rendering: optimizeSpeed !important;
-  }
+ @keyframes marquee-scroll {
+   0% {
+     transform: translateX(0);
+   }
 
-  .footer-brand {
-      background: none !important;
-      -webkit-background-clip: initial !important;
-      background-clip: initial !important;
-      -webkit-text-fill-color: #111 !important;
-      color: #111 !important;
-      font-size: 3rem !important; 
-      text-shadow: none !important;
-      margin-top: 2rem !important;
-  }
+   100% {
+     transform: translateX(-50%);
+   }
+ }
 
-  .testimonial-quote span {
-      background: none !important;
-      -webkit-background-clip: initial !important;
-      background-clip: initial !important;
-      -webkit-text-fill-color: var(--primary-red) !important;
-      color: var(--primary-red) !important;
-  }
-  
-  .section-padding {
-      padding: 3rem 0 !important;
-  }
-  
-  .split-section {
-      min-height: 400px !important;
-  }
-}
+ /* AGGRESSIVE MOBILE PERFORMANCE OVERRIDES */
+ @media (max-width: 768px) {
+   * {
+     -webkit-tap-highlight-color: transparent;
+     text-rendering: optimizeSpeed !important;
+   }
+
+   .footer-brand {
+     background: none !important;
+     -webkit-background-clip: initial !important;
+     background-clip: initial !important;
+     -webkit-text-fill-color: #111 !important;
+     color: #111 !important;
+     font-size: 3rem !important;
+     text-shadow: none !important;
+     margin-top: 2rem !important;
+   }
+
+   .testimonial-quote span {
+     background: none !important;
+     -webkit-background-clip: initial !important;
+     background-clip: initial !important;
+     -webkit-text-fill-color: var(--primary-red) !important;
+     color: var(--primary-red) !important;
+   }
+
+   .section-padding {
+     padding: 3rem 0 !important;
+   }
+
+   .split-section {
+     min-height: 400px !important;
+   }
+ }
