@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetSetMart Connectivity Test</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff0000;
+            margin-bottom: 20px;
+        }
+
+        .success-box {
+            border: 2px solid #0f0;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .info {
+            color: #888;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="success-box">
+        <h1>CONNECTIVITY SUCCESS!</h1>
+        <p>If you can see this page, your internet connection to the server is <b>WORKING</b>.</p>
+    </div>
+    <p class="info">This is a diagnostic page with NO heavy JavaScript. If this works but the main homepage doesn't, the
+        issue is related to the app's loading process. If this also fails with 'DNS Error', the issue is your
+        domain/network settings.</p>
+    <button onclick="window.location.href='/'"
+        style="margin-top: 30px; padding: 12px 25px; background: #fff; color: #000; border: none; font-weight: bold; border-radius: 5px; cursor: pointer;">Go
+        to Main Site</button>
+</body>
+
+</html>
