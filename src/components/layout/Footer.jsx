@@ -1,13 +1,15 @@
-import { Link } from 'react-router-dom';
+ï»¿import { Link } from 'react-router-dom';
+import useMobile from '../../hooks/useMobile';
 
 const Footer = () => {
+    const isMobile = useMobile();
+
     return (
         <footer className="footer-section">
             <div className="container">
                 <div className="footer-grid">
                     {/* Newsletter */}
                     <div className="mobile-symmetric-aligned" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left', width: '100%' }}>
-                        {/* Remove extra intent to bring closer to edge ('pass karo') */}
                         <h3 className="section-header-title" style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase', textAlign: 'left', width: '100%', marginLeft: 0 }}>Join the Movement</h3>
                         <div style={{ marginLeft: 0, marginRight: 0, width: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                              <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', textAlign: 'left', width: '100%' }}>Sign up for exclusive drops and early access.</p>
@@ -34,7 +36,6 @@ const Footer = () => {
                     {/* Links */}
                     <div className="footer-links mobile-symmetric-aligned" style={{ textAlign: 'left', alignItems: 'flex-start', width: '100%' }}>
                         <div>
-                            {/* Align headers to edge */}
                             <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem', textAlign: 'left', marginLeft: 0 }}>Shop</h4>
                             <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: 0, marginRight: 0, textAlign: 'left', alignItems: 'flex-start' }}>
                                 <li><Link to="/shop?category=Men">Men</Link></li>
@@ -71,13 +72,20 @@ const Footer = () => {
                 </div>
 
                 {/* Big Brand Text */}
-                <div className="footer-brand">
+                <div className="footer-brand" style={isMobile ? { 
+                    background: 'none', 
+                    WebkitTextFillColor: '#111', 
+                    color: '#111',
+                    fontSize: '4rem',
+                    backgroundClip: 'initial',
+                    WebkitBackgroundClip: 'initial'
+                } : {}}>
                     GETSETMART
                 </div>
 
                 {/* Sub Footer */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', fontSize: '0.8rem', color: '#444', borderTop: '1px solid #111', paddingTop: '2rem' }}>
-                    <div>© 2026 GETSETMART Inc. All rights reserved.</div>
+                    <div>&copy; 2026 GETSETMART Inc. All rights reserved.</div>
                     <div style={{ display: 'flex', gap: '1rem' }}>
                         <span>Privacy Policy</span>
                         <span>Terms of Service</span>

@@ -9,12 +9,27 @@ import useMobile from '../../hooks/useMobile';
 
 const Hero = () => {
     const isMobile = useMobile();
+    const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+        if (!isMobile) return;
+        const handleScroll = () => {
+            // Pause 3D rendering when Hero is well off-screen
+            setIsVisible(window.scrollY < 800);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isMobile]);
 
     return (
         <section className="hero-section">
             {/* Full-Screen 3D Background */}
-            <div className="hero-background-canvas">
-                <Canvas dpr={isMobile ? 1 : [1, 2]} gl={{ antialias: !isMobile, powerPreference: "high-performance" }}>
+            <div className="hero-background-canvas" style={{ display: isVisible ? 'block' : 'none' }}>
+                <Canvas
+                    dpr={isMobile ? 1 : [1, 2]}
+                    gl={{ antialias: !isMobile, powerPreference: "high-performance" }}
+                    frameloop={isVisible ? 'always' : 'never'}
+                >
                     <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
                     <color attach="background" args={['#050505']} />
 

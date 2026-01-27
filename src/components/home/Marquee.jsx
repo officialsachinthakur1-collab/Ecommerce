@@ -1,36 +1,29 @@
 import { motion } from 'framer-motion';
-
 import useMobile from '../../hooks/useMobile';
 
 const Marquee = () => {
     const isMobile = useMobile();
+    const items = ["Statement Not Subtle", "Statement Not Subtle", "Statement Not Subtle", "Statement Not Subtle", "Statement Not Subtle", "Statement Not Subtle"];
     return (
-        <div style={{
-            padding: isMobile ? '2rem 0' : '4rem 0',
-            background: 'var(--bg-secondary)',
-            overflow: 'hidden',
-            borderTop: '1px solid #222',
-            borderBottom: '1px solid #222'
-        }}>
-            <motion.div
-                animate={{ x: isMobile ? [0, -500] : [0, -1000] }}
-                transition={{ repeat: Infinity, duration: isMobile ? 30 : 20, ease: 'linear' }}
-                style={{ whiteSpace: 'nowrap', display: 'flex' }}
-            >
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <span key={i} style={{
-                        fontSize: isMobile ? '3rem' : '6rem',
-                        fontWeight: '900',
-                        color: 'transparent',
-                        WebkitTextStroke: '1px rgba(255,255,255,0.2)',
-                        marginRight: '2rem',
-                        textTransform: 'uppercase'
-                    }}>
-                        Statement Not Subtle —
-                    </span>
-                ))}
-            </motion.div>
-        </div>
+        <section style={{ borderBottom: '1px solid #111', padding: isMobile ? '1rem 0' : '2.5rem 0', overflow: 'hidden', background: '#050505' }}>
+            <div className="marquee-wrapper">
+                <div className="marquee-content">
+                    {items.map((item, index) => (
+                        <div key={index} className="marquee-item">
+                            <span className="marquee-dot" />
+                            {item}
+                        </div>
+                    ))}
+                    {/* Duplicate for seamless loop */}
+                    {items.map((item, index) => (
+                        <div key={`dup-${index}`} className="marquee-item">
+                            <span className="marquee-dot" />
+                            {item}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
     );
 };
 

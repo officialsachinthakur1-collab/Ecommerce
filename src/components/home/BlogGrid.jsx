@@ -26,7 +26,12 @@ const BlogGrid = ({ posts }) => {
                                 loading="lazy"
                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             />
-                            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', transition: 'background 0.3s' }} className="hover-overlay" />
+                            <div style={{
+                                position: 'absolute',
+                                inset: 0,
+                                background: 'rgba(0,0,0,0.2)',
+                                transition: isMobile ? 'none' : 'background 0.3s'
+                            }} className="hover-overlay" />
                         </div>
                         <div style={{ color: 'var(--primary-red)', fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
                             {post.category}
