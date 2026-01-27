@@ -9,11 +9,19 @@ import Testimonials from '../components/home/Testimonials';
 import BlogGrid from '../components/home/BlogGrid';
 
 const Home = () => {
+    const isMobile = useMobile();
     return (
         <>
-            <Suspense fallback={<div style={{ height: '80vh', background: '#050505' }} />}>
-                <Hero />
-            </Suspense>
+            {isMobile ? (
+                <div style={{ height: '40vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(to bottom, #111, #050505)', padding: '2rem', textAlign: 'center' }}>
+                    <h1 style={{ fontSize: 'clamp(2rem, 10vw, 3.5rem)', fontWeight: 900, textTransform: 'uppercase', color: 'white', lineHeight: 1 }}>GetSet<span style={{ color: 'var(--primary-red)' }}>Mart</span></h1>
+                    <p style={{ color: '#888', marginTop: '1rem', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem' }}>Performance Undefined</p>
+                </div>
+            ) : (
+                <Suspense fallback={<div style={{ height: '80vh', background: '#050505' }} />}>
+                    <Hero />
+                </Suspense>
+            )}
             <ValueProps />
             <ProductGrid />
             <SplitFeatured
