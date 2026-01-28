@@ -128,8 +128,8 @@ const ProductDetails = () => {
                                 {product.description}
                             </p>
 
-                            {/* Size Selector - Only show if sizes follow-up are available and not "One Size" */}
-                            {product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size") && (
+                            {/* Size Selector - Only show if valid sizes are available */}
+                            {product.sizes && product.sizes.filter(s => s && s.trim() !== "").length > 0 && !(product.sizes.length === 1 && (product.sizes[0] === "One Size" || product.sizes[0] === "")) && (
                                 <div style={{ marginBottom: '3rem' }}>
                                     <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '1px' }}>Select Size</h3>
                                     <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>

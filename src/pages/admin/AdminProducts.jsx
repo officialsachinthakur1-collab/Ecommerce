@@ -32,7 +32,7 @@ const AdminProducts = () => {
         try {
             const payload = {
                 ...formData,
-                sizes: formData.sizes ? formData.sizes.split(',').map(s => s.trim()) : []
+                sizes: formData.sizes ? formData.sizes.split(',').map(s => s.trim()).filter(s => s !== '') : []
             };
 
             const url = editingProduct
