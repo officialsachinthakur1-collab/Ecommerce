@@ -182,7 +182,7 @@ const AdminProducts = () => {
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                             />
                             <input
-                                name="sizes" placeholder="Available Sizes (7, 8, 9 or small, large)" value={formData.sizes} onChange={handleInputChange}
+                                name="sizes" placeholder="Sizes (e.g. S, M, L, XL or 7, 8, 9, 10)" value={formData.sizes} onChange={handleInputChange}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                             />
                             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -197,6 +197,8 @@ const AdminProducts = () => {
                                     <option value="Men">Men</option>
                                     <option value="Women">Women</option>
                                     <option value="Unisex">Unisex</option>
+                                    <option value="Clothing">Clothing</option>
+                                    <option value="Accessories">Accessories</option>
                                 </select>
                             </div>
                             <textarea

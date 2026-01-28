@@ -138,14 +138,19 @@ const ProductDetails = () => {
                                                 key={size}
                                                 onClick={() => setSelectedSize(size)}
                                                 style={{
-                                                    width: '50px',
+                                                    minWidth: '50px',
                                                     height: '50px',
+                                                    padding: '0 15px',
                                                     borderRadius: '8px',
                                                     border: selectedSize === size ? '2px solid var(--primary-red)' : '1px solid #333',
                                                     background: selectedSize === size ? 'rgba(255,0,0,0.1)' : 'transparent',
                                                     color: selectedSize === size ? 'var(--primary-red)' : 'var(--text-muted)',
                                                     cursor: 'pointer',
-                                                    transition: 'all 0.2s'
+                                                    transition: 'all 0.2s',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontWeight: '600'
                                                 }}
                                             >
                                                 {size}
