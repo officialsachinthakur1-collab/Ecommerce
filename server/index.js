@@ -165,6 +165,7 @@ app.delete('/api/products/:id', (req, res) => {
 // Auth Route
 app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
+    console.log("Login attempt received for:", email);
 
     // Simple Mock Auth Logic
     if (email === 'admin@getsetmart.com' && password === 'admin') {
