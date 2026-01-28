@@ -126,7 +126,48 @@ const About = () => {
             {/* Team Header (Placeholder) */}
             <section className="section-padding container" style={{ textAlign: 'center' }}>
                 <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '3rem', textTransform: 'uppercase' }}>Global Design Team</h2>
-                <p style={{ color: 'var(--text-muted)' }}>Locations: Tokyo • Berlin • New York • London</p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', color: 'var(--text-muted)' }}>
+                    <span>Tokyo</span> • <span>Berlin</span> • <span>New York</span> • <span>London</span>
+                </div>
+            </section>
+
+            {/* Contact Section */}
+            <section id="contact" style={{ padding: '8rem 0', background: 'linear-gradient(to top, #050505, #000)' }}>
+                <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '5rem' }}>
+                    <div>
+                        <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '2rem', textTransform: 'uppercase' }}>Get in <span className="text-gradient">Touch</span></h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', lineHeight: '1.6', marginBottom: '3rem' }}>
+                            Have questions about our technology or a specific order? Our specialist team is here to help you move forward.
+                        </p>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            <div>
+                                <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>HQ Address</h4>
+                                <p style={{ color: 'var(--text-muted)' }}>123 Innovation Drive, Tech City, Metaverse 404</p>
+                            </div>
+                            <div>
+                                <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>Email</h4>
+                                <p style={{ color: 'var(--text-muted)' }}>hello@getsetmart.com</p>
+                            </div>
+                            <div>
+                                <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>Support Line</h4>
+                                <p style={{ color: 'var(--text-muted)' }}>+1 (800) GET-SET-NOW</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{ background: '#0a0a0a', padding: '3rem', borderRadius: '24px', border: '1px solid #1a1a1a' }}>
+                        <form style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }} onSubmit={(e) => { e.preventDefault(); alert("Message Sent! We'll get back to you soon."); }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                <input placeholder="Your Name" style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }} required />
+                                <input type="email" placeholder="Email Address" style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }} required />
+                            </div>
+                            <input placeholder="Subject" style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }} required />
+                            <textarea placeholder="Your Message" rows={5} style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white', resize: 'none' }} required></textarea>
+                            <button className="btn-primary" style={{ padding: '1.25rem', justifyContent: 'center' }}>Send Message</button>
+                        </form>
+                    </div>
+                </div>
             </section>
 
         </div>
