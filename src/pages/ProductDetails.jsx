@@ -128,41 +128,44 @@ const ProductDetails = () => {
                                 {product.description}
                             </p>
 
-                            {/* Size Selector */}
-                            <div style={{ marginBottom: '3rem' }}>
-                                <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '1px' }}>Select Size</h3>
-                                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                                    {product.sizes.map(size => (
-                                        <button
-                                            key={size}
-                                            onClick={() => setSelectedSize(size)}
-                                            style={{
-                                                width: '50px',
-                                                height: '50px',
-                                                borderRadius: '8px',
-                                                border: selectedSize === size ? '2px solid var(--primary-red)' : '1px solid #333',
-                                                background: selectedSize === size ? 'rgba(255,0,0,0.1)' : 'transparent',
-                                                color: selectedSize === size ? 'var(--primary-red)' : 'var(--text-muted)',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.2s'
-                                            }}
-                                        >
-                                            {size}
-                                        </button>
-                                    ))}
+                            {/* Size Selector - Only show if sizes follow-up are available and not "One Size" */}
+                            {product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size") && (
+                                <div style={{ marginBottom: '3rem' }}>
+                                    <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '1px' }}>Select Size</h3>
+                                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                                        {product.sizes.map(size => (
+                                            <button
+                                                key={size}
+                                                onClick={() => setSelectedSize(size)}
+                                                style={{
+                                                    width: '50px',
+                                                    height: '50px',
+                                                    borderRadius: '8px',
+                                                    border: selectedSize === size ? '2px solid var(--primary-red)' : '1px solid #333',
+                                                    background: selectedSize === size ? 'rgba(255,0,0,0.1)' : 'transparent',
+                                                    color: selectedSize === size ? 'var(--primary-red)' : 'var(--text-muted)',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s'
+                                                }}
+                                            >
+                                                {size}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Actions */}
                             <div style={{ display: 'flex', gap: '1rem', marginBottom: '3rem' }}>
                                 <button
                                     className="btn-primary"
                                     onClick={() => {
-                                        if (!selectedSize) {
+                                        const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
+                                        if (hasSizing && !selectedSize) {
                                             alert('Please select a size');
                                             return;
                                         }
-                                        addToCart(product, selectedSize);
+                                        addToCart(product, selectedSize || "One Size");
                                     }}
                                     style={{ flex: 1, padding: '1rem', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}
                                 >

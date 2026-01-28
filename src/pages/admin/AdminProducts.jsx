@@ -8,7 +8,7 @@ const AdminProducts = () => {
     const { products, loading, refetch } = useProducts(); // Use the hook with refetch
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '' });
+    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '' });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,7 +21,8 @@ const AdminProducts = () => {
             price: product.price,
             category: product.category,
             description: product.description || '',
-            image: product.image || ''
+            image: product.image || '',
+            sizes: Array.isArray(product.sizes) ? product.sizes.join(', ') : (product.sizes || '')
         });
         setIsModalOpen(true);
     };
@@ -29,21 +30,26 @@ const AdminProducts = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const payload = {
+                ...formData,
+                sizes: formData.sizes ? formData.sizes.split(',').map(s => s.trim()) : []
+            };
+
             const url = editingProduct
-                ? `${API_URL}/api/products?id=${editingProduct.id}`
+                ? `${API_URL}/api/products/${editingProduct.id}`
                 : `${API_URL}/api/products`;
             const method = editingProduct ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
             if (response.ok) {
                 alert(editingProduct ? 'Product Updated!' : 'Product Added!');
                 setIsModalOpen(false);
                 setEditingProduct(null);
-                setFormData({ name: '', price: '', category: 'Men', description: '', image: '' });
+                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '' });
                 refetch(); // Refetch products to update the list
             } else {
                 const errorData = await response.json();
@@ -163,7 +169,7 @@ const AdminProducts = () => {
                             <button onClick={() => {
                                 setIsModalOpen(false);
                                 setEditingProduct(null);
-                                setFormData({ name: '', price: '', category: 'Men', description: '', image: '' });
+                                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '' });
                             }} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X /></button>
                         </div>
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -173,6 +179,10 @@ const AdminProducts = () => {
                             />
                             <input
                                 name="image" placeholder="Image URL (optional)" value={formData.image} onChange={handleInputChange}
+                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                            />
+                            <input
+                                name="sizes" placeholder="Available Sizes (7, 8, 9 or small, large)" value={formData.sizes} onChange={handleInputChange}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                             />
                             <div style={{ display: 'flex', gap: '1rem' }}>

@@ -84,7 +84,7 @@ app.delete('/api/orders/:id', (req, res) => {
 
 app.post('/api/products', (req, res) => {
     try {
-        const { name, price, category, description, image } = req.body;
+        const { name, price, category, description, image, sizes, tag } = req.body;
 
         if (!name || !price) {
             return res.status(400).json({ success: false, message: 'Name and Price are required' });
@@ -97,8 +97,8 @@ app.post('/api/products', (req, res) => {
             category: category || 'Men',
             description: description || "Engineered for performance.",
             image: image || "",
-            tag: "New",
-            sizes: [7, 8, 9, 10, 11, 12],
+            tag: tag || "New",
+            sizes: sizes || [],
             reviews: 0,
             rating: 5
         };
@@ -114,7 +114,7 @@ app.post('/api/products', (req, res) => {
 
 app.put('/api/products/:id', (req, res) => {
     const { id } = req.params;
-    const { name, price, category, description, image } = req.body;
+    const { name, price, category, description, image, sizes, tag } = req.body;
 
     const index = products.findIndex(p => p.id == id);
     if (index !== -1) {
@@ -124,7 +124,9 @@ app.put('/api/products/:id', (req, res) => {
             price: price || products[index].price,
             category: category || products[index].category,
             description: description || products[index].description,
-            image: image || products[index].image
+            image: image || products[index].image,
+            sizes: sizes || products[index].sizes,
+            tag: tag || products[index].tag
         };
         res.json({ success: true, product: products[index] });
     } else {
