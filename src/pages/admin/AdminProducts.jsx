@@ -36,7 +36,7 @@ const AdminProducts = () => {
             };
 
             const url = editingProduct
-                ? `${API_URL}/api/products/${editingProduct.id}`
+                ? `${API_URL}/api/products?id=${editingProduct.id}`
                 : `${API_URL}/api/products`;
             const method = editingProduct ? 'PUT' : 'POST';
 

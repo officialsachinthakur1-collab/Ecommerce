@@ -74,7 +74,8 @@ export default async function handler(req, res) {
                 category: category || 'Men',
                 description: description || "Engineered for performance.",
                 image: image || "",
-                tag: tag || "New"
+                tag: tag || "New",
+                sizes: req.body.sizes || []
             });
 
             return res.status(201).json({ success: true, product });
