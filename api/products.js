@@ -63,6 +63,12 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
             const { name, price, category, description, image, tag } = req.body;
+            const password = req.headers['x-admin-password'];
+
+            if (password !== 'admin') {
+                return res.status(403).json({ success: false, message: 'Unauthorized' });
+            }
+
             if (!name || !price) {
                 return res.status(400).json({ success: false, message: 'Name and Price are required' });
             }
@@ -88,6 +94,11 @@ export default async function handler(req, res) {
         try {
             const { id } = req.query;
             const updateData = req.body;
+            const password = req.headers['x-admin-password'];
+
+            if (password !== 'admin') {
+                return res.status(403).json({ success: false, message: 'Unauthorized' });
+            }
 
             // Try updating by custom id first if it's a number
             let product;
@@ -110,6 +121,11 @@ export default async function handler(req, res) {
     if (req.method === 'DELETE') {
         try {
             const { id } = req.query;
+            const password = req.headers['x-admin-password'];
+
+            if (password !== 'admin') {
+                return res.status(403).json({ success: false, message: 'Unauthorized' });
+            }
 
             let product;
             if (!isNaN(id)) {

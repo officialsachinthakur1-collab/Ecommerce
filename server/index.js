@@ -85,6 +85,11 @@ app.delete('/api/orders/:id', (req, res) => {
 app.post('/api/products', (req, res) => {
     try {
         const { name, price, category, description, image, sizes, tag } = req.body;
+        const password = req.headers['x-admin-password'];
+
+        if (password !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
+        }
 
         if (!name || !price) {
             return res.status(400).json({ success: false, message: 'Name and Price are required' });
@@ -115,6 +120,11 @@ app.post('/api/products', (req, res) => {
 app.put('/api/products/:id', (req, res) => {
     const { id } = req.params;
     const { name, price, category, description, image, sizes, tag } = req.body;
+    const password = req.headers['x-admin-password'];
+
+    if (password !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
+    }
 
     const index = products.findIndex(p => p.id == id);
     if (index !== -1) {
@@ -136,6 +146,12 @@ app.put('/api/products/:id', (req, res) => {
 
 app.delete('/api/products/:id', (req, res) => {
     const { id } = req.params;
+    const password = req.headers['x-admin-password'];
+
+    if (password !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
+    }
+
     const initialLength = products.length;
     products = products.filter(p => p.id != id);
 

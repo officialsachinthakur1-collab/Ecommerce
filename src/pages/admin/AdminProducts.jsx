@@ -42,7 +42,10 @@ const AdminProducts = () => {
 
             const response = await fetch(url, {
                 method: method,
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-admin-password': 'admin'
+                },
                 body: JSON.stringify(payload)
             });
             if (response.ok) {
@@ -66,7 +69,10 @@ const AdminProducts = () => {
 
         try {
             const response = await fetch(`${API_URL}/api/products?id=${id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'x-admin-password': 'admin'
+                }
             });
             if (response.ok) {
                 refetch();
