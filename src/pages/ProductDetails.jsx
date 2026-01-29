@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Star, ShoppingBag, Truck, ShieldCheck } from 'lucide-react';
 import useMobile from '../hooks/useMobile';
 
@@ -10,8 +10,19 @@ const ProductDetails = () => {
     const isMobile = useMobile();
     const { id } = useParams();
     const [selectedSize, setSelectedSize] = useState(null);
+    const [activeImage, setActiveImage] = useState(""); // Moved up to satisfy rules of hooks
     const { addToCart } = useCart();
     const { products, loading } = useProducts();
+
+    // Initialize active image when product is found
+    useEffect(() => {
+        if (!loading && products.length > 0) {
+            const p = products.find(prod => String(prod.id) === String(id));
+            if (p && !activeImage) {
+                setActiveImage(p.image);
+            }
+        }
+    }, [loading, products, id, activeImage]);
 
     if (loading) {
         return (
@@ -21,8 +32,7 @@ const ProductDetails = () => {
         );
     }
 
-    const product = products.find(p => p.id === parseInt(id));
-    const [activeImage, setActiveImage] = useState(product?.image || "");
+    const product = products.find(p => String(p.id) === String(id));
 
     if (!product) {
         return (
