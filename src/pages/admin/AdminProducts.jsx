@@ -5,7 +5,7 @@ import { useProducts } from '../../hooks/useProducts';
 import API_URL from '../../config';
 
 const AdminProducts = () => {
-    const { products, loading, refetch } = useProducts(); // Use the hook with refetch
+    const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
     const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '' });

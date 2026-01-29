@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import API_URL from '../config';
 import { products as localProductsFallback } from '../data/products.js';
 
-export const useProducts = () => {
+export const useProducts = (includeFallback = true) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -22,21 +22,24 @@ export const useProducts = () => {
                     id: p.id || p._id || p.id
                 }));
 
-                // HYBRID STRATEGY: Merge API data with local items
+                // HYBRID STRATEGY: Merge API data with local items (only if requested)
                 const mergedProducts = [...mappedData];
-                localProductsFallback.forEach(lp => {
-                    const exists = mergedProducts.some(mp => mp.name === lp.name || mp.id === lp.id);
-                    if (!exists) mergedProducts.unshift(lp);
-                });
+
+                if (includeFallback) {
+                    localProductsFallback.forEach(lp => {
+                        const exists = mergedProducts.some(mp => mp.name === lp.name || mp.id === lp.id);
+                        if (!exists) mergedProducts.unshift(lp);
+                    });
+                }
 
                 setProducts(mergedProducts);
             } else {
-                setProducts(localProductsFallback);
+                setProducts(includeFallback ? localProductsFallback : []);
             }
             setLoading(false);
         } catch (err) {
             console.warn("API fetch failed, using local fallback:", err);
-            setProducts(localProductsFallback);
+            setProducts(includeFallback ? localProductsFallback : []);
             setLoading(false);
         }
     };
