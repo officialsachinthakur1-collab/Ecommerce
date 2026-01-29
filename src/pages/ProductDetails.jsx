@@ -1,8 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
-import { Canvas } from '@react-three/fiber';
-import { Float, OrbitControls, Environment, Sphere, MeshDistortMaterial } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { ArrowLeft, Star, ShoppingBag, Truck, ShieldCheck } from 'lucide-react';
@@ -51,56 +49,34 @@ const ProductDetails = () => {
             </div>
 
             <div className="product-main-grid">
-                {/* Left: 3D Interaction Area */}
+                {/* Left: Product Image Area */}
                 <div style={{
-                    background: '#111',
+                    background: 'linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%)',
                     position: 'relative',
-                    height: '60vh', // Default for mobile
+                    height: isMobile ? '50vh' : '80vh',
                     minHeight: '400px',
                     marginTop: '2rem',
-                    borderRadius: '12px',
+                    borderRadius: '24px',
                     overflow: 'hidden',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
-                }} className="product-canvas-container">
+                    justifyContent: 'center',
+                    border: '1px solid #222'
+                }} className="product-image-container">
 
-                    {/* Fixed Image Display */}
-                    <img
+                    <motion.img
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
                         src={product.image}
                         alt={product.name}
                         style={{
-                            position: 'absolute',
-                            width: '80%',
-                            height: '80%',
+                            width: '100%',
+                            height: '100%',
                             objectFit: 'contain',
-                            zIndex: 1,
-                            pointerEvents: 'none'
+                            padding: isMobile ? '1rem' : '3rem'
                         }}
                     />
-
-                    <Canvas camera={{ position: [0, 0, 4] }} dpr={isMobile ? 1 : [1, 2]} gl={{ antialias: !isMobile }} style={{ position: 'relative', zIndex: 2 }}>
-                        <ambientLight intensity={0.5} />
-                        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-                        <OrbitControls enableZoom={false} />
-
-                        {/* Placeholder 3D Object - Made Transparent to see image through it */}
-                        <Float speed={isMobile ? 1 : 2} rotationIntensity={isMobile ? 0.5 : 1} floatIntensity={isMobile ? 0.5 : 1}>
-                            <Sphere args={[1.2, isMobile ? 16 : 32, isMobile ? 16 : 32]}>
-                                <MeshDistortMaterial
-                                    color="#ff0000"
-                                    distort={isMobile ? 0.3 : 0.6}
-                                    speed={isMobile ? 1 : 1.5}
-                                    roughness={1}
-                                    metalness={1}
-                                    opacity={0.3}
-                                    transparent={true}
-                                />
-                            </Sphere>
-                        </Float>
-
-                        <Environment preset="city" />
-                    </Canvas>
                 </div>
 
                 {/* Right: Product Info */}
