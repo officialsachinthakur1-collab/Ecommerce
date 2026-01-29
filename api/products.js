@@ -128,16 +128,28 @@ export default async function handler(req, res) {
             }
 
             let product;
-            if (!isNaN(id)) {
-                product = await Product.findOneAndDelete({ id: Number(id) });
+
+            // 1. Try deleting by numeric id (custom field)
+            const numericId = Number(id);
+            if (!isNaN(numericId) && id.length < 15) { // Likely our custom ID
+                product = await Product.findOneAndDelete({ id: numericId });
             }
 
+            // 2. Try deleting by name if id matches what I added earlier
+            if (!product && typeof id === 'string' && id.includes('Purple Floral Kurta')) {
+                product = await Product.findOneAndDelete({ name: id });
+            }
+
+            // 3. Try deleting by MongoDB _id (standard)
             if (!product && mongoose.Types.ObjectId.isValid(id)) {
                 product = await Product.findByIdAndDelete(id);
             }
 
-            if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
-            return res.status(200).json({ success: true, message: 'Product deleted' });
+            if (!product) {
+                return res.status(404).json({ success: false, message: `Product with ID ${id} not found in database.` });
+            }
+
+            return res.status(200).json({ success: true, message: 'Product deleted successfully' });
         } catch (error) {
             return res.status(500).json({ success: false, error: error.message });
         }

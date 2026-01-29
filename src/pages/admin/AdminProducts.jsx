@@ -77,7 +77,8 @@ const AdminProducts = () => {
             if (response.ok) {
                 refetch();
             } else {
-                alert("Failed to delete product");
+                const errorData = await response.json();
+                alert(`Error: ${errorData.message || 'Failed to delete product'}`);
             }
         } catch (error) {
             console.error("Error deleting product:", error);
