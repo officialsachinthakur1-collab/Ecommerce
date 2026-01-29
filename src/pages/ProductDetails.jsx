@@ -22,6 +22,7 @@ const ProductDetails = () => {
     }
 
     const product = products.find(p => p.id === parseInt(id));
+    const [activeImage, setActiveImage] = useState(product?.image || "");
 
     if (!product) {
         return (
@@ -50,32 +51,61 @@ const ProductDetails = () => {
 
             <div className="product-main-grid">
                 {/* Left: Product Image Area */}
-                <div style={{
-                    background: 'linear-gradient(135deg, #181818 0%, #0a0a0a 100%)',
-                    position: 'relative',
-                    height: isMobile ? '350px' : '550px',
-                    marginTop: '2rem',
-                    borderRadius: '24px',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1px solid #222'
-                }} className="product-image-container">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{
+                        background: 'linear-gradient(135deg, #181818 0%, #0a0a0a 100%)',
+                        position: 'relative',
+                        height: isMobile ? '350px' : '550px',
+                        marginTop: '2rem',
+                        borderRadius: '24px',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '1px solid #222'
+                    }} className="product-image-container">
 
-                    <motion.img
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                        src={product.image}
-                        alt={product.name}
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain',
-                            padding: isMobile ? '0.5rem' : '1.5rem'
-                        }}
-                    />
+                        <motion.img
+                            key={activeImage}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3 }}
+                            src={activeImage || product.image}
+                            alt={product.name}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                                padding: isMobile ? '0.5rem' : '1.5rem'
+                            }}
+                        />
+                    </div>
+
+                    {/* Thumbnail Gallery */}
+                    {product.images && product.images.length > 0 && (
+                        <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', padding: '0.5rem 0', scrollbarWidth: 'none' }}>
+                            {[product.image, ...product.images.filter(img => img !== product.image)].map((img, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setActiveImage(img)}
+                                    style={{
+                                        width: '70px',
+                                        height: '70px',
+                                        borderRadius: '12px',
+                                        overflow: 'hidden',
+                                        border: activeImage === img ? '2px solid var(--primary-red)' : '1px solid #333',
+                                        background: '#111',
+                                        cursor: 'pointer',
+                                        padding: 0,
+                                        flexShrink: 0,
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    <img src={img} alt={`view-${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Right: Product Info */}

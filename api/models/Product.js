@@ -7,6 +7,7 @@ const ProductSchema = new mongoose.Schema({
     category: { type: String, default: 'Men' },
     description: { type: String, default: 'Engineered for performance.' },
     image: { type: String, default: '' },
+    images: { type: [String], default: [] },
     tag: { type: String, default: 'New' },
     sizes: { type: [mongoose.Schema.Types.Mixed], default: [7, 8, 9, 10, 11, 12] },
     reviews: { type: Number, default: 0 },

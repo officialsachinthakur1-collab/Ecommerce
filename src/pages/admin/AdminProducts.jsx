@@ -8,7 +8,7 @@ const AdminProducts = () => {
     const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '' });
+    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '' });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,6 +22,7 @@ const AdminProducts = () => {
             category: product.category,
             description: product.description || '',
             image: product.image || '',
+            images: Array.isArray(product.images) ? product.images : (product.image ? [product.image] : []),
             sizes: Array.isArray(product.sizes) ? product.sizes.join(', ') : (product.sizes || '')
         });
         setIsModalOpen(true);
@@ -184,14 +185,47 @@ const AdminProducts = () => {
                                 name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
                             />
-                            <input
-                                name="image" placeholder="Image URL (optional)" value={formData.image} onChange={handleInputChange}
-                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                            />
-                            <input
-                                name="sizes" placeholder="Sizes (e.g. S, M, L, XL or 7, 8, 9, 10)" value={formData.sizes} onChange={handleInputChange}
-                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                            />
+                            <div style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                    <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>Product Gallery</h3>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const url = prompt("Enter image URL:");
+                                            if (url) {
+                                                setFormData({ ...formData, images: [...formData.images, url] });
+                                            }
+                                        }}
+                                        style={{ background: 'var(--primary-red)', color: 'white', border: 'none', padding: '0.25rem 0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}
+                                    >
+                                        Add URL
+                                    </button>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(60px, 1fr))', gap: '0.5rem' }}>
+                                    {formData.images.map((img, idx) => (
+                                        <div key={idx} style={{ position: 'relative', width: '60px', height: '60px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #444' }}>
+                                            <img src={img} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const newImages = [...formData.images];
+                                                    newImages.splice(idx, 1);
+                                                    setFormData({ ...formData, images: newImages });
+                                                }}
+                                                style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(255,0,0,0.8)', border: 'none', color: 'white', padding: '0.1rem', cursor: 'pointer', fontSize: '10px' }}
+                                            >
+                                                <X size={12} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {/* Upload Button Placeholder */}
+                                    <div
+                                        onClick={() => alert("Upload feature: In a real production app, this would open a Cloudinary or S3 upload widget. For now, please use 'Add URL' to add images.")}
+                                        style={{ width: '60px', height: '60px', borderRadius: '4px', background: '#1a1a1a', border: '1px dashed #444', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#666' }}>
+                                        <Plus size={20} />
+                                    </div>
+                                </div>
+                            </div>
                             <div style={{ display: 'flex', gap: '1rem' }}>
                                 <input
                                     name="price" placeholder="Price ($100)" value={formData.price} onChange={handleInputChange}
@@ -208,6 +242,10 @@ const AdminProducts = () => {
                                     <option value="Accessories">Accessories</option>
                                 </select>
                             </div>
+                            <input
+                                name="sizes" placeholder="Sizes (e.g. S, M, L, XL or 7, 8, 9, 10)" value={formData.sizes} onChange={handleInputChange}
+                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                            />
                             <textarea
                                 name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} rows={3}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}

@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         try {
-            const { name, price, category, description, image, tag } = req.body;
+            const { name, price, category, description, image, images, tag } = req.body;
             const password = req.headers['x-admin-password'];
 
             if (password !== 'admin') {
@@ -41,13 +41,18 @@ export default async function handler(req, res) {
                 return res.status(400).json({ success: false, message: 'Name and Price are required' });
             }
 
+            // Handle multi-image logic
+            const finalImages = Array.isArray(images) ? images : [];
+            const primaryImage = image || (finalImages.length > 0 ? finalImages[0] : "");
+
             const product = await Product.create({
                 id: Date.now(),
                 name,
                 price,
                 category: category || 'Men',
                 description: description || "Engineered for performance.",
-                image: image || "",
+                image: primaryImage,
+                images: finalImages,
                 tag: tag || "New",
                 sizes: req.body.sizes || []
             });
@@ -77,6 +82,11 @@ export default async function handler(req, res) {
             // If not found by custom id, try by _id
             if (!product && mongoose.Types.ObjectId.isValid(id)) {
                 product = await Product.findByIdAndUpdate(id, updateData, { new: true });
+            }
+
+            // Sync primary image with images[0] if needed
+            if (updateData.images && Array.isArray(updateData.images) && updateData.images.length > 0 && !updateData.image) {
+                updateData.image = updateData.images[0];
             }
 
             if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
