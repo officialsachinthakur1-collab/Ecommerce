@@ -70,17 +70,5 @@ export const products = [
         reviews: 89,
         rating: 4.7,
         image: "/assets/products/denim_jacket.png"
-    },
-    {
-        id: 7,
-        name: "Premium Purple Floral Kurta",
-        price: "₹1,899",
-        tag: "New Arrival",
-        category: "Women",
-        description: "A beautifully crafted purple floral kurta with delicate patterns and premium cotton fabric. Perfect for elegant everyday wear or special traditional occasions.",
-        sizes: ["S", "M", "L", "XL"],
-        reviews: 42,
-        rating: 4.9,
-        image: "/assets/products/floral_kurta.jpg"
     }
 ];
