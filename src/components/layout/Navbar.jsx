@@ -48,39 +48,56 @@ const Navbar = () => {
             }}>
                 <div className="container" style={{
                     display: 'flex',
-                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    width: '100%'
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    position: 'relative'
                 }}>
-                    {/* Left: Navigation (Desktop) */}
-                    <div className="desktop-nav">
-                        <Link to="/shop" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Shop</Link>
-                        <Link to="/about" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Company</Link>
-                        <Link to="/blog" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Insights</Link>
+                    {/* Left Section: Menu (Mobile) / Nav (Desktop) */}
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                        <div className="desktop-nav">
+                            <Link to="/shop" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Shop</Link>
+                            <Link to="/about" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Company</Link>
+                            <Link to="/blog" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Insights</Link>
+                        </div>
+                        <div className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
+                            <Menu size={24} />
+                        </div>
                     </div>
 
-                    {/* Mobile Menu Button */}
-                    <div className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
-                        <Menu size={24} />
-                    </div>
-
-                    {/* Center: Logo */}
-                    <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-                        <Link to="/" style={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.05em', color: 'white' }}>
+                    {/* Center Section: Logo (Perfectly Centered) */}
+                    <div style={{
+                        flex: '0 0 auto',
+                        textAlign: 'center',
+                        zIndex: 2
+                    }}>
+                        <Link to="/" style={{
+                            fontSize: isMobile ? '1.1rem' : '1.5rem',
+                            fontWeight: 800,
+                            letterSpacing: '-0.05em',
+                            color: 'white',
+                            whiteSpace: 'nowrap'
+                        }}>
                             GETSETMART
                         </Link>
                     </div>
 
-                    {/* Right: Utilities */}
-                    <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                    {/* Right Section: Utilities */}
+                    <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        gap: isMobile ? '1rem' : '1.5rem',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end'
+                    }}>
                         <div onClick={() => setSearchOpen(true)} style={{ cursor: 'pointer' }}>
-                            <Search size={20} />
+                            <Search size={isMobile ? 18 : 20} />
                         </div>
                         <Link to="/wishlist" style={{ cursor: 'pointer', color: 'inherit' }}>
-                            <Heart size={20} />
+                            <Heart size={isMobile ? 18 : 20} />
                         </Link>
                         <div style={{ position: 'relative', cursor: 'pointer' }} onClick={toggleCart}>
-                            <ShoppingBag size={20} />
+                            <ShoppingBag size={isMobile ? 18 : 20} />
                             {cartCount > 0 && (
                                 <span style={{
                                     position: 'absolute',
