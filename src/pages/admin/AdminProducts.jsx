@@ -218,12 +218,33 @@ const AdminProducts = () => {
                                             </button>
                                         </div>
                                     ))}
-                                    {/* Upload Button Placeholder */}
-                                    <div
-                                        onClick={() => alert("Upload feature: In a real production app, this would open a Cloudinary or S3 upload widget. For now, please use 'Add URL' to add images.")}
-                                        style={{ width: '60px', height: '60px', borderRadius: '4px', background: '#1a1a1a', border: '1px dashed #444', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#666' }}>
+                                    {/* Real Upload Button */}
+                                    <label style={{
+                                        width: '60px', height: '60px', borderRadius: '4px', background: '#1a1a1a',
+                                        border: '1px dashed #444', display: 'flex', alignItems: 'center',
+                                        justifyContent: 'center', cursor: 'pointer', color: '#666'
+                                    }}>
                                         <Plus size={20} />
-                                    </div>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            multiple
+                                            style={{ display: 'none' }}
+                                            onChange={(e) => {
+                                                const files = Array.from(e.target.files);
+                                                files.forEach(file => {
+                                                    const reader = new FileReader();
+                                                    reader.onloadend = () => {
+                                                        setFormData(prev => ({
+                                                            ...prev,
+                                                            images: [...prev.images, reader.result]
+                                                        }));
+                                                    };
+                                                    reader.readAsDataURL(file);
+                                                });
+                                            }}
+                                        />
+                                    </label>
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '1rem' }}>
