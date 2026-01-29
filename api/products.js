@@ -6,49 +6,17 @@ import { initialProducts } from './_data.js';
 export default async function handler(req, res) {
     await dbConnect();
 
-    // Auto-seed required products if missing
-    const requiredIds = [4, 5, 6];
-    const existingIds = await Product.find({ id: { $in: requiredIds } }).distinct('id');
-
-    if (existingIds.length < requiredIds.length) {
-        console.log("Seeding missing products...");
+    // Only seed if the database is COMPLETELY empty
+    const productCount = await Product.countDocuments();
+    if (productCount === 0) {
+        console.log("Database empty. Seeding initial products...");
         const fullProducts = [
             ...initialProducts,
-            {
-                id: 4,
-                name: "Premium Pink Traditional Earrings",
-                price: "₹1,299",
-                tag: "Bestseller",
-                category: "Women",
-                description: "Exquisite traditional Indian oxidized silver earrings with premium pink gemstones. Featuring intricate silver craftsmanship and delicate hanging beads for a timeless ethnic look.",
-                image: "/assets/products/earrings_pink.png"
-            },
-            {
-                id: 5,
-                name: "Premium Green Traditional Earrings",
-                price: "₹1,299",
-                tag: "Trending",
-                category: "Women",
-                description: "Elegant emerald green traditional earrings set in oxidized silver. High-contrast design with sophisticated silver bead tassels, perfect for festive occasions or luxury wear.",
-                image: "/assets/products/earrings_green.png"
-            },
-            {
-                id: 6,
-                name: "Premium Red Traditional Earrings",
-                price: "₹1,299",
-                tag: "New",
-                category: "Women",
-                description: "Stunning ruby red traditional earrings with royal peacock motifs in oxidized silver. Hand-finished with delicate silver bells and ultra-realistic gemstones for a regal appearance.",
-                image: "/assets/products/earrings_red_user.jpg"
-            }
+            { id: 4, name: "Premium Pink Traditional Earrings", price: "₹1,299", tag: "Bestseller", category: "Women", description: "Exquisite traditional Indian oxidized silver earrings with premium pink gemstones.", image: "/assets/products/earrings_pink.png" },
+            { id: 5, name: "Premium Green Traditional Earrings", price: "₹1,299", tag: "Trending", category: "Women", description: "Elegant emerald green traditional earrings set in oxidized silver.", image: "/assets/products/earrings_green.png" },
+            { id: 6, name: "Premium Red Traditional Earrings", price: "₹1,299", tag: "New", category: "Women", description: "Stunning ruby red traditional earrings with royal peacock motifs.", image: "/assets/products/earrings_red_user.jpg" }
         ];
-
-        for (const item of fullProducts) {
-            const exists = await Product.findOne({ $or: [{ id: item.id }, { name: item.name }] });
-            if (!exists) {
-                await Product.create(item);
-            }
-        }
+        await Product.insertMany(fullProducts);
     }
 
     if (req.method === 'GET') {
