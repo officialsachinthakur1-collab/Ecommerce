@@ -51,10 +51,9 @@ const ProductDetails = () => {
             <div className="product-main-grid">
                 {/* Left: Product Image Area */}
                 <div style={{
-                    background: 'linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%)',
+                    background: 'linear-gradient(135deg, #181818 0%, #0a0a0a 100%)',
                     position: 'relative',
-                    height: isMobile ? '50vh' : '80vh',
-                    minHeight: '400px',
+                    height: isMobile ? '350px' : '550px',
                     marginTop: '2rem',
                     borderRadius: '24px',
                     overflow: 'hidden',
@@ -74,7 +73,7 @@ const ProductDetails = () => {
                             width: '100%',
                             height: '100%',
                             objectFit: 'contain',
-                            padding: isMobile ? '1rem' : '3rem'
+                            padding: isMobile ? '0.5rem' : '1.5rem'
                         }}
                     />
                 </div>
