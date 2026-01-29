@@ -44,7 +44,7 @@
    backdrop-filter: blur(10px);
    background: rgba(255, 255, 255, 0.05);
    padding: 1rem 2rem;
-   border-radius: 1rem;
+   border-radius: 2rem;
    border: 1px solid rgba(255, 255, 255, 0.1);
    z-index: var(--z-hero-countdown);
  }
@@ -393,7 +393,8 @@
    }
 
    .split-content {
-     padding: 4rem 1.5rem !important;
+     padding: 1rem !important;
+     border-radius: 20px !important;
      order: 2 !important;
    }
 
@@ -812,8 +813,8 @@
    overflow-x: auto;
    /* Enable horizontal scroll */
    -webkit-overflow-scrolling: touch;
-   background: #111;
-   border-radius: 12px;
+   padding: 2rem;
+   border-radius: 24px;
    border: 1px solid #222;
  }
 

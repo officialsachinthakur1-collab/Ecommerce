@@ -167,7 +167,7 @@ const AdminProducts = () => {
                     display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100
                 }}>
                     <div style={{
-                        background: '#111', padding: '2rem', borderRadius: '12px',
+                        background: '#111', padding: '2rem', borderRadius: '24px',
                         width: '100%', maxWidth: '500px', border: '1px solid #333'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>

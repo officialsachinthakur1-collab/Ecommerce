@@ -18,7 +18,7 @@ const ProductCard = ({ product }) => {
                 {/* Image Placeholder */}
                 <div className="product-image-container" style={{
                     background: '#111',
-                    borderRadius: '12px',
+                    borderRadius: '24px',
                     overflow: 'hidden',
                     position: 'relative',
                     marginBottom: '1rem',
@@ -33,7 +33,7 @@ const ProductCard = ({ product }) => {
                         padding: '0.25rem 0.75rem',
                         fontSize: '0.75rem',
                         fontWeight: 'bold',
-                        borderRadius: '4px',
+                        borderRadius: '12px',
                         textTransform: 'uppercase'
                     }}>
                         {product.tag}

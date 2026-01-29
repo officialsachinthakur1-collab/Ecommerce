@@ -51,7 +51,7 @@ const Login = () => {
                     maxWidth: '400px',
                     background: '#111',
                     padding: '2.5rem',
-                    borderRadius: '16px',
+                    borderRadius: '32px',
                     border: '1px solid #222'
                 }}
             >
@@ -89,7 +89,7 @@ const Login = () => {
                                     padding: '0.75rem 1rem 0.75rem 2.75rem',
                                     background: '#050505',
                                     border: '1px solid #333',
-                                    borderRadius: '8px',
+                                    borderRadius: '16px',
                                     color: 'white',
                                     outline: 'none'
                                 }}
