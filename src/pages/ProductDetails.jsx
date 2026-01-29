@@ -115,7 +115,7 @@ const ProductDetails = () => {
                             transition={{ duration: 0.5 }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#fbbf24' }}>
-                                {[...Array(product.rating || 5)].map((_, i) => (
+                                {[...Array(Math.floor(Number(product.rating) || 5))].map((_, i) => (
                                     <Star key={i} fill="#fbbf24" size={16} />
                                 ))}
                                 <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginLeft: '0.5rem' }}>({product.reviews} Reviews)</span>
