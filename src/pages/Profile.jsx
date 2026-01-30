@@ -101,11 +101,18 @@ const Profile = () => {
                                             fontSize: '0.75rem',
                                             fontWeight: '700',
                                             textTransform: 'uppercase',
-                                            background: order.status === 'Paid' ? 'rgba(74, 222, 128, 0.1)' : 'rgba(251, 191, 36, 0.1)',
-                                            color: order.status === 'Paid' ? '#4ade80' : '#fbbf24',
-                                            border: `1px solid ${order.status === 'Paid' ? 'rgba(74, 222, 128, 0.2)' : 'rgba(251, 191, 36, 0.2)'}`
+                                            background: order.status === 'Delivered' ? 'rgba(74, 222, 128, 0.1)' :
+                                                order.status === 'Cancelled' ? 'rgba(239, 68, 68, 0.1)' :
+                                                    'rgba(59, 130, 246, 0.1)',
+                                            color: order.status === 'Delivered' ? '#4ade80' :
+                                                order.status === 'Cancelled' ? '#ef4444' :
+                                                    '#3b82f6',
+                                            border: `1px solid ${order.status === 'Delivered' ? 'rgba(74, 222, 128, 0.2)' :
+                                                    order.status === 'Cancelled' ? 'rgba(239, 68, 68, 0.2)' :
+                                                        'rgba(59, 130, 246, 0.2)'
+                                                }`
                                         }}>
-                                            {order.status}
+                                            {order.status || 'Pending'}
                                         </div>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>

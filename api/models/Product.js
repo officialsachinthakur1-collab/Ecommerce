@@ -12,6 +12,7 @@ const ProductSchema = new mongoose.Schema({
     sizes: { type: [mongoose.Schema.Types.Mixed], default: [7, 8, 9, 10, 11, 12] },
     reviews: { type: Number, default: 0 },
     rating: { type: Number, default: 5 },
+    stock: { type: Number, default: 10 },
     createdAt: { type: Date, default: Date.now }
 });
 

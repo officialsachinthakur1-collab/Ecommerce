@@ -179,6 +179,7 @@ const ProductDetails = () => {
                             <div style={{ display: 'flex', gap: '1rem', marginBottom: '3rem' }}>
                                 <button
                                     className="btn-primary"
+                                    disabled={product.stock <= 0}
                                     onClick={() => {
                                         const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
                                         if (hasSizing && !selectedSize) {
@@ -187,9 +188,25 @@ const ProductDetails = () => {
                                         }
                                         addToCart(product, selectedSize || "One Size");
                                     }}
-                                    style={{ flex: 1, padding: '1rem', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}
+                                    style={{
+                                        flex: 1,
+                                        padding: '1rem',
+                                        fontSize: '1rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.75rem',
+                                        opacity: product.stock <= 0 ? 0.5 : 1,
+                                        cursor: product.stock <= 0 ? 'not-allowed' : 'pointer'
+                                    }}
                                 >
-                                    <ShoppingBag size={20} /> Add to Cart
+                                    {product.stock <= 0 ? (
+                                        <>Out of Stock</>
+                                    ) : (
+                                        <>
+                                            <ShoppingBag size={20} /> Add to Cart
+                                        </>
+                                    )}
                                 </button>
                                 <button style={{
                                     padding: '1rem',

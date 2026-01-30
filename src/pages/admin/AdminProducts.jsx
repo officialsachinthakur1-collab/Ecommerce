@@ -8,7 +8,7 @@ const AdminProducts = () => {
     const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '' });
+    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '', stock: 10 });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,7 +23,8 @@ const AdminProducts = () => {
             description: product.description || '',
             image: product.image || '',
             images: Array.isArray(product.images) ? product.images : (product.image ? [product.image] : []),
-            sizes: Array.isArray(product.sizes) ? product.sizes.join(', ') : (product.sizes || '')
+            sizes: Array.isArray(product.sizes) ? product.sizes.join(', ') : (product.sizes || ''),
+            stock: product.stock !== undefined ? product.stock : 10
         });
         setIsModalOpen(true);
     };
@@ -107,6 +108,7 @@ const AdminProducts = () => {
                                 <th style={{ padding: '1rem 1.5rem' }}>Product Name</th>
                                 <th style={{ padding: '1rem 1.5rem' }}>Category</th>
                                 <th style={{ padding: '1rem 1.5rem' }}>Price</th>
+                                <th style={{ padding: '1rem 1.5rem' }}>Stock</th>
                                 <th style={{ padding: '1rem 1.5rem' }}>Status</th>
                                 <th style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>Actions</th>
                             </tr>
@@ -128,6 +130,9 @@ const AdminProducts = () => {
                                     </td>
                                     <td data-label="Category" style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)' }}>{product.category}</td>
                                     <td data-label="Price" style={{ padding: '1rem 1.5rem' }}>{product.price}</td>
+                                    <td data-label="Stock" style={{ padding: '1rem 1.5rem', color: product.stock <= 0 ? '#ff3333' : 'var(--text-muted)' }}>
+                                        {product.stock !== undefined ? product.stock : 10}
+                                    </td>
                                     <td data-label="Status" style={{ padding: '1rem 1.5rem' }}>
                                         <span style={{
                                             padding: '0.25rem 0.75rem',
@@ -177,7 +182,7 @@ const AdminProducts = () => {
                             <button onClick={() => {
                                 setIsModalOpen(false);
                                 setEditingProduct(null);
-                                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '' });
+                                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '', stock: 10 });
                             }} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X /></button>
                         </div>
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -252,17 +257,22 @@ const AdminProducts = () => {
                                     name="price" placeholder="Price ($100)" value={formData.price} onChange={handleInputChange}
                                     style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
                                 />
-                                <select
-                                    name="category" value={formData.category} onChange={handleInputChange}
-                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                                >
-                                    <option value="Men">Men</option>
-                                    <option value="Women">Women</option>
-                                    <option value="Unisex">Unisex</option>
-                                    <option value="Clothing">Clothing</option>
-                                    <option value="Accessories">Accessories</option>
-                                </select>
+                                <input
+                                    type="number"
+                                    name="stock" placeholder="Stock" value={formData.stock} onChange={handleInputChange}
+                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
+                                />
                             </div>
+                            <select
+                                name="category" value={formData.category} onChange={handleInputChange}
+                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                            >
+                                <option value="Men">Men</option>
+                                <option value="Women">Women</option>
+                                <option value="Unisex">Unisex</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Accessories">Accessories</option>
+                            </select>
                             <input
                                 name="sizes" placeholder="Sizes (e.g. S, M, L, XL or 7, 8, 9, 10)" value={formData.sizes} onChange={handleInputChange}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
@@ -278,7 +288,7 @@ const AdminProducts = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </div >
     );
 };
 

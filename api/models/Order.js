@@ -6,7 +6,11 @@ const OrderSchema = new mongoose.Schema({
     email: { type: String, required: true },
     items: { type: Array, required: true },
     total: { type: String, required: true },
-    status: { type: String, default: 'Paid' },
+    status: {
+        type: String,
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+        default: 'Pending'
+    },
     address: { type: String, required: true },
     payment_id: String,
     userId: {
