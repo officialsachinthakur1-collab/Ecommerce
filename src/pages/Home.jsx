@@ -1,6 +1,9 @@
 import { Suspense, lazy } from 'react';
 const Hero = lazy(() => import('../components/home/Hero'));
 import useMobile from '../hooks/useMobile';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import AuthModal from '../components/auth/AuthModal';
 
 import ValueProps from '../components/home/ValueProps';
 import CuratedSections from '../components/home/CuratedSections';
@@ -10,8 +13,26 @@ import Testimonials from '../components/home/Testimonials';
 import BlogGrid from '../components/home/BlogGrid';
 
 const Home = () => {
+    const { user } = useAuth();
+    const [showModal, setShowModal] = useState(false);
+
+    useEffect(() => {
+        // Direct, simple trigger for the landing page
+        if (!user) {
+            const key = 'gsm_landing_popup_new';
+            if (!sessionStorage.getItem(key)) {
+                const timer = setTimeout(() => {
+                    setShowModal(true);
+                    sessionStorage.setItem(key, 'true');
+                }, 1500);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [user]);
+
     return (
         <>
+            <AuthModal isOpen={showModal} onClose={() => setShowModal(false)} />
             <Suspense fallback={<div style={{ height: '80vh', background: '#050505' }} />}>
                 <Hero />
             </Suspense>
