@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import API_URL from '../../config';
 import { Link } from 'react-router-dom';
 
-const ReviewForm = ({ productId, refetch }) => {
+export default function ReviewForm({ productId, refetch }) {
     const { user } = useAuth();
     const [rating, setRating] = useState(5);
     const [hoverRating, setHoverRating] = useState(0);
@@ -108,6 +108,5 @@ const ReviewForm = ({ productId, refetch }) => {
             </button>
         </form>
     );
-};
+}
 
-export default ReviewForm;

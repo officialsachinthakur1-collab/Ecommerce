@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
-import { Float, Stars, PerspectiveCamera } from '@react-three/drei';
+import { Float, PerspectiveCamera } from '@react-three/drei';
+// Temporarily disabled: Stars component causing "Star is not defined" error
+// import { Stars } from '@react-three/drei';
 import TechCore from '../canvas/TechCore';
 import SceneEffects from '../canvas/SceneEffects';
 import { Suspense, useState, useEffect } from 'react';
@@ -41,7 +43,7 @@ const Hero = () => {
                         <Float speed={isMobile ? 1 : 2} rotationIntensity={isMobile ? 0.2 : 0.5} floatIntensity={isMobile ? 0.5 : 1}>
                             <TechCore />
                         </Float>
-                        <Stars radius={100} depth={50} count={isMobile ? 1000 : 5000} factor={4} saturation={0} fade speed={1} />
+                        {/* <Stars radius={100} depth={50} count={isMobile ? 1000 : 5000} factor={4} saturation={0} fade speed={1} /> */}
                         {!isMobile && <SceneEffects />}
                     </Suspense>
                 </Canvas>

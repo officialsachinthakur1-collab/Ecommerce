@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Ticket, Plus, Trash2, Calendar, Users, Briefcase, X, Check } from 'lucide-react';
 import API_URL from '../../config';
 
-const AdminCoupons = () => {
+export default function AdminCoupons() {
     const [coupons, setCoupons] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -246,6 +246,5 @@ const AdminCoupons = () => {
             </AnimatePresence>
         </div>
     );
-};
+}
 
-export default AdminCoupons;

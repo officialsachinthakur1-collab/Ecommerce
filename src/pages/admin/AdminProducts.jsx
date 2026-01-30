@@ -4,7 +4,7 @@ import { Plus, Edit2, Trash2, X } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import API_URL from '../../config';
 
-const AdminProducts = () => {
+export default function AdminProducts() {
     const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
@@ -305,8 +305,7 @@ const AdminProducts = () => {
                     </div>
                 </div>
             )}
-        </div >
+        </div>
     );
-};
+}
 
-export default AdminProducts;

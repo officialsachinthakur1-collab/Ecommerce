@@ -3,7 +3,7 @@ import { Eye, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import API_URL from '../../config';
 
-const AdminOrders = () => {
+export default function AdminOrders() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -218,6 +218,5 @@ const AdminOrders = () => {
             )}
         </div>
     );
-};
+}
 
-export default AdminOrders;

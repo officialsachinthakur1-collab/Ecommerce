@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Save, User, Lock, Globe, Bell } from 'lucide-react';
 import API_URL from '../../config';
 
-const AdminSettings = () => {
+export default function AdminSettings() {
     const [activeTab, setActiveTab] = useState('general');
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -276,6 +276,5 @@ const AdminSettings = () => {
             </div>
         </div>
     );
-};
+}
 
-export default AdminSettings;

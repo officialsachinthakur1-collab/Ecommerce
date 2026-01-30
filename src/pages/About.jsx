@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
-import { Stars, Float, MeshDistortMaterial } from '@react-three/drei';
+import { Float, MeshDistortMaterial } from '@react-three/drei';
+// Temporarily disabled: Stars component causing "Star is not defined" error
+// import { Stars } from '@react-three/drei';
 import API_URL from '../config';
 
 const About = () => {
@@ -20,7 +22,7 @@ const About = () => {
             }}>
                 <div style={{ position: 'absolute', inset: 0 }}>
                     <Canvas>
-                        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+                        {/* <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} /> */}
                     </Canvas>
                 </div>
 

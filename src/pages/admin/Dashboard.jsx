@@ -4,7 +4,7 @@ import { DollarSign, ShoppingBag, Users, TrendingUp } from 'lucide-react';
 import StatCard from '../../components/admin/StatCard';
 import API_URL from '../../config';
 
-const Dashboard = () => {
+export default function Dashboard() {
     const [stats, setStats] = useState({
         revenue: 0,
         orders: 0,
@@ -213,6 +213,5 @@ const Dashboard = () => {
             </div>
         </div>
     );
-};
+}
 
-export default Dashboard;
