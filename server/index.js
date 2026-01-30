@@ -4,6 +4,10 @@ import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
+import dbConnect from '../api/utils/db.js';
+import Product from '../api/models/Product.js';
+import Order from '../api/models/Order.js';
 import { products as initialProducts } from '../src/data/products.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -15,17 +19,18 @@ const PORT = process.env.PORT || 5000;
 console.log(">>> GetSetMart Server Starting - Express 5 Engine Active <<<");
 console.log(">>> Current Commit Fix: Robust app.use Catch-all <<<");
 
+// Database Connection
+dbConnect().then(() => {
+    console.log(">>> MongoDB Connected Successfully <<<");
+}).catch(err => {
+    console.error(">>> MongoDB Connection Failed <<<", err);
+});
+
 // Razorpay Instance
 const razorpay = new Razorpay({
     key_id: 'rzp_live_S7fi6DftRGCZQo',
     key_secret: 'l5UTCj7s9NG7keJ0YoiA4TdZ'
 });
-
-// In-memory database (reset on restart)
-// In-memory database (reset on restart)
-let products = [...initialProducts];
-let orders = [];
-
 app.use(cors());
 app.use(express.json());
 
@@ -34,65 +39,87 @@ app.get('/', (req, res) => {
     res.send('GetSetMart E-commerce API is running...');
 });
 
-app.get('/api/products', (req, res) => {
-    res.json(products);
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await Product.find({}).sort({ createdAt: -1 });
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
-app.get('/api/orders', (req, res) => {
-    res.json(orders);
+app.get('/api/orders', async (req, res) => {
+    try {
+        const orders = await Order.find({}).sort({ createdAt: -1 });
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
-app.post('/api/orders', (req, res) => {
-    const { customer, items, total, address, city, zip, email } = req.body;
+app.post('/api/orders', async (req, res) => {
+    try {
+        const { customer, items, total, address, city, zip, email } = req.body;
 
-    const newOrder = {
-        id: `#ORD-${Math.floor(1000 + Math.random() * 9000)}`, // Random 4-digit ID
-        customer: customer || "Guest User",
-        email,
-        items,
-        total,
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        status: 'Pending',
-        address: `${address}, ${city} ${zip}`
-    };
+        const newOrder = await Order.create({
+            orderId: `#ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+            customer: customer || "Guest User",
+            email,
+            items,
+            total,
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            status: 'Pending',
+            address: `${address}, ${city} ${zip}`
+        });
 
-    orders.unshift(newOrder); // Add to beginning of array
-    res.status(201).json({ success: true, order: newOrder });
+        res.status(201).json({ success: true, order: newOrder });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
-app.put(['/api/orders/:id', '/api/orders'], (req, res) => {
+app.put(['/api/orders/:id', '/api/orders'], async (req, res) => {
     const id = req.params.id || req.query.id;
     const { status } = req.body;
 
-    const orderIndex = orders.findIndex(o => o.id === id);
-    if (orderIndex !== -1) {
-        orders[orderIndex].status = status;
-        res.json({ success: true, order: orders[orderIndex] });
-    } else {
-        res.status(404).json({ success: false, message: 'Order not found' });
-    }
-});
-
-app.delete(['/api/orders/:id', '/api/orders'], (req, res) => {
-    const id = req.params.id || req.query.id;
-    const initialLength = orders.length;
-    // Handle URL encoded ID (e.g., #ORD-1234 might come as %23ORD-1234)
-    // However, fastify/express usually handles this, but we need to match string exactness
-    // The ID stored is "#ORD-xxxx". 
-    // Let's assume the client sends the ID correctly.
-
-    orders = orders.filter(o => o.id !== id);
-
-    if (orders.length < initialLength) {
-        res.json({ success: true, message: 'Order deleted' });
-    } else {
-        res.status(404).json({ success: false, message: 'Order not found' });
-    }
-});
-
-app.post('/api/products', (req, res) => {
     try {
-        const { name, price, category, description, image, sizes, tag } = req.body;
+        const order = await Order.findOneAndUpdate(
+            { $or: [{ orderId: id }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }] },
+            { status },
+            { new: true }
+        );
+
+        if (order) {
+            res.json({ success: true, order });
+        } else {
+            res.status(404).json({ success: false, message: 'Order not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+app.delete(['/api/orders/:id', '/api/orders'], async (req, res) => {
+    const id = req.params.id || req.query.id;
+
+    try {
+        const order = await Order.findOneAndDelete({
+            $or: [{ orderId: id }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }]
+        });
+
+        if (order) {
+            res.json({ success: true, message: 'Order deleted' });
+        } else {
+            res.status(404).json({ success: false, message: 'Order not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+app.post('/api/products', async (req, res) => {
+    try {
+        const { name, price, category, description, image, images, sizes, tag, affiliateLink } = req.body;
         const password = req.headers['x-admin-password'];
 
         if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
@@ -103,76 +130,79 @@ app.post('/api/products', (req, res) => {
             return res.status(400).json({ success: false, message: 'Name and Price are required' });
         }
 
-        const newProduct = {
-            id: Date.now(), // More reliable ID generation
+        const newProduct = await Product.create({
+            id: Date.now(),
             name,
             price,
             category: category || 'Men',
             description: description || "Engineered for performance.",
             image: image || "",
+            images: images || [],
             tag: tag || "New",
             sizes: sizes || [],
-            reviews: 0,
-            rating: 5
-        };
+            affiliateLink: affiliateLink || ""
+        });
 
-        products.push(newProduct);
         console.log("Product added successfully:", newProduct.name);
         res.status(201).json({ success: true, product: newProduct });
     } catch (error) {
         console.error("Backend Error adding product:", error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
-app.put(['/api/products/:id', '/api/products'], (req, res) => {
+app.put(['/api/products/:id', '/api/products'], async (req, res) => {
     const id = req.params.id || req.query.id;
-    const { name, price, category, description, image, sizes, tag } = req.body;
+    const updateData = req.body;
     const password = req.headers['x-admin-password'];
 
     if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
         return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
     }
 
-    const index = products.findIndex(p => p.id == id);
-    if (index !== -1) {
-        products[index] = {
-            ...products[index],
-            name: name || products[index].name,
-            price: price || products[index].price,
-            category: category || products[index].category,
-            description: description || products[index].description,
-            image: image || products[index].image,
-            sizes: sizes || products[index].sizes,
-            tag: tag || products[index].tag
-        };
-        res.json({ success: true, product: products[index] });
-    } else {
-        res.status(404).json({ success: false, message: 'Product not found' });
+    try {
+        let product = await Product.findOneAndUpdate(
+            { $or: [{ id: !isNaN(id) ? Number(id) : null }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }] },
+            updateData,
+            { new: true }
+        );
+
+        if (product) {
+            res.json({ success: true, product });
+        } else {
+            res.status(404).json({ success: false, message: 'Product not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
-app.delete(['/api/products/:id', '/api/products'], (req, res) => {
+app.delete(['/api/products/:id', '/api/products'], async (req, res) => {
     const id = req.params.id || req.query.id;
     const password = req.headers['x-admin-password'];
 
-    console.log(`[DELETE] Attempting to delete product with ID: ${id}`);
+    console.log(`[DELETE] Attempting to delete product with ID: ${id} from MongoDB`);
 
     if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
         console.warn(`[DELETE] Unauthorized attempt for product ID: ${id}`);
         return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
     }
 
-    const initialLength = products.length;
-    // Use string comparison to be safe with different ID types
-    products = products.filter(p => String(p.id) !== String(id));
+    try {
+        const product = await Product.findOneAndDelete({
+            $or: [{ id: !isNaN(id) ? Number(id) : null }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }]
+        });
 
-    if (products.length < initialLength) {
-        console.log(`[DELETE] Successfully deleted product ID: ${id}`);
-        res.json({ success: true, message: 'Product deleted' });
-    } else {
-        console.error(`[DELETE] Product not found for ID: ${id}`);
-        res.status(404).json({ success: false, message: `Product with ID ${id} not found.` });
+        if (product) {
+            console.log(`[DELETE] Successfully deleted product ID: ${id} from MongoDB`);
+            res.json({ success: true, message: 'Product deleted' });
+        } else {
+            console.error(`[DELETE] Product not found for ID: ${id} in MongoDB`);
+            res.status(404).json({ success: false, message: `Product with ID ${id} not found in database.` });
+        }
+    } catch (error) {
+        console.error(`[DELETE] Error deleting product ID: ${id}`, error);
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
