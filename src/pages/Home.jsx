@@ -17,18 +17,16 @@ const Home = () => {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        // Direct, simple trigger for the landing page
-        if (!user) {
-            const key = 'gsm_landing_popup_new';
-            if (!sessionStorage.getItem(key)) {
-                const timer = setTimeout(() => {
-                    setShowModal(true);
-                    sessionStorage.setItem(key, 'true');
-                }, 1500);
-                return () => clearTimeout(timer);
-            }
-        }
-    }, [user]);
+        // ULTIMATE DEBUG: Trigger for everyone, every time
+        console.log("HOME PAGE MOUNTED - ATTEMPTING POPUP");
+
+        const timer = setTimeout(() => {
+            console.log("FORCING SHOW MODAL");
+            setShowModal(true);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <>
