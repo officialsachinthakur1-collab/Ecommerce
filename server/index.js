@@ -60,8 +60,8 @@ app.post('/api/orders', (req, res) => {
     res.status(201).json({ success: true, order: newOrder });
 });
 
-app.put('/api/orders/:id', (req, res) => {
-    const { id } = req.params;
+app.put(['/api/orders/:id', '/api/orders'], (req, res) => {
+    const id = req.params.id || req.query.id;
     const { status } = req.body;
 
     const orderIndex = orders.findIndex(o => o.id === id);
@@ -73,8 +73,8 @@ app.put('/api/orders/:id', (req, res) => {
     }
 });
 
-app.delete('/api/orders/:id', (req, res) => {
-    const { id } = req.params;
+app.delete(['/api/orders/:id', '/api/orders'], (req, res) => {
+    const id = req.params.id || req.query.id;
     const initialLength = orders.length;
     // Handle URL encoded ID (e.g., #ORD-1234 might come as %23ORD-1234)
     // However, fastify/express usually handles this, but we need to match string exactness
@@ -125,8 +125,8 @@ app.post('/api/products', (req, res) => {
     }
 });
 
-app.put('/api/products/:id', (req, res) => {
-    const { id } = req.params;
+app.put(['/api/products/:id', '/api/products'], (req, res) => {
+    const id = req.params.id || req.query.id;
     const { name, price, category, description, image, sizes, tag } = req.body;
     const password = req.headers['x-admin-password'];
 
@@ -152,21 +152,27 @@ app.put('/api/products/:id', (req, res) => {
     }
 });
 
-app.delete('/api/products/:id', (req, res) => {
-    const { id } = req.params;
+app.delete(['/api/products/:id', '/api/products'], (req, res) => {
+    const id = req.params.id || req.query.id;
     const password = req.headers['x-admin-password'];
 
+    console.log(`[DELETE] Attempting to delete product with ID: ${id}`);
+
     if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
+        console.warn(`[DELETE] Unauthorized attempt for product ID: ${id}`);
         return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
     }
 
     const initialLength = products.length;
-    products = products.filter(p => p.id != id);
+    // Use string comparison to be safe with different ID types
+    products = products.filter(p => String(p.id) !== String(id));
 
     if (products.length < initialLength) {
+        console.log(`[DELETE] Successfully deleted product ID: ${id}`);
         res.json({ success: true, message: 'Product deleted' });
     } else {
-        res.status(404).json({ success: false, message: 'Product not found' });
+        console.error(`[DELETE] Product not found for ID: ${id}`);
+        res.status(404).json({ success: false, message: `Product with ID ${id} not found.` });
     }
 });
 

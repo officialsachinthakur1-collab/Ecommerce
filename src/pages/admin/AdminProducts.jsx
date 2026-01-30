@@ -78,6 +78,7 @@ export default function AdminProducts() {
                 }
             });
             if (response.ok) {
+                alert("Product Deleted Successfully!");
                 refetch();
             } else {
                 const errorData = await response.json();
