@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useMobile from '../../hooks/useMobile';
-import API_URL from '../../../config';
+import API_URL from '../../config';
 
 const Footer = () => {
     const isMobile = useMobile();
