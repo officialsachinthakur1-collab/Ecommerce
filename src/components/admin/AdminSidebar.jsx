@@ -1,10 +1,12 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X, Star, Ticket } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import useMobile from '../../hooks/useMobile';
 
 const AdminSidebar = ({ isOpen, onClose }) => {
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const isMobile = useMobile();
 
     const navItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
@@ -32,19 +34,20 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                     GETSETMART <span style={{ color: 'var(--primary-red)' }}>ADMIN</span>
                 </div>
                 {/* Mobile Close Button */}
-                <button
-                    onClick={onClose}
-                    className="mobile-close-btn"
-                    style={{
-                        display: 'none', /* Hidden by default, explicit CSS can override */
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'white',
-                        cursor: 'pointer'
-                    }}
-                >
-                    <X size={24} />
-                </button>
+                {isMobile && (
+                    <button
+                        onClick={onClose}
+                        className="mobile-close-btn"
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: 'white',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <X size={24} />
+                    </button>
+                )}
             </div>
 
             <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>

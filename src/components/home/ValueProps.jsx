@@ -2,7 +2,7 @@ import { Truck, ShieldCheck, RefreshCw, Zap } from 'lucide-react';
 
 const ValueProps = () => {
     const props = [
-        { icon: <Truck size={32} />, title: "Free Shipping", desc: "On all orders over $200" },
+        { icon: <Truck size={32} />, title: "Free Shipping", desc: "On all orders over ₹1,999" },
         { icon: <ShieldCheck size={32} />, title: "Secure Payment", desc: "100% secure checkout" },
         { icon: <RefreshCw size={32} />, title: "Free Returns", desc: "30-day return policy" },
         { icon: <Zap size={32} />, title: "Fast Delivery", desc: "2-3 business days" }
