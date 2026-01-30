@@ -13,17 +13,18 @@ const Layout = () => {
     const [showAuthModal, setShowAuthModal] = useState(false);
 
     useEffect(() => {
-        // Don't show on auth pages or if already logged in
-        const isAuthPage = location.pathname.includes('signup') || location.pathname.includes('login');
+        // Target Home Page explicitly for the auto-show
+        const isHomePage = location.pathname === '/' || location.pathname === '/index.html';
+        const isAuthPage = location.pathname.includes('signup') || location.pathname.includes('login') || location.pathname.includes('admin');
 
-        if (!loading && !user && !isAuthPage) {
-            const hasSeenModal = sessionStorage.getItem('gsm_auth_popup_v1');
+        if (!loading && !user && isHomePage && !isAuthPage) {
+            const hasSeenModal = sessionStorage.getItem('gsm_auth_popup_fresh');
 
             if (!hasSeenModal) {
                 const timer = setTimeout(() => {
                     setShowAuthModal(true);
-                    sessionStorage.setItem('gsm_auth_popup_v1', 'true');
-                }, 2500); // Slightly faster trigger
+                    sessionStorage.setItem('gsm_auth_popup_fresh', 'true');
+                }, 2000); // 2-second delay for premium feel
 
                 return () => clearTimeout(timer);
             }
