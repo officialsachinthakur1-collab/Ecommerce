@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         const { email, password } = req.body;
 
         // Admin legacy support
-        if (email === 'admin@getsetmart.com' && password === 'admin') {
+        if (email === (process.env.ADMIN_EMAIL || 'admin@getsetmart.com') && password === (process.env.ADMIN_PASSWORD || 'admin')) {
             return res.status(200).json({
                 success: true,
                 user: {

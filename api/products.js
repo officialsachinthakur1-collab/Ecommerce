@@ -33,7 +33,7 @@ export default async function handler(req, res) {
             const { name, price, category, description, image, images, tag } = req.body;
             const password = req.headers['x-admin-password'];
 
-            if (password !== 'admin') {
+            if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
                 return res.status(403).json({ success: false, message: 'Unauthorized' });
             }
 
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
             const updateData = req.body;
             const password = req.headers['x-admin-password'];
 
-            if (password !== 'admin') {
+            if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
                 return res.status(403).json({ success: false, message: 'Unauthorized' });
             }
 
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
             const { id } = req.query;
             const password = req.headers['x-admin-password'];
 
-            if (password !== 'admin') {
+            if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
                 return res.status(403).json({ success: false, message: 'Unauthorized' });
             }
 

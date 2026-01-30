@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         const { code, adminPass } = req.query;
 
         // Admin: Get all coupons
-        if (adminPass === 'admin') {
+        if (adminPass === (process.env.ADMIN_PASSWORD || 'admin')) {
             try {
                 const coupons = await Coupon.find({}).sort({ createdAt: -1 });
                 return res.status(200).json({ success: true, coupons });
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         const { adminPass, couponData } = req.body;
-        if (adminPass !== 'admin') return res.status(401).json({ success: false, message: 'Unauthorized' });
+        if (adminPass !== (process.env.ADMIN_PASSWORD || 'admin')) return res.status(401).json({ success: false, message: 'Unauthorized' });
         try {
             const newCoupon = await Coupon.create(couponData);
             return res.status(201).json({ success: true, coupon: newCoupon });
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'DELETE') {
         const { id, adminPass } = req.query;
-        if (adminPass !== 'admin') return res.status(401).json({ success: false, message: 'Unauthorized' });
+        if (adminPass !== (process.env.ADMIN_PASSWORD || 'admin')) return res.status(401).json({ success: false, message: 'Unauthorized' });
         try {
             await Coupon.findByIdAndDelete(id);
             return res.status(200).json({ success: true, message: 'Coupon deleted' });

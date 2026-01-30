@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         try {
             const { productId, reviewId, adminPass } = req.body;
 
-            if (adminPass !== 'admin') {
+            if (adminPass !== (process.env.ADMIN_PASSWORD || 'admin')) {
                 return res.status(403).json({ success: false, message: 'Unauthorized' });
             }
 

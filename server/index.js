@@ -87,7 +87,7 @@ app.post('/api/products', (req, res) => {
         const { name, price, category, description, image, sizes, tag } = req.body;
         const password = req.headers['x-admin-password'];
 
-        if (password !== 'admin') {
+        if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
             return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
         }
 
@@ -122,7 +122,7 @@ app.put('/api/products/:id', (req, res) => {
     const { name, price, category, description, image, sizes, tag } = req.body;
     const password = req.headers['x-admin-password'];
 
-    if (password !== 'admin') {
+    if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
         return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
     }
 
@@ -148,7 +148,7 @@ app.delete('/api/products/:id', (req, res) => {
     const { id } = req.params;
     const password = req.headers['x-admin-password'];
 
-    if (password !== 'admin') {
+    if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
         return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
     }
 
@@ -168,7 +168,7 @@ app.post('/api/auth/login', (req, res) => {
     console.log("Login attempt received for:", email);
 
     // Simple Mock Auth Logic
-    if (email === 'admin@getsetmart.com' && password === 'admin') {
+    if (email === (process.env.ADMIN_EMAIL || 'admin@getsetmart.com') && password === (process.env.ADMIN_PASSWORD || 'admin')) {
         res.json({
             success: true,
             user: {
