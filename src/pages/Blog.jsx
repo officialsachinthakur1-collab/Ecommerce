@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowUpRight, Calendar, Tag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import BlogGrid from '../components/home/BlogGrid';
 import { blogPosts } from '../data/blogData';
 
@@ -55,11 +56,13 @@ const Blog = () => {
                         }}
                     >
                         {/* Image */}
-                        <div style={{
-                            height: 'auto',
-                            minHeight: '300px',
-                            background: `url(${featuredPost.image}) center/cover no-repeat`
-                        }}></div>
+                        <Link to={`/blog/${featuredPost.id}`} style={{ display: 'block' }}>
+                            <div style={{
+                                height: 'auto',
+                                minHeight: '350px',
+                                background: `url(${featuredPost.image}) center/cover no-repeat`
+                            }}></div>
+                        </Link>
 
                         {/* Content */}
                         <div style={{ padding: '3rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -67,15 +70,17 @@ const Blog = () => {
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Calendar size={14} /> {featuredPost.date}</span>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Tag size={14} /> {featuredPost.category}</span>
                             </div>
-                            <h2 style={{ fontSize: '2.5rem', fontWeight: '800', lineHeight: 1.1, marginBottom: '1.5rem' }}>
-                                {featuredPost.title}
-                            </h2>
+                            <Link to={`/blog/${featuredPost.id}`} style={{ textDecoration: 'none', color: 'white' }}>
+                                <h2 style={{ fontSize: '2.5rem', fontWeight: '800', lineHeight: 1.1, marginBottom: '1.5rem' }}>
+                                    {featuredPost.title}
+                                </h2>
+                            </Link>
                             <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '2rem' }}>
                                 {featuredPost.excerpt}
                             </p>
-                            <button className="btn-primary" style={{ alignSelf: 'start', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Link to={`/blog/${featuredPost.id}`} className="btn-primary" style={{ alignSelf: 'start', display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
                                 Read Full Story <ArrowUpRight size={18} />
-                            </button>
+                            </Link>
                         </div>
                     </motion.div>
                 </section>

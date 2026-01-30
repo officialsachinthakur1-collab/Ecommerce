@@ -5,6 +5,7 @@ import Shop from './pages/Shop';
 import ProductDetails from './pages/ProductDetails';
 import About from './pages/About';
 import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import ScrollToTop from './components/common/ScrollToTop';
 import Wishlist from './pages/Wishlist';
 import Checkout from './pages/Checkout';
@@ -28,6 +29,7 @@ function App() {
           <Route path="product/:id" element={<ProductDetails />} />
           <Route path="about" element={<About />} />
           <Route path="blog" element={<Blog />} />
+          <Route path="blog/:id" element={<BlogPost />} />
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="order-success" element={<OrderSuccess />} />
