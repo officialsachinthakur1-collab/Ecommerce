@@ -10,14 +10,8 @@ const ProductSchema = new mongoose.Schema({
     images: { type: [String], default: [] },
     tag: { type: String, default: 'New' },
     sizes: { type: [mongoose.Schema.Types.Mixed], default: [7, 8, 9, 10, 11, 12] },
-    reviews: [{
-        userId: { type: String, required: true },
-        userName: { type: String, required: true },
-        rating: { type: Number, required: true, min: 1, max: 5 },
-        comment: { type: String, required: true },
-        date: { type: Date, default: Date.now }
-    }],
-    rating: { type: Number, default: 5 },
+    reviews: { type: mongoose.Schema.Types.Mixed, default: [] },
+    rating: { type: mongoose.Schema.Types.Mixed, default: 5 },
     stock: { type: Number, default: 10 },
     affiliateLink: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now }

@@ -153,7 +153,7 @@ app.put('/api/products/:id', async (req, res) => handleUpdateProduct(req.params.
 app.put('/api/products', async (req, res) => handleUpdateProduct(req.query.id, req, res));
 
 async function handleUpdateProduct(id, req, res) {
-    const { _id, id: bodyId, ...updateData } = req.body; // Strip immutable fields
+    const { _id, id: bodyId, reviews, rating, ...updateData } = req.body; // Strip immutable and sensitive fields
     const password = req.headers['x-admin-password'];
 
     console.log(`[UPDATE] Attempting to update product. Received ID: "${id}", Name in body: "${updateData.name}"`);
