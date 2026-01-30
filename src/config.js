@@ -3,7 +3,7 @@
 // Production (Vercel): Uses Render backend URL
 
 const API_URL = import.meta.env.PROD
-    ? 'https://your-render-app.onrender.com' // Replace with actual Render URL
+    ? 'https://ecommerce-eo7c.onrender.com'
     : '';
 
 export default API_URL;
