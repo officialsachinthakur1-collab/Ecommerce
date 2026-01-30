@@ -3,7 +3,7 @@ const Hero = lazy(() => import('../components/home/Hero'));
 import useMobile from '../hooks/useMobile';
 
 import ValueProps from '../components/home/ValueProps';
-import ProductGrid from '../components/home/ProductGrid';
+import CuratedSections from '../components/home/CuratedSections';
 import SplitFeatured from '../components/home/SplitFeatured';
 import Marquee from '../components/home/Marquee';
 import Testimonials from '../components/home/Testimonials';
@@ -16,7 +16,9 @@ const Home = () => {
                 <Hero />
             </Suspense>
             <ValueProps />
-            <ProductGrid />
+
+            <CuratedSections title="Trending Now" tag="Trending" limit={4} />
+
             <SplitFeatured
                 title="For Him"
                 subtitle="Engineered for the modern athlete. Precision meets power."
@@ -25,7 +27,9 @@ const Home = () => {
                 imageLeft={false}
                 image="/assets/banners/men_fashion.png"
             />
+
             <Marquee />
+
             <SplitFeatured
                 title="For Her"
                 subtitle="Uncompromising style and performance. Defined by you."
@@ -34,6 +38,9 @@ const Home = () => {
                 imageLeft={true}
                 image="/assets/banners/women_fashion.png"
             />
+
+            <CuratedSections title="Best Sellers" tag="Bestseller" limit={4} />
+
             <Testimonials />
             <BlogGrid />
         </>
