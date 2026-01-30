@@ -47,6 +47,28 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const signup = async (name, email, password) => {
+        try {
+            const response = await fetch(`${API_URL}/api/auth/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                return { success: true };
+            } else {
+                return { success: false, error: data.message || 'Signup failed' };
+            }
+        } catch (error) {
+            return { success: false, error: 'Server error. Please try again.' };
+        }
+    };
+
     const logout = () => {
         setUser(null);
         localStorage.removeItem('user');
@@ -55,6 +77,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         user,
         login,
+        signup,
         logout,
         isAuthenticated: !!user,
         loading

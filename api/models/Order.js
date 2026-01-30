@@ -8,9 +8,12 @@ const OrderSchema = new mongoose.Schema({
     total: { type: String, required: true },
     status: { type: String, default: 'Paid' },
     address: { type: String, required: true },
-    payment_id: { type: String },
-    date: { type: String },
-    createdAt: { type: Date, default: Date.now }
-});
+    payment_id: String,
+    userId: {
+        type: String,
+        default: null
+    },
+    date: { type: String }
+}, { timestamps: true });
 
 export default mongoose.models.Order || mongoose.model('Order', OrderSchema);

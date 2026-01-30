@@ -10,6 +10,8 @@ import ScrollToTop from './components/common/ScrollToTop';
 import Wishlist from './pages/Wishlist';
 import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
+import Signup from './pages/Signup';
+import Profile from './pages/Profile';
 import AdminLayout from './components/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/AdminProducts';
@@ -33,6 +35,8 @@ function App() {
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="order-success" element={<OrderSuccess />} />
+          <Route path="signup" element={<Signup />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* Admin Routes */}

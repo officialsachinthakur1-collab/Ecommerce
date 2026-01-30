@@ -1,27 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import API_URL from '../config';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    // Mock form state
+    // Form state
     const [formData, setFormData] = useState({
-        email: '',
-        firstName: '',
-        lastName: '',
+        email: user?.email || '',
+        firstName: user?.name?.split(' ')[0] || '',
+        lastName: user?.name?.split(' ').slice(1).join(' ') || '',
         address: '',
         city: '',
         zip: '',
-        cardColor: '#111' // just for fun visual
+        cardColor: '#111'
     });
 
+    useEffect(() => {
+        if (user) {
+            setFormData(prev => ({
+                ...prev,
+                email: user.email,
+                firstName: user.name.split(' ')[0],
+                lastName: user.name.split(' ').slice(1).join(' ')
+            }));
+        }
+    }, [user]);
+
     const handleInput = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const loadScript = (src) => {
@@ -88,6 +102,7 @@ const Checkout = () => {
                             const finalOrderData = {
                                 customer: `${formData.firstName} ${formData.lastName}`,
                                 email: formData.email,
+                                userId: user?.id || user?._id || null, // Link to user if logged in
                                 items: cart,
                                 total: `₹${cartTotal.toLocaleString()}`,
                                 address: formData.address,
@@ -158,6 +173,8 @@ const Checkout = () => {
                                 type="email"
                                 name="email"
                                 placeholder="Email Address"
+                                value={formData.email}
+                                onChange={handleInput}
                                 required
                                 style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }}
                             />
@@ -166,13 +183,13 @@ const Checkout = () => {
                         <section>
                             <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', borderBottom: '1px solid #333', paddingBottom: '0.5rem' }}>Shipping Address</h3>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                                <input type="text" placeholder="First Name" required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }} />
-                                <input type="text" placeholder="Last Name" required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }} />
+                                <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleInput} required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }} />
+                                <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleInput} required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }} />
                             </div>
-                            <input type="text" placeholder="Address" required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white', marginBottom: '1rem' }} />
+                            <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleInput} required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white', marginBottom: '1rem' }} />
                             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem' }}>
-                                <input type="text" placeholder="City" required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }} />
-                                <input type="text" placeholder="ZIP Code" required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }} />
+                                <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleInput} required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }} />
+                                <input type="text" name="zip" placeholder="ZIP Code" value={formData.zip} onChange={handleInput} required style={{ width: '100%', padding: '1rem', background: '#111', border: '1px solid #333', borderRadius: '4px', color: 'white' }} />
                             </div>
                         </section>
 

@@ -6,7 +6,9 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
         try {
-            const orders = await Order.find({}).sort({ createdAt: -1 });
+            const { email } = req.query;
+            const query = email ? { email } : {};
+            const orders = await Order.find(query).sort({ createdAt: -1 });
             return res.status(200).json(orders);
         } catch (error) {
             return res.status(500).json({ success: false, error: error.message });

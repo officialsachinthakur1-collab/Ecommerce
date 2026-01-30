@@ -2,12 +2,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, Heart, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import useMobile from '../../hooks/useMobile';
 
 const Navbar = () => {
     const isMobile = useMobile();
+    const { user } = useAuth();
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -57,8 +59,12 @@ const Navbar = () => {
                     <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
                         <div className="desktop-nav">
                             <Link to="/shop" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Shop</Link>
-                            <Link to="/about" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Company</Link>
                             <Link to="/blog" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Insights</Link>
+                            {user ? (
+                                <Link to="/profile" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--primary-red)' }}>Account</Link>
+                            ) : (
+                                <Link to="/login" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Sign In</Link>
+                            )}
                         </div>
                         <div className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
                             <Menu size={24} />
@@ -146,8 +152,15 @@ const Navbar = () => {
                         <Link to="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem', color: 'white' }}>GETSETMART</Link>
 
                         <Link to="/shop" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SHOP</Link>
-                        <Link to="/about" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>COMPANY</Link>
                         <Link to="/blog" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>INSIGHTS</Link>
+                        {user ? (
+                            <Link to="/profile" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--primary-red)' }}>MY ACCOUNT</Link>
+                        ) : (
+                            <>
+                                <Link to="/login" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SIGN IN</Link>
+                                <Link to="/signup" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1rem', fontWeight: 500, color: '#666' }}>CREATE ACCOUNT</Link>
+                            </>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>
