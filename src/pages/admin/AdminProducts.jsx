@@ -30,6 +30,36 @@ export default function AdminProducts() {
         setIsModalOpen(true);
     };
 
+    const handleFetchMetadata = async () => {
+        if (!formData.affiliateLink) return alert("Please enter a link first!");
+
+        try {
+            const response = await fetch(`${API_URL}/api/utils/scrape`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: formData.affiliateLink })
+            });
+            const result = await response.json();
+            if (result.success) {
+                const { name, image, description, price } = result.data;
+                setFormData(prev => ({
+                    ...prev,
+                    name: name || prev.name,
+                    image: image || prev.image,
+                    images: image ? [...new Set([...prev.images, image])] : prev.images,
+                    description: description || prev.description,
+                    price: price || prev.price
+                }));
+                alert("Product details fetched!");
+            } else {
+                alert("Failed to fetch details: " + result.message);
+            }
+        } catch (error) {
+            console.error("Fetch metadata error:", error);
+            alert("Error fetching metadata");
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -282,10 +312,21 @@ export default function AdminProducts() {
                                     style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
                                 />
                             </div>
-                            <input
-                                name="affiliateLink" placeholder="Affiliate Link (Optional - e.g. Amazon URL)" value={formData.affiliateLink} onChange={handleInputChange}
-                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                            />
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <input
+                                    name="affiliateLink" placeholder="Affiliate Link (Optional - e.g. Amazon URL)" value={formData.affiliateLink} onChange={handleInputChange}
+                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                />
+                                {formData.affiliateLink && formData.affiliateLink.startsWith('http') && (
+                                    <button
+                                        type="button"
+                                        onClick={handleFetchMetadata}
+                                        style={{ background: '#333', color: 'white', border: '1px solid #444', borderRadius: '8px', padding: '0 1rem', cursor: 'pointer', fontSize: '0.75rem' }}
+                                    >
+                                        Fetch Details
+                                    </button>
+                                )}
+                            </div>
                             <select
                                 name="category" value={formData.category} onChange={handleInputChange}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}

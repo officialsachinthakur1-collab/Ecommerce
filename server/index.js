@@ -290,6 +290,50 @@ app.post('/api/razorpay/verify', (req, res) => {
     }
 });
 
+// Utility: Scrape Metadata
+app.post('/api/utils/scrape', async (req, res) => {
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ success: false, message: 'URL is required' });
+
+    try {
+        console.log(`[SCRAPE] Fetching metadata for: ${url}`);
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch URL');
+
+        const html = await response.text();
+
+        // Basic Regex Based Extraction
+        const title = html.match(/<meta property="og:title" content="(.*?)"/i)?.[1] ||
+            html.match(/<title>(.*?)<\/title>/i)?.[1] || "";
+
+        const image = html.match(/<meta property="og:image" content="(.*?)"/i)?.[1] || "";
+
+        const description = html.match(/<meta property="og:description" content="(.*?)"/i)?.[1] ||
+            html.match(/<meta name="description" content="(.*?)"/i)?.[1] || "";
+
+        const priceMatch = html.match(/<meta property="product:price:amount" content="(.*?)"/i)?.[1] ||
+            html.match(/priceAmount":(.*?),/i)?.[1];
+
+        res.json({
+            success: true,
+            data: {
+                name: title.trim(),
+                image: image.trim(),
+                description: description.trim(),
+                price: priceMatch ? `₹${priceMatch}` : ""
+            }
+        });
+    } catch (error) {
+        console.error(`[SCRAPE] Error:`, error.message);
+        res.status(500).json({ success: false, message: 'Could not fetch metadata' });
+    }
+});
+
 // Serve static files from React build (Production)
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../dist')));
