@@ -213,25 +213,6 @@ const ProductDetails = () => {
                                         </>
                                     )}
                                 </button>
-                                <button
-                                    onClick={() => document.getElementById('review-form-section')?.scrollIntoView({ behavior: 'smooth' })}
-                                    style={{
-                                        padding: '0.75rem 1.25rem',
-                                        border: 'none',
-                                        borderRadius: '9999px',
-                                        background: 'var(--primary-red)',
-                                        color: 'white',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        fontSize: '0.9rem',
-                                        fontWeight: '700',
-                                        boxShadow: '0 4px 15px rgba(255,0,0,0.3)'
-                                    }}
-                                >
-                                    <Edit3 size={18} /> <span>Review</span>
-                                </button>
                                 <button style={{
                                     padding: '1rem',
                                     border: '1px solid #333',
@@ -261,11 +242,11 @@ const ProductDetails = () => {
                                     </div>
                                 </div>
                             </div>
-
                         </motion.div>
                     </div>
                 </div>
             </div>
+
             {/* Reviews Section Separator */}
             <div className="container" style={{ marginTop: '8rem' }}>
                 <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, #333, transparent)', marginBottom: '4rem' }}></div>
@@ -317,8 +298,8 @@ const ProductDetails = () => {
                         )}
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
