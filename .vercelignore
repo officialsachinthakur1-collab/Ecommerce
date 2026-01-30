@@ -1,0 +1,9 @@
+# Ignore API folder - Backend will be deployed on Render
+api/
+server/
+
+# Build outputs
+dist/
+node_modules/
+.env
+.env.local
