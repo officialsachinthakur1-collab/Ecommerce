@@ -8,7 +8,7 @@ export default function AdminProducts() {
     const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
+    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,7 +19,7 @@ export default function AdminProducts() {
         setFormData({
             name: product.name,
             price: product.price,
-            category: product.category,
+            tag: product.tag || 'New',
             description: product.description || '',
             image: product.image || '',
             images: Array.isArray(product.images) ? product.images : (product.image ? [product.image] : []),
@@ -85,7 +85,7 @@ export default function AdminProducts() {
                 alert(editingProduct ? 'Product Updated!' : 'Product Added!');
                 setIsModalOpen(false);
                 setEditingProduct(null);
-                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
+                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
                 refetch(); // Refetch products to update the list
             } else {
                 const errorData = await response.json();
@@ -231,7 +231,7 @@ export default function AdminProducts() {
                             <button onClick={() => {
                                 setIsModalOpen(false);
                                 setEditingProduct(null);
-                                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
+                                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
                             }} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X /></button>
                         </div>
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -327,16 +327,28 @@ export default function AdminProducts() {
                                     </button>
                                 )}
                             </div>
-                            <select
-                                name="category" value={formData.category} onChange={handleInputChange}
-                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
-                            >
-                                <option value="Men">Men</option>
-                                <option value="Women">Women</option>
-                                <option value="Unisex">Unisex</option>
-                                <option value="Clothing">Clothing</option>
-                                <option value="Accessories">Accessories</option>
-                            </select>
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <select
+                                    name="category" value={formData.category} onChange={handleInputChange}
+                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                >
+                                    <option value="Men">Men</option>
+                                    <option value="Women">Women</option>
+                                    <option value="Unisex">Unisex</option>
+                                    <option value="Clothing">Clothing</option>
+                                    <option value="Accessories">Accessories</option>
+                                </select>
+                                <select
+                                    name="tag" value={formData.tag} onChange={handleInputChange}
+                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                >
+                                    <option value="New">New</option>
+                                    <option value="Trending">Trending</option>
+                                    <option value="Bestseller">Best Seller</option>
+                                    <option value="Hot">Hot</option>
+                                    <option value="Exclusive">Exclusive</option>
+                                </select>
+                            </div>
                             <input
                                 name="sizes" placeholder="Sizes (e.g. S, M, L, XL or 7, 8, 9, 10)" value={formData.sizes} onChange={handleInputChange}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
