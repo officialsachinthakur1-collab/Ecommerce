@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, User, Lock, Globe, Bell } from 'lucide-react';
+import API_URL from '../../config';
 
 const AdminSettings = () => {
     const [activeTab, setActiveTab] = useState('general');
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         siteName: 'GETSETMART',
         contactEmail: 'support@getsetmart.com',
@@ -14,9 +16,68 @@ const AdminSettings = () => {
         confirmPassword: ''
     });
 
-    const handleSave = (e) => {
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const res = await fetch(`${API_URL}/api/settings`);
+                const data = await res.json();
+                if (data.success && data.settings) {
+                    setFormData(prev => ({
+                        ...prev,
+                        ...data.settings
+                    }));
+                }
+            } catch (error) {
+                console.error("Error fetching settings:", error);
+            }
+        };
+        fetchSettings();
+    }, []);
+
+    const handleSave = async (e) => {
         e.preventDefault();
-        alert('Settings saved successfully! (Demo Mode)');
+        setLoading(true);
+
+        try {
+            // Filter out password fields from general settings save
+            const settingsToSave = { ...formData };
+            delete settingsToSave.currentPassword;
+            delete settingsToSave.newPassword;
+            delete settingsToSave.confirmPassword;
+
+            const res = await fetch(`${API_URL}/api/settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ settings: settingsToSave })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                alert('Settings updated successfully!');
+            } else {
+                alert('Failed to save settings: ' + data.message);
+            }
+        } catch (error) {
+            console.error("Error saving settings:", error);
+            alert('Error connecting to server.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handlePasswordUpdate = async (e) => {
+        e.preventDefault();
+        if (formData.newPassword !== formData.confirmPassword) {
+            alert("New passwords don't match!");
+            return;
+        }
+        setLoading(true);
+        // Implementation for admin password update would go here
+        // For now, we simulate success
+        setTimeout(() => {
+            alert('Password update functionality coming soon in production!');
+            setLoading(false);
+        }, 1000);
     };
 
     return (
@@ -26,7 +87,7 @@ const AdminSettings = () => {
                 <p style={{ color: 'var(--text-muted)' }}>Manage your store preferences</p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '3rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 240px) 1fr', gap: '3rem' }}>
                 {/* Settings Sidebar */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     <button
@@ -129,30 +190,49 @@ const AdminSettings = () => {
                                     </div>
                                 </div>
                             </div>
-                            <button className="btn-primary" style={{ marginTop: '2rem' }}>Save Changes</button>
+                            <button className="btn-primary" style={{ marginTop: '2rem' }} disabled={loading}>
+                                {loading ? 'Saving...' : 'Save Changes'}
+                            </button>
                         </form>
                     )}
 
                     {activeTab === 'security' && (
-                        <form onSubmit={handleSave}>
+                        <form onSubmit={handlePasswordUpdate}>
                             <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                                 <Lock color="var(--primary-red)" /> Security Settings
                             </h2>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                 <div>
                                     <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.875rem' }}>Current Password</label>
-                                    <input type="password" style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
+                                    <input
+                                        type="password"
+                                        value={formData.currentPassword}
+                                        onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
+                                        style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
+                                    />
                                 </div>
                                 <div>
                                     <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.875rem' }}>New Password</label>
-                                    <input type="password" style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
+                                    <input
+                                        type="password"
+                                        value={formData.newPassword}
+                                        onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
+                                        style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
+                                    />
                                 </div>
                                 <div>
                                     <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.875rem' }}>Confirm New Password</label>
-                                    <input type="password" style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
+                                    <input
+                                        type="password"
+                                        value={formData.confirmPassword}
+                                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                        style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
+                                    />
                                 </div>
                             </div>
-                            <button className="btn-primary" style={{ marginTop: '2rem' }}>Update Password</button>
+                            <button className="btn-primary" style={{ marginTop: '2rem' }} disabled={loading}>
+                                {loading ? 'Updating...' : 'Update Password'}
+                            </button>
                         </form>
                     )}
 
@@ -187,7 +267,9 @@ const AdminSettings = () => {
                                     />
                                 </div>
                             </div>
-                            <button className="btn-primary" style={{ marginTop: '2rem' }}>Save Preferences</button>
+                            <button className="btn-primary" style={{ marginTop: '2rem' }} disabled={loading}>
+                                {loading ? 'Saving...' : 'Save Preferences'}
+                            </button>
                         </form>
                     )}
                 </div>

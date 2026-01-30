@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Star, ShoppingBag, Truck, ShieldCheck, Heart, Edit3 } from 'lucide-react';
+import RatingStars from '../components/common/RatingStars';
 import { useAuth } from '../context/AuthContext';
 import API_URL from '../config';
 import useMobile from '../hooks/useMobile';
@@ -132,10 +133,8 @@ const ProductDetails = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#fbbf24' }}>
-                                {[...Array(Math.floor(Number(product.rating) || 5))].map((_, i) => (
-                                    <Star key={i} fill="#fbbf24" size={16} />
-                                ))}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                                <RatingStars rating={Number(product.rating) || 5} size={16} />
                                 <a href="#review-form-section" style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginLeft: '0.5rem', textDecoration: 'underline' }}>
                                     ({product.reviews?.length || 0} Reviews) - Write a Review
                                 </a>
@@ -267,11 +266,7 @@ const ProductDetails = () => {
                                     <div key={idx} style={{ paddingBottom: '2rem', borderBottom: '1px solid #222' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                                             <span style={{ fontWeight: '700', fontSize: '1rem' }}>{rev.userName}</span>
-                                            <div style={{ display: 'flex', color: '#fbbf24' }}>
-                                                {[...Array(5)].map((_, i) => (
-                                                    <Star key={i} size={14} fill={i < rev.rating ? "#fbbf24" : "transparent"} stroke={i < rev.rating ? "none" : "#444"} />
-                                                ))}
-                                            </div>
+                                            <RatingStars rating={rev.rating} size={14} />
                                         </div>
                                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem' }}>{rev.comment}</p>
                                         <span style={{ fontSize: '0.75rem', color: '#444', marginTop: '0.5rem', display: 'block' }}>

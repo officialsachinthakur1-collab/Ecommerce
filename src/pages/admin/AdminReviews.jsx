@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Trash2, Search, ExternalLink } from 'lucide-react';
+import RatingStars from '../../components/common/RatingStars';
 import { useProducts } from '../../hooks/useProducts';
 import API_URL from '../../config';
 
@@ -97,9 +98,7 @@ const AdminReviews = () => {
                                             </div>
                                         </td>
                                         <td style={{ padding: '1rem 1.5rem' }}>
-                                            <div style={{ display: 'flex', color: '#fbbf24' }}>
-                                                {rev.rating}/5
-                                            </div>
+                                            <RatingStars rating={rev.rating} size={14} />
                                         </td>
                                         <td style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)', maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                             {rev.comment}
