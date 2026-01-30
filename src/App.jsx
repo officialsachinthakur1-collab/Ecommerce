@@ -19,6 +19,7 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminReviews from './pages/admin/AdminReviews';
 import AdminCoupons from './pages/admin/AdminCoupons';
+import AdminSettings from './pages/admin/AdminSettings';
 import Login from './pages/Login';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
@@ -56,7 +57,7 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="reviews" element={<AdminReviews />} />
           <Route path="coupons" element={<AdminCoupons />} />
-          <Route path="settings" element={<div style={{ padding: '2rem' }}>Settings (Coming Soon)</div>} />
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
 
         {/* Login & Reset Routes */}
