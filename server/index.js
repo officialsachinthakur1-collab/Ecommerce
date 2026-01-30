@@ -152,7 +152,7 @@ app.put('/api/products/:id', async (req, res) => handleUpdateProduct(req.params.
 app.put('/api/products', async (req, res) => handleUpdateProduct(req.query.id, req, res));
 
 async function handleUpdateProduct(id, req, res) {
-    const updateData = req.body;
+    const { _id, id: bodyId, ...updateData } = req.body; // Strip immutable fields
     const password = req.headers['x-admin-password'];
 
     console.log(`[UPDATE] Attempting to update product ID: ${id}`);
@@ -162,11 +162,15 @@ async function handleUpdateProduct(id, req, res) {
     }
 
     try {
-        let product = await Product.findOneAndUpdate(
-            { $or: [{ id: !isNaN(id) && id ? Number(id) : null }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }] },
-            updateData,
-            { new: true }
-        );
+        const query = { $or: [] };
+        if (id && !isNaN(id)) query.$or.push({ id: Number(id) });
+        if (id && mongoose.Types.ObjectId.isValid(id)) query.$or.push({ _id: id });
+
+        if (query.$or.length === 0) {
+            return res.status(400).json({ success: false, message: 'Invalid Product ID' });
+        }
+
+        let product = await Product.findOneAndUpdate(query, updateData, { new: true });
 
         if (product) {
             res.json({ success: true, product });
@@ -175,8 +179,8 @@ async function handleUpdateProduct(id, req, res) {
             res.status(404).json({ success: false, message: 'Product not found' });
         }
     } catch (error) {
-        console.error(`[UPDATE] Error updating product ID: ${id}`, error);
-        res.status(500).json({ success: false, message: error.message });
+        console.error(`[UPDATE] Error updating product ID: ${id}:`, error);
+        res.status(500).json({ success: false, message: error.message || 'Error updating product' });
     }
 }
 
