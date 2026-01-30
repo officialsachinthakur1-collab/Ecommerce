@@ -78,44 +78,40 @@ app.post('/api/orders', async (req, res) => {
     }
 });
 
-app.put(['/api/orders/:id', '/api/orders'], async (req, res) => {
-    const id = req.params.id || req.query.id;
-    const { status } = req.body;
+// Update Order
+app.put('/api/orders/:id', async (req, res) => handleUpdateOrder(req.params.id, req, res));
+app.put('/api/orders', async (req, res) => handleUpdateOrder(req.query.id, req, res));
 
+async function handleUpdateOrder(id, req, res) {
+    const { status } = req.body;
     try {
         const order = await Order.findOneAndUpdate(
             { $or: [{ orderId: id }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }] },
             { status },
             { new: true }
         );
-
-        if (order) {
-            res.json({ success: true, order });
-        } else {
-            res.status(404).json({ success: false, message: 'Order not found' });
-        }
+        if (order) res.json({ success: true, order });
+        else res.status(404).json({ success: false, message: 'Order not found' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-});
+}
 
-app.delete(['/api/orders/:id', '/api/orders'], async (req, res) => {
-    const id = req.params.id || req.query.id;
+// Delete Order
+app.delete('/api/orders/:id', async (req, res) => handleDeleteOrder(req.params.id, req, res));
+app.delete('/api/orders', async (req, res) => handleDeleteOrder(req.query.id, req, res));
 
+async function handleDeleteOrder(id, req, res) {
     try {
         const order = await Order.findOneAndDelete({
             $or: [{ orderId: id }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }]
         });
-
-        if (order) {
-            res.json({ success: true, message: 'Order deleted' });
-        } else {
-            res.status(404).json({ success: false, message: 'Order not found' });
-        }
+        if (order) res.json({ success: true, message: 'Order deleted' });
+        else res.status(404).json({ success: false, message: 'Order not found' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-});
+}
 
 app.post('/api/products', async (req, res) => {
     try {
@@ -151,10 +147,15 @@ app.post('/api/products', async (req, res) => {
     }
 });
 
-app.put(['/api/products/:id', '/api/products'], async (req, res) => {
-    const id = req.params.id || req.query.id;
+// Update Product
+app.put('/api/products/:id', async (req, res) => handleUpdateProduct(req.params.id, req, res));
+app.put('/api/products', async (req, res) => handleUpdateProduct(req.query.id, req, res));
+
+async function handleUpdateProduct(id, req, res) {
     const updateData = req.body;
     const password = req.headers['x-admin-password'];
+
+    console.log(`[UPDATE] Attempting to update product ID: ${id}`);
 
     if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
         return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
@@ -162,7 +163,7 @@ app.put(['/api/products/:id', '/api/products'], async (req, res) => {
 
     try {
         let product = await Product.findOneAndUpdate(
-            { $or: [{ id: !isNaN(id) ? Number(id) : null }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }] },
+            { $or: [{ id: !isNaN(id) && id ? Number(id) : null }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }] },
             updateData,
             { new: true }
         );
@@ -170,15 +171,20 @@ app.put(['/api/products/:id', '/api/products'], async (req, res) => {
         if (product) {
             res.json({ success: true, product });
         } else {
+            console.error(`[UPDATE] Product not found for ID: ${id}`);
             res.status(404).json({ success: false, message: 'Product not found' });
         }
     } catch (error) {
+        console.error(`[UPDATE] Error updating product ID: ${id}`, error);
         res.status(500).json({ success: false, message: error.message });
     }
-});
+}
 
-app.delete(['/api/products/:id', '/api/products'], async (req, res) => {
-    const id = req.params.id || req.query.id;
+// Delete Product
+app.delete('/api/products/:id', async (req, res) => handleDeleteProduct(req.params.id, req, res));
+app.delete('/api/products', async (req, res) => handleDeleteProduct(req.query.id, req, res));
+
+async function handleDeleteProduct(id, req, res) {
     const password = req.headers['x-admin-password'];
 
     console.log(`[DELETE] Attempting to delete product with ID: ${id} from MongoDB`);
@@ -190,7 +196,7 @@ app.delete(['/api/products/:id', '/api/products'], async (req, res) => {
 
     try {
         const product = await Product.findOneAndDelete({
-            $or: [{ id: !isNaN(id) ? Number(id) : null }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }]
+            $or: [{ id: !isNaN(id) && id ? Number(id) : null }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }]
         });
 
         if (product) {
@@ -204,7 +210,7 @@ app.delete(['/api/products/:id', '/api/products'], async (req, res) => {
         console.error(`[DELETE] Error deleting product ID: ${id}`, error);
         res.status(500).json({ success: false, message: error.message });
     }
-});
+}
 
 // Auth Route
 app.post('/api/auth/login', (req, res) => {
@@ -276,7 +282,6 @@ app.post('/api/razorpay/verify', (req, res) => {
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../dist')));
 
-    // Final Robust Catch-all for Express 5+ (Pathless middleware to bypass parser)
     app.use((req, res) => {
         // Only serve index.html for non-API routes
         if (!req.path.startsWith('/api')) {
@@ -285,6 +290,16 @@ if (process.env.NODE_ENV === 'production') {
         res.status(404).send('API Route Not Found');
     });
 }
+
+// Global JSON Error Handler
+app.use((err, req, res, next) => {
+    console.error(">>> UNHANDLED ERROR <<<", err);
+    res.status(500).json({
+        success: false,
+        message: 'Internal Server Error',
+        error: err.message
+    });
+});
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
