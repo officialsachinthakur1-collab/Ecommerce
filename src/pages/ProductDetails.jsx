@@ -3,16 +3,19 @@ import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Star, ShoppingBag, Truck, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Star, ShoppingBag, Truck, ShieldCheck, Heart, Edit3 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import API_URL from '../config';
 import useMobile from '../hooks/useMobile';
 
 const ProductDetails = () => {
     const isMobile = useMobile();
     const { id } = useParams();
     const [selectedSize, setSelectedSize] = useState(null);
-    const [activeImage, setActiveImage] = useState(""); // Moved up to satisfy rules of hooks
+    const [activeImage, setActiveImage] = useState("");
     const { addToCart } = useCart();
-    const { products, loading } = useProducts();
+    const { products, loading, refetch } = useProducts();
+    const { user } = useAuth();
 
     // Initialize active image when product is found
     useEffect(() => {
@@ -133,7 +136,9 @@ const ProductDetails = () => {
                                 {[...Array(Math.floor(Number(product.rating) || 5))].map((_, i) => (
                                     <Star key={i} fill="#fbbf24" size={16} />
                                 ))}
-                                <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginLeft: '0.5rem' }}>({product.reviews} Reviews)</span>
+                                <a href="#review-form-section" style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginLeft: '0.5rem', textDecoration: 'underline' }}>
+                                    ({product.reviews?.length || 0} Reviews) - Write a Review
+                                </a>
                             </div>
 
                             <h1 className="product-title" style={{ fontWeight: '800', lineHeight: 1, marginBottom: '0.5rem' }}>{product.name}</h1>
@@ -208,6 +213,25 @@ const ProductDetails = () => {
                                         </>
                                     )}
                                 </button>
+                                <button
+                                    onClick={() => document.getElementById('review-form-section')?.scrollIntoView({ behavior: 'smooth' })}
+                                    style={{
+                                        padding: '0.75rem 1.25rem',
+                                        border: 'none',
+                                        borderRadius: '9999px',
+                                        background: 'var(--primary-red)',
+                                        color: 'white',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        fontSize: '0.9rem',
+                                        fontWeight: '700',
+                                        boxShadow: '0 4px 15px rgba(255,0,0,0.3)'
+                                    }}
+                                >
+                                    <Edit3 size={18} /> <span>Review</span>
+                                </button>
                                 <button style={{
                                     padding: '1rem',
                                     border: '1px solid #333',
@@ -216,7 +240,7 @@ const ProductDetails = () => {
                                     color: 'white',
                                     cursor: 'pointer'
                                 }}>
-                                    <Star size={20} />
+                                    <Heart size={20} />
                                 </button>
                             </div>
 
@@ -242,7 +266,159 @@ const ProductDetails = () => {
                     </div>
                 </div>
             </div>
+            {/* Reviews Section Separator */}
+            <div className="container" style={{ marginTop: '8rem' }}>
+                <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, #333, transparent)', marginBottom: '4rem' }}></div>
+            </div>
+
+            {/* Reviews Section */}
+            <div className="container" style={{ paddingBottom: '6rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '4rem' }}>
+
+                    {/* Review List */}
+                    <div>
+                        <h2 style={{ fontSize: '1.75rem', fontWeight: '800', marginBottom: '2rem' }}>CUSTOMER REVIEWS</h2>
+                        {(!product.reviews || product.reviews.length === 0) ? (
+                            <p style={{ color: 'var(--text-muted)' }}>No reviews yet. Be the first to share your experience!</p>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                {product.reviews.map((rev, idx) => (
+                                    <div key={idx} style={{ paddingBottom: '2rem', borderBottom: '1px solid #222' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                                            <span style={{ fontWeight: '700', fontSize: '1rem' }}>{rev.userName}</span>
+                                            <div style={{ display: 'flex', color: '#fbbf24' }}>
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star key={i} size={14} fill={i < rev.rating ? "#fbbf24" : "transparent"} stroke={i < rev.rating ? "none" : "#444"} />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem' }}>{rev.comment}</p>
+                                        <span style={{ fontSize: '0.75rem', color: '#444', marginTop: '0.5rem', display: 'block' }}>
+                                            {new Date(rev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Submit Review Form */}
+                    <div id="review-form-section" style={{ background: '#111', padding: '2.5rem', borderRadius: '24px', border: '1px solid #222', height: 'fit-content' }}>
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.5rem' }}>SHARE YOUR THOUGHTS</h3>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '2rem' }}>How was your experience with this product?</p>
+
+                        {!user ? (
+                            <div style={{ textAlign: 'center', padding: '2rem', border: '1px dashed #333', borderRadius: '12px' }}>
+                                <p style={{ color: '#888', marginBottom: '1rem' }}>Please log in to leave a review.</p>
+                                <Link to="/login" className="btn-primary" style={{ display: 'inline-block' }}>Login Now</Link>
+                            </div>
+                        ) : (
+                            <ReviewForm productId={product.id || product._id} refetch={refetch} />
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
+    );
+};
+
+const ReviewForm = ({ productId, refetch }) => {
+    const { user } = useAuth();
+    const [rating, setRating] = useState(5);
+    const [hoverRating, setHoverRating] = useState(0);
+    const [comment, setComment] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState({ type: '', text: '' });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!comment.trim()) return alert("Please enter a comment");
+
+        setLoading(true);
+        try {
+            const res = await fetch(`${API_URL}/api/reviews`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: user.id || user.email,
+                    userName: user.name,
+                    rating,
+                    comment,
+                    productId
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                setMsg({ type: 'success', text: 'Thank you! Your review has been submitted.' });
+                setComment("");
+                setRating(5);
+                refetch();
+            } else {
+                setMsg({ type: 'error', text: data.message || 'Submission failed' });
+            }
+        } catch (error) {
+            setMsg({ type: 'error', text: 'Server error. Please try again.' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+                <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#666', display: 'block', marginBottom: '1rem' }}>Rating</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                            key={star}
+                            size={24}
+                            style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
+                            fill={(hoverRating || rating) >= star ? "#fbbf24" : "transparent"}
+                            stroke={(hoverRating || rating) >= star ? "none" : "#444"}
+                            onMouseEnter={() => setHoverRating(star)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            onClick={() => setRating(star)}
+                            className={(hoverRating || rating) >= star ? "scale-110" : ""}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <div>
+                <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#666', display: 'block', marginBottom: '0.75rem' }}>Comment</label>
+                <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Tell us what you like or dislike..."
+                    style={{
+                        width: '100%',
+                        background: '#050505',
+                        border: '1px solid #222',
+                        borderRadius: '12px',
+                        padding: '1rem',
+                        color: 'white',
+                        minHeight: '120px',
+                        resize: 'none',
+                        outline: 'none'
+                    }}
+                />
+            </div>
+
+            {msg.text && (
+                <div style={{ padding: '1rem', borderRadius: '8px', fontSize: '0.875rem', background: msg.type === 'success' ? 'rgba(74, 222, 128, 0.1)' : 'rgba(239, 68, 68, 0.1)', color: msg.type === 'success' ? '#4ade80' : '#ef4444' }}>
+                    {msg.text}
+                </div>
+            )}
+
+            <button
+                type="submit"
+                disabled={loading}
+                className="btn-primary"
+                style={{ justifyContent: 'center', opacity: loading ? 0.7 : 1 }}
+            >
+                {loading ? 'Submitting...' : 'Post Review'}
+            </button>
+        </form>
     );
 };
 

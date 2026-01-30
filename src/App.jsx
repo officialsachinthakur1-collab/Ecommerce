@@ -16,6 +16,7 @@ import AdminLayout from './components/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
+import AdminReviews from './pages/admin/AdminReviews';
 import Login from './pages/Login';
 import ResetPassword from './pages/ResetPassword';
 import { AuthProvider } from './context/AuthContext';
@@ -49,6 +50,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="orders" element={<AdminOrders />} />
+          <Route path="reviews" element={<AdminReviews />} />
           <Route path="settings" element={<div style={{ padding: '2rem' }}>Settings (Coming Soon)</div>} />
         </Route>
 

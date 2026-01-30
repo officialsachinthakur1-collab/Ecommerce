@@ -10,6 +10,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
         { icon: Package, label: 'Products', path: '/admin/products' },
         { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
+        { icon: Star, label: 'Reviews', path: '/admin/reviews' },
         { icon: Settings, label: 'Settings', path: '/admin/settings' },
     ];
 
