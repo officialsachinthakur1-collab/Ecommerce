@@ -11,6 +11,56 @@ const Checkout = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
+    // Coupon State
+    const [couponInput, setCouponInput] = useState("");
+    const [appliedCoupon, setAppliedCoupon] = useState(null);
+    const [couponMsg, setCouponMsg] = useState({ type: '', text: '' });
+
+    const [discountAmount, setDiscountAmount] = useState(0);
+    const [finalTotal, setFinalTotal] = useState(cartTotal);
+
+    useEffect(() => {
+        if (appliedCoupon) {
+            let discount = 0;
+            if (appliedCoupon.discountType === 'percentage') {
+                discount = (cartTotal * appliedCoupon.discountAmount) / 100;
+            } else {
+                discount = appliedCoupon.discountAmount;
+            }
+            setDiscountAmount(discount);
+            setFinalTotal(cartTotal - discount);
+        } else {
+            setDiscountAmount(0);
+            setFinalTotal(cartTotal);
+        }
+    }, [appliedCoupon, cartTotal]);
+
+    const handleApplyCoupon = async () => {
+        if (!couponInput.trim()) return;
+        setLoading(true);
+        setCouponMsg({ type: '', text: '' });
+        try {
+            const res = await fetch(`${API_URL}/api/coupons?code=${couponInput}`);
+            const data = await res.json();
+            if (data.success) {
+                if (cartTotal < data.coupon.minOrderAmount) {
+                    setCouponMsg({ type: 'error', text: `Minimum order of ₹${data.coupon.minOrderAmount} required` });
+                    setAppliedCoupon(null);
+                } else {
+                    setAppliedCoupon(data.coupon);
+                    setCouponMsg({ type: 'success', text: `Coupon applied: ${data.coupon.discountAmount}${data.coupon.discountType === 'percentage' ? '%' : ' INR'} off` });
+                }
+            } else {
+                setCouponMsg({ type: 'error', text: data.message });
+                setAppliedCoupon(null);
+            }
+        } catch (error) {
+            setCouponMsg({ type: 'error', text: 'Failed to validate coupon' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Form state
     const [formData, setFormData] = useState({
         email: user?.email || '',
@@ -66,7 +116,7 @@ const Checkout = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    amount: cartTotal,
+                    amount: finalTotal,
                     currency: 'INR'
                 })
             });
@@ -104,7 +154,9 @@ const Checkout = () => {
                                 email: formData.email,
                                 userId: user?.id || user?._id || null, // Link to user if logged in
                                 items: cart,
-                                total: `₹${cartTotal.toLocaleString()}`,
+                                total: `₹${finalTotal.toLocaleString()}`,
+                                discount: discountAmount,
+                                couponCode: appliedCoupon?.code || null,
                                 address: formData.address,
                                 city: formData.city,
                                 zip: formData.zip,
@@ -214,7 +266,7 @@ const Checkout = () => {
                                 cursor: loading ? 'wait' : 'pointer'
                             }}
                         >
-                            {loading ? 'Processing...' : `Pay ₹${cartTotal.toLocaleString()}`}
+                            {loading ? 'Processing...' : `Pay ₹${finalTotal.toLocaleString()}`}
                         </button>
 
                     </form>
@@ -246,18 +298,52 @@ const Checkout = () => {
                         ))}
                     </div>
 
-                    <div style={{ borderTop: '1px solid #333', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
-                            <span>Subtotal</span>
-                            <span>₹{cartTotal.toLocaleString()}</span>
+                    <div style={{ borderTop: '1px solid #333', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                        {/* Coupon Input */}
+                        <div>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <input
+                                    type="text"
+                                    placeholder="Discount Code"
+                                    value={couponInput}
+                                    onChange={(e) => setCouponInput(e.target.value)}
+                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', borderRadius: '4px', color: 'white', fontSize: '0.875rem' }}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleApplyCoupon}
+                                    disabled={loading || !couponInput}
+                                    style={{ padding: '0.75rem 1rem', background: '#222', border: '1px solid #444', color: 'white', borderRadius: '4px', cursor: 'pointer', fontSize: '0.875rem' }}
+                                >
+                                    Apply
+                                </button>
+                            </div>
+                            {couponMsg.text && (
+                                <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: couponMsg.type === 'success' ? '#4ade80' : '#ef4444' }}>
+                                    {couponMsg.text}
+                                </p>
+                            )}
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
-                            <span>Shipping</span>
-                            <span>Free</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.25rem', fontWeight: 'bold', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #333' }}>
-                            <span>Total</span>
-                            <span>₹{cartTotal.toLocaleString()}</span>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                                <span>Subtotal</span>
+                                <span>₹{cartTotal.toLocaleString()}</span>
+                            </div>
+                            {discountAmount > 0 && (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4ade80', fontSize: '0.9rem' }}>
+                                    <span>Discount ({appliedCoupon?.code})</span>
+                                    <span>-₹{discountAmount.toLocaleString()}</span>
+                                </div>
+                            )}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.25rem', fontWeight: 'bold', marginTop: '0.5rem', paddingTop: '1rem', borderTop: '1px solid #333' }}>
+                                <span>Total</span>
+                                <span>₹{finalTotal.toLocaleString()}</span>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
