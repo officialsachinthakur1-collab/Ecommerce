@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
                 return { success: false, error: data.message || 'Login failed' };
             }
         } catch (error) {
+            console.error("DEBUG: Login Fetch Error:", error);
             return { success: false, error: 'Server error. Please try again.' };
         }
     };

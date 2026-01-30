@@ -3,7 +3,7 @@ import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Star, ShoppingBag, Truck, ShieldCheck, Heart, Edit3 } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Truck, ShieldCheck, Heart, Edit3 } from 'lucide-react';
 import RatingStars from '../components/common/RatingStars';
 import { useAuth } from '../context/AuthContext';
 import API_URL from '../config';
@@ -345,17 +345,25 @@ const ReviewForm = ({ productId, refetch }) => {
                 <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#666', display: 'block', marginBottom: '1rem' }}>Rating</label>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                     {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
+                        <svg
                             key={star}
                             size={24}
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
                             style={{ cursor: 'pointer', transition: 'transform 0.2s' }}
                             fill={(hoverRating || rating) >= star ? "#fbbf24" : "transparent"}
                             stroke={(hoverRating || rating) >= star ? "none" : "#444"}
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             onMouseEnter={() => setHoverRating(star)}
                             onMouseLeave={() => setHoverRating(0)}
                             onClick={() => setRating(star)}
                             className={(hoverRating || rating) >= star ? "scale-110" : ""}
-                        />
+                        >
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
                     ))}
                 </div>
             </div>

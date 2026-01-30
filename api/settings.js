@@ -1,5 +1,5 @@
-import dbConnect from './utils/db';
-import Setting from './models/Setting';
+import dbConnect from './utils/db.js';
+import Setting from './models/Setting.js';
 
 export default async function handler(req, res) {
     await dbConnect();

@@ -1,4 +1,4 @@
-import dbConnect from './utils/db';
+import dbConnect from './utils/db.js';
 import mongoose from 'mongoose';
 
 const contactSchema = new mongoose.Schema({
