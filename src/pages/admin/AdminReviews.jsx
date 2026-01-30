@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Trash2, Search, ExternalLink } from 'lucide-react';
 import RatingStars from '../../components/common/RatingStars';
 import { useProducts } from '../../hooks/useProducts';
 import API_URL from '../../config';
 
-const AdminReviews = () => {
+export default function AdminReviews() {
     const { products, loading, refetch } = useProducts(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [deleting, setDeleting] = useState(false);
@@ -124,7 +124,4 @@ const AdminReviews = () => {
             )}
         </div>
     );
-};
-
-export default AdminReviews;
-// Forced reload v2
+}
