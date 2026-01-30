@@ -237,8 +237,12 @@ app.post('/api/razorpay/verify', (req, res) => {
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../dist')));
 
-    app.get(/.*/, (req, res) => {
-        res.sendFile(path.join(__dirname, '../dist/index.html'));
+    // Catch-all: Send all non-API requests to React's index.html
+    app.use((req, res, next) => {
+        if (!req.path.startsWith('/api')) {
+            return res.sendFile(path.join(__dirname, '../dist/index.html'));
+        }
+        next();
     });
 }
 
