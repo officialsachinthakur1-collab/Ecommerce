@@ -116,7 +116,8 @@ async function handleDeleteOrder(id, req, res) {
 
 app.post('/api/products', async (req, res) => {
     try {
-        const { name, price, category, description, image, images, sizes, tag, affiliateLink } = req.body;
+        console.log("[POST] Adding new product. Data:", JSON.stringify(req.body));
+        const { name, price, category, description, image, images, sizes, tag, stock, affiliateLink } = req.body;
         const password = req.headers['x-admin-password'];
 
         if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
@@ -134,9 +135,10 @@ app.post('/api/products', async (req, res) => {
             category: category || 'Men',
             description: description || "Engineered for performance.",
             image: image || "",
-            images: images || [],
+            images: Array.isArray(images) ? images : [],
             tag: tag || "New",
-            sizes: sizes || [],
+            sizes: Array.isArray(sizes) ? sizes : [],
+            stock: stock !== undefined ? Number(stock) : 10,
             affiliateLink: affiliateLink || ""
         });
 
