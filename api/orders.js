@@ -7,8 +7,10 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
         try {
-            const { email } = req.query;
-            const query = email ? { email } : {};
+            const { email, userId } = req.query;
+            let query = {};
+            if (userId) query.userId = userId;
+            else if (email) query.email = email;
             const orders = await Order.find(query).sort({ createdAt: -1 });
             return res.status(200).json(orders);
         } catch (error) {

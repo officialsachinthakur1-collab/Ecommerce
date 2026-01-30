@@ -61,7 +61,7 @@ const Navbar = () => {
                             <Link to="/shop" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Shop</Link>
                             <Link to="/blog" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Insights</Link>
                             {user ? (
-                                <Link to="/profile" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--primary-red)' }}>Account</Link>
+                                <Link to="/account" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--primary-red)' }}>Account</Link>
                             ) : (
                                 <Link to="/login" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Sign In</Link>
                             )}
@@ -154,7 +154,7 @@ const Navbar = () => {
                         <Link to="/shop" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SHOP</Link>
                         <Link to="/blog" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>INSIGHTS</Link>
                         {user ? (
-                            <Link to="/profile" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--primary-red)' }}>MY ACCOUNT</Link>
+                            <Link to="/account" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--primary-red)' }}>MY ACCOUNT</Link>
                         ) : (
                             <>
                                 <Link to="/login" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SIGN IN</Link>
