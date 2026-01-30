@@ -13,6 +13,7 @@ const Dashboard = () => {
     });
     const [chartData, setChartData] = useState([]);
     const [topProducts, setTopProducts] = useState([]);
+    const [lowStockProducts, setLowStockProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -30,6 +31,7 @@ const Dashboard = () => {
                     });
                     setChartData(anaData.chartData);
                     setTopProducts(anaData.topProducts);
+                    setLowStockProducts(anaData.lowStockProducts);
                 }
 
                 // Fetch Recent Orders separately for the list
@@ -157,6 +159,32 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Stock Alerts Widget */}
+            {lowStockProducts.length > 0 && (
+                <div style={{ marginTop: '2rem', background: '#111', padding: '2rem', borderRadius: '12px', border: '1px solid #222' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#ff4444' }}>Critical Stock Alerts</h2>
+                        <div style={{ fontSize: '0.75rem', padding: '2px 10px', background: 'rgba(255, 68, 68, 0.1)', color: '#ff4444', borderRadius: '99px', fontWeight: 'bold' }}>ATTENTION REQUIRED</div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+                        {lowStockProducts.map(prod => (
+                            <div key={prod._id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: '#050505', borderRadius: '12px', border: '1px solid #222' }}>
+                                <div style={{ width: '45px', height: '45px', background: '#1a1a1a', borderRadius: '8px', overflow: 'hidden' }}>
+                                    <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '0.9rem', fontWeight: '700' }}>{prod.name}</div>
+                                    <div style={{ fontSize: '0.75rem', color: '#ff4444', fontWeight: 'bold' }}>Only {prod.stock} units left</div>
+                                </div>
+                                <a href="/admin/products" style={{ fontSize: '0.75rem', background: '#222', padding: '0.5rem 0.75rem', borderRadius: '8px', color: 'white', border: '1px solid #333', textDecoration: 'none' }}>
+                                    Restock
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Bottom Section: Recent Orders */}
             <div style={{ marginTop: '2rem', background: '#111', padding: '2rem', borderRadius: '12px', border: '1px solid #222' }}>

@@ -1,5 +1,6 @@
 import dbConnect from './utils/db.js';
 import Order from './models/Order.js';
+import Product from './models/Product.js';
 
 export default async function handler(req, res) {
     await dbConnect();
@@ -49,6 +50,9 @@ export default async function handler(req, res) {
                 .sort((a, b) => b.sales - a.sales)
                 .slice(0, 5);
 
+            // 4. Low Stock Products
+            const lowStockProducts = await Product.find({ stock: { $lte: 10 } }).limit(5);
+
             return res.status(200).json({
                 success: true,
                 stats: {
@@ -57,7 +61,8 @@ export default async function handler(req, res) {
                     avgOrderValue: orders.length > 0 ? (totalRevenue / orders.length) : 0
                 },
                 chartData,
-                topProducts
+                topProducts,
+                lowStockProducts
             });
         } catch (error) {
             return res.status(500).json({ success: false, error: error.message });

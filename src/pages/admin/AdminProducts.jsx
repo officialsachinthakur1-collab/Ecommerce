@@ -134,15 +134,32 @@ const AdminProducts = () => {
                                         {product.stock !== undefined ? product.stock : 10}
                                     </td>
                                     <td data-label="Status" style={{ padding: '1rem 1.5rem' }}>
-                                        <span style={{
-                                            padding: '0.25rem 0.75rem',
-                                            borderRadius: '999px',
-                                            fontSize: '0.75rem',
-                                            background: 'rgba(74, 222, 128, 0.1)',
-                                            color: '#4ade80'
-                                        }}>
-                                            Active
-                                        </span>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                            <span style={{
+                                                padding: '0.25rem 0.75rem',
+                                                borderRadius: '999px',
+                                                fontSize: '0.65rem',
+                                                background: 'rgba(74, 222, 128, 0.1)',
+                                                color: '#4ade80',
+                                                width: 'fit-content',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                Active
+                                            </span>
+                                            {product.stock <= 10 && (
+                                                <span style={{
+                                                    padding: '0.25rem 0.75rem',
+                                                    borderRadius: '999px',
+                                                    fontSize: '0.65rem',
+                                                    background: 'rgba(239, 68, 68, 0.1)',
+                                                    color: '#ef4444',
+                                                    width: 'fit-content',
+                                                    fontWeight: 'bold'
+                                                }}>
+                                                    Low Stock
+                                                </span>
+                                            )}
+                                        </div>
                                     </td>
                                     <td data-label="Actions" style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>
                                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
