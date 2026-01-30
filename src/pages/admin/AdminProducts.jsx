@@ -8,7 +8,7 @@ export default function AdminProducts() {
     const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '', stock: 10 });
+    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +24,8 @@ export default function AdminProducts() {
             image: product.image || '',
             images: Array.isArray(product.images) ? product.images : (product.image ? [product.image] : []),
             sizes: Array.isArray(product.sizes) ? product.sizes.join(', ') : (product.sizes || ''),
-            stock: product.stock !== undefined ? product.stock : 10
+            stock: product.stock !== undefined ? product.stock : 10,
+            affiliateLink: product.affiliateLink || ''
         });
         setIsModalOpen(true);
     };
@@ -54,7 +55,7 @@ export default function AdminProducts() {
                 alert(editingProduct ? 'Product Updated!' : 'Product Added!');
                 setIsModalOpen(false);
                 setEditingProduct(null);
-                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '' });
+                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
                 refetch(); // Refetch products to update the list
             } else {
                 const errorData = await response.json();
@@ -199,7 +200,7 @@ export default function AdminProducts() {
                             <button onClick={() => {
                                 setIsModalOpen(false);
                                 setEditingProduct(null);
-                                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', sizes: '', stock: 10 });
+                                setFormData({ name: '', price: '', category: 'Men', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
                             }} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X /></button>
                         </div>
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -280,6 +281,10 @@ export default function AdminProducts() {
                                     style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
                                 />
                             </div>
+                            <input
+                                name="affiliateLink" placeholder="Affiliate Link (Optional - e.g. Amazon URL)" value={formData.affiliateLink} onChange={handleInputChange}
+                                style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                            />
                             <select
                                 name="category" value={formData.category} onChange={handleInputChange}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}

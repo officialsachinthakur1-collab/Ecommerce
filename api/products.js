@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         try {
-            const { name, price, category, description, image, images, tag } = req.body;
+            const { name, price, category, description, image, images, tag, affiliateLink } = req.body;
             const password = req.headers['x-admin-password'];
 
             if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
@@ -54,7 +54,8 @@ export default async function handler(req, res) {
                 image: primaryImage,
                 images: finalImages,
                 tag: tag || "New",
-                sizes: req.body.sizes || []
+                sizes: req.body.sizes || [],
+                affiliateLink: affiliateLink || ""
             });
 
             return res.status(201).json({ success: true, product });

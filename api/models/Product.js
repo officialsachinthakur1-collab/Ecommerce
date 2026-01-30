@@ -19,6 +19,7 @@ const ProductSchema = new mongoose.Schema({
     }],
     rating: { type: Number, default: 5 },
     stock: { type: Number, default: 10 },
+    affiliateLink: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now }
 });
 

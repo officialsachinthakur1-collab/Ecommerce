@@ -3,7 +3,7 @@ import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ArrowLeft, ShoppingBag, Truck, ShieldCheck, Heart } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Truck, ShieldCheck, Heart, ExternalLink } from 'lucide-react';
 import RatingStars from '../components/common/RatingStars';
 import { useAuth } from '../context/AuthContext';
 import ReviewForm from '../components/product/ReviewForm';
@@ -179,39 +179,59 @@ export default function ProductDetails() {
                                 </div>
                             )}
 
-                            {/* Actions */}
                             <div style={{ display: 'flex', gap: '1rem', marginBottom: '3rem' }}>
-                                <button
-                                    className="btn-primary"
-                                    disabled={product.stock <= 0}
-                                    onClick={() => {
-                                        const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
-                                        if (hasSizing && !selectedSize) {
-                                            alert('Please select a size');
-                                            return;
-                                        }
-                                        addToCart(product, selectedSize || "One Size");
-                                    }}
-                                    style={{
-                                        flex: 1,
-                                        padding: '1rem',
-                                        fontSize: '1rem',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '0.75rem',
-                                        opacity: product.stock <= 0 ? 0.5 : 1,
-                                        cursor: product.stock <= 0 ? 'not-allowed' : 'pointer'
-                                    }}
-                                >
-                                    {product.stock <= 0 ? (
-                                        <>Out of Stock</>
-                                    ) : (
-                                        <>
-                                            <ShoppingBag size={20} /> Add to Cart
-                                        </>
-                                    )}
-                                </button>
+                                {product.affiliateLink ? (
+                                    <a
+                                        href={product.affiliateLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-primary"
+                                        style={{
+                                            flex: 1,
+                                            padding: '1rem',
+                                            textDecoration: 'none',
+                                            textAlign: 'center',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '0.5rem'
+                                        }}
+                                    >
+                                        Buy Now <ExternalLink size={18} />
+                                    </a>
+                                ) : (
+                                    <button
+                                        className="btn-primary"
+                                        disabled={product.stock <= 0}
+                                        onClick={() => {
+                                            const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
+                                            if (hasSizing && !selectedSize) {
+                                                alert('Please select a size');
+                                                return;
+                                            }
+                                            addToCart(product, selectedSize || "One Size");
+                                        }}
+                                        style={{
+                                            flex: 1,
+                                            padding: '1rem',
+                                            fontSize: '1rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '0.75rem',
+                                            opacity: product.stock <= 0 ? 0.5 : 1,
+                                            cursor: product.stock <= 0 ? 'not-allowed' : 'pointer'
+                                        }}
+                                    >
+                                        {product.stock <= 0 ? (
+                                            <>Out of Stock</>
+                                        ) : (
+                                            <>
+                                                <ShoppingBag size={20} /> Add to Cart
+                                            </>
+                                        )}
+                                    </button>
+                                )}
                                 <button style={{
                                     padding: '1rem',
                                     border: '1px solid #333',
