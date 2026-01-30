@@ -38,6 +38,8 @@ const Home = () => {
             </Suspense>
             <ValueProps />
 
+            <CuratedSections title="New Arrivals" tag="New" limit={4} />
+
             <CuratedSections title="Trending Now" tag="Trending" limit={4} />
 
             <SplitFeatured
