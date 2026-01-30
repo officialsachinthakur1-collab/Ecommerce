@@ -2,10 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { products as initialProducts } from '../src/data/products.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Razorpay Instance
 const razorpay = new Razorpay({
@@ -228,6 +233,15 @@ app.post('/api/razorpay/verify', (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+// Serve static files from React build (Production)
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../dist')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../dist/index.html'));
+    });
+}
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
 });
