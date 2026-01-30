@@ -13,23 +13,23 @@ const Layout = () => {
     const [showAuthModal, setShowAuthModal] = useState(false);
 
     useEffect(() => {
-        // Target Home Page explicitly for the auto-show
-        const isHomePage = location.pathname === '/' || location.pathname === '/index.html';
-        const isAuthPage = location.pathname.includes('signup') || location.pathname.includes('login') || location.pathname.includes('admin');
+        const isAuthOrAdmin = location.pathname.includes('login') || location.pathname.includes('signup') || location.pathname.includes('admin');
 
-        if (!loading && !user && isHomePage && !isAuthPage) {
-            const hasSeenModal = sessionStorage.getItem('gsm_auth_popup_fresh');
+        console.log("Modal Trigger Check:", { user: !!user, isAuthOrAdmin, path: location.pathname });
 
-            if (!hasSeenModal) {
+        if (!user && !isAuthOrAdmin) {
+            const key = 'gsm_final_v9';
+            if (!sessionStorage.getItem(key)) {
+                console.log("Modal timer starting...");
                 const timer = setTimeout(() => {
+                    console.log("Setting showAuthModal to true");
                     setShowAuthModal(true);
-                    sessionStorage.setItem('gsm_auth_popup_fresh', 'true');
-                }, 2000); // 2-second delay for premium feel
-
+                    sessionStorage.setItem(key, 'true');
+                }, 2000);
                 return () => clearTimeout(timer);
             }
         }
-    }, [user, loading, location.pathname]);
+    }, [user, location.pathname]);
 
     return (
         <div style={{ background: 'var(--bg-color)', minHeight: '100vh', color: 'white' }}>

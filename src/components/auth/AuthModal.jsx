@@ -4,7 +4,11 @@ import { X, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const AuthModal = ({ isOpen, onClose }) => {
-    const [isLogin, setIsLogin] = useState(false); // Default to Signup as per user request
+    useEffect(() => {
+        if (isOpen) console.log("AuthModal is now OPEN");
+    }, [isOpen]);
+
+    const [isLogin, setIsLogin] = useState(false);
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
