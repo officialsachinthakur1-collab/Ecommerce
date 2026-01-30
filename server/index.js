@@ -156,28 +156,31 @@ async function handleUpdateProduct(id, req, res) {
     const { _id, id: bodyId, ...updateData } = req.body; // Strip immutable fields
     const password = req.headers['x-admin-password'];
 
-    console.log(`[UPDATE] Attempting to update product ID: ${id}`);
+    console.log(`[UPDATE] Attempting to update product. Received ID: "${id}", Name in body: "${updateData.name}"`);
 
     if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
         return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
     }
 
     try {
-        const query = { $or: [] };
-        if (id && !isNaN(id)) query.$or.push({ id: Number(id) });
-        if (id && mongoose.Types.ObjectId.isValid(id)) query.$or.push({ _id: id });
+        const queryOr = [];
+        if (id && !isNaN(id)) queryOr.push({ id: Number(id) });
+        if (id && mongoose.Types.ObjectId.isValid(id)) queryOr.push({ _id: id });
+        if (id) queryOr.push({ id: String(id) });
+        if (id) queryOr.push({ name: String(id) });
 
-        if (query.$or.length === 0) {
+        if (queryOr.length === 0) {
             return res.status(400).json({ success: false, message: 'Invalid Product ID' });
         }
 
-        let product = await Product.findOneAndUpdate(query, updateData, { new: true });
+        let product = await Product.findOneAndUpdate({ $or: queryOr }, updateData, { new: true });
 
         if (product) {
+            console.log(`[UPDATE] Successfully updated product: ${product.name}`);
             res.json({ success: true, product });
         } else {
             console.error(`[UPDATE] Product not found for ID: ${id}`);
-            res.status(404).json({ success: false, message: 'Product not found' });
+            res.status(404).json({ success: false, message: `Product not found for ID: ${id}` });
         }
     } catch (error) {
         console.error(`[UPDATE] Error updating product ID: ${id}:`, error);
@@ -192,7 +195,7 @@ app.delete('/api/products', async (req, res) => handleDeleteProduct(req.query.id
 async function handleDeleteProduct(id, req, res) {
     const password = req.headers['x-admin-password'];
 
-    console.log(`[DELETE] Attempting to delete product with ID: ${id} from MongoDB`);
+    console.log(`[DELETE] Attempting to delete product. Received ID: "${id}"`);
 
     if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
         console.warn(`[DELETE] Unauthorized attempt for product ID: ${id}`);
@@ -200,12 +203,16 @@ async function handleDeleteProduct(id, req, res) {
     }
 
     try {
-        const product = await Product.findOneAndDelete({
-            $or: [{ id: !isNaN(id) && id ? Number(id) : null }, { _id: mongoose.Types.ObjectId.isValid(id) ? id : null }]
-        });
+        const queryOr = [];
+        if (id && !isNaN(id)) queryOr.push({ id: Number(id) });
+        if (id && mongoose.Types.ObjectId.isValid(id)) queryOr.push({ _id: id });
+        if (id) queryOr.push({ id: String(id) });
+        if (id) queryOr.push({ name: String(id) });
+
+        const product = await Product.findOneAndDelete({ $or: queryOr });
 
         if (product) {
-            console.log(`[DELETE] Successfully deleted product ID: ${id} from MongoDB`);
+            console.log(`[DELETE] Successfully deleted product: ${product.name}`);
             res.json({ success: true, message: 'Product deleted' });
         } else {
             console.error(`[DELETE] Product not found for ID: ${id} in MongoDB`);
