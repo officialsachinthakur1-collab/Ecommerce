@@ -12,6 +12,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+console.log(">>> GetSetMart Server Starting - Express 5 Engine Active <<<");
+console.log(">>> Current Commit Fix: Robust app.use Catch-all <<<");
+
 // Razorpay Instance
 const razorpay = new Razorpay({
     key_id: 'rzp_live_S7fi6DftRGCZQo',
@@ -237,12 +240,10 @@ app.post('/api/razorpay/verify', (req, res) => {
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../dist')));
 
-    // Catch-all: Send all non-API requests to React's index.html
-    app.use((req, res, next) => {
-        if (!req.path.startsWith('/api')) {
-            return res.sendFile(path.join(__dirname, '../dist/index.html'));
-        }
-        next();
+    // Final Robust Catch-all for Express 5+
+    app.get('/*', (req, res, next) => {
+        if (req.path.startsWith('/api')) return next();
+        res.sendFile(path.join(__dirname, '../dist/index.html'));
     });
 }
 
