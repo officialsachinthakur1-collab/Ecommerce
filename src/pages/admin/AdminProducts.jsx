@@ -239,6 +239,19 @@ export default function AdminProducts() {
                                 name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
                             />
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>Primary Thumbnail Image URL</label>
+                                <input
+                                    name="image" placeholder="Main Product Image URL (Thumbnail)" value={formData.image} onChange={handleInputChange}
+                                    style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                />
+                                {formData.image && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem', background: '#1a1a1a', borderRadius: '8px' }}>
+                                        <img src={formData.image} alt="Thumbnail Preview" style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                                        <span style={{ fontSize: '0.7rem', color: '#4ade80' }}>✓ Thumbnail Active</span>
+                                    </div>
+                                )}
+                            </div>
                             <div style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                                     <h3 style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>Product Gallery</h3>
