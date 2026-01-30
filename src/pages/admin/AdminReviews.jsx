@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Star, Trash2, Search, ExternalLink } from 'lucide-react';
+import { Trash2, Search, ExternalLink } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import API_URL from '../../config';
 
@@ -98,9 +98,7 @@ const AdminReviews = () => {
                                         </td>
                                         <td style={{ padding: '1rem 1.5rem' }}>
                                             <div style={{ display: 'flex', color: '#fbbf24' }}>
-                                                {[...Array(5)].map((_, i) => (
-                                                    <Star key={i} size={14} fill={i < rev.rating ? "#fbbf24" : "transparent"} stroke={i < rev.rating ? "none" : "#444"} />
-                                                ))}
+                                                {rev.rating}/5
                                             </div>
                                         </td>
                                         <td style={{ padding: '1rem 1.5rem', color: 'var(--text-muted)', maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -130,3 +128,4 @@ const AdminReviews = () => {
 };
 
 export default AdminReviews;
+// Forced reload

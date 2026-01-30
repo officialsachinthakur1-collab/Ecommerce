@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X, Star, Ticket } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X, Ticket } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import useMobile from '../../hooks/useMobile';
 
@@ -12,7 +12,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
         { icon: Package, label: 'Products', path: '/admin/products' },
         { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
-        { icon: Star, label: 'Reviews', path: '/admin/reviews' },
+        { icon: Settings, label: 'Reviews', path: '/admin/reviews' },
         { icon: Ticket, label: 'Coupons', path: '/admin/coupons' },
         { icon: Settings, label: 'Settings', path: '/admin/settings' },
     ];
@@ -101,3 +101,4 @@ const AdminSidebar = ({ isOpen, onClose }) => {
 };
 
 export default AdminSidebar;
+// Forced reload
