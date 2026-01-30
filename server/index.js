@@ -146,7 +146,7 @@ app.post('/api/products', async (req, res) => {
         res.status(201).json({ success: true, product: newProduct });
     } catch (error) {
         console.error("Backend Error adding product:", error);
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: error.message, error: error });
     }
 });
 
