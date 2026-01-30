@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -9,23 +9,26 @@ import AuthModal from '../auth/AuthModal';
 
 const Layout = () => {
     const { user, loading } = useAuth();
+    const location = useLocation();
     const [showAuthModal, setShowAuthModal] = useState(false);
 
     useEffect(() => {
-        // Only trigger if not loading and user is a guest
-        if (!loading && !user) {
-            const hasSeenModal = sessionStorage.getItem('hasSeenAuthModal');
+        // Don't show on auth pages or if already logged in
+        const isAuthPage = location.pathname.includes('signup') || location.pathname.includes('login');
+
+        if (!loading && !user && !isAuthPage) {
+            const hasSeenModal = sessionStorage.getItem('gsm_auth_popup_v1');
 
             if (!hasSeenModal) {
                 const timer = setTimeout(() => {
                     setShowAuthModal(true);
-                    sessionStorage.setItem('hasSeenAuthModal', 'true');
-                }, 3000); // 3-second delay like Amazon/Premium sites
+                    sessionStorage.setItem('gsm_auth_popup_v1', 'true');
+                }, 2500); // Slightly faster trigger
 
                 return () => clearTimeout(timer);
             }
         }
-    }, [user, loading]);
+    }, [user, loading, location.pathname]);
 
     return (
         <div style={{ background: 'var(--bg-color)', minHeight: '100vh', color: 'white' }}>

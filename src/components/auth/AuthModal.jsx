@@ -30,30 +30,30 @@ const AuthModal = ({ isOpen, onClose }) => {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)' }}
+                        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(10px)' }}
                     />
 
                     {/* Modal */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.9, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 30 }}
                         style={{
                             position: 'relative',
                             width: '100%',
-                            maxWidth: '440px',
+                            maxWidth: '450px',
                             background: '#0a0a0a',
                             borderRadius: '32px',
-                            border: '1px solid #222',
+                            border: '1px solid #333',
                             padding: '3rem',
-                            boxShadow: '0 30px 60px rgba(0,0,0,0.8)'
+                            boxShadow: '0 0 100px rgba(255,0,0,0.1), 0 30px 60px rgba(0,0,0,0.8)'
                         }}
                     >
                         <button
