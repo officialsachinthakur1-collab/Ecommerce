@@ -166,7 +166,6 @@ async function handleUpdateProduct(id, req, res) {
         const queryOr = [];
         if (id && !isNaN(id)) queryOr.push({ id: Number(id) });
         if (id && mongoose.Types.ObjectId.isValid(id)) queryOr.push({ _id: id });
-        if (id) queryOr.push({ id: String(id) });
         if (id) queryOr.push({ name: String(id) });
 
         if (queryOr.length === 0) {
@@ -206,7 +205,6 @@ async function handleDeleteProduct(id, req, res) {
         const queryOr = [];
         if (id && !isNaN(id)) queryOr.push({ id: Number(id) });
         if (id && mongoose.Types.ObjectId.isValid(id)) queryOr.push({ _id: id });
-        if (id) queryOr.push({ id: String(id) });
         if (id) queryOr.push({ name: String(id) });
 
         const product = await Product.findOneAndDelete({ $or: queryOr });

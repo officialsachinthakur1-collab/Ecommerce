@@ -69,7 +69,7 @@ export default function AdminProducts() {
             };
 
             const url = editingProduct
-                ? `${API_URL}/api/products?id=${editingProduct.id}`
+                ? `${API_URL}/api/products?id=${editingProduct.id || editingProduct._id}`
                 : `${API_URL}/api/products`;
             const method = editingProduct ? 'PUT' : 'POST';
 
@@ -147,7 +147,7 @@ export default function AdminProducts() {
                         </thead>
                         <tbody>
                             {products.map((product) => (
-                                <tr key={product.id} className="admin-table-row">
+                                <tr key={product.id || product._id} className="admin-table-row">
                                     <td data-label="Product Name" style={{ padding: '1rem 1.5rem', fontWeight: '600' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             {/* Simple color block for image placeholder if no image */}
@@ -202,7 +202,7 @@ export default function AdminProducts() {
                                                 <Edit2 size={18} />
                                             </button>
                                             <button
-                                                onClick={() => handleDelete(product.id)}
+                                                onClick={() => handleDelete(product.id || product._id)}
                                                 style={{ background: 'transparent', border: 'none', color: '#ff3333', cursor: 'pointer' }}
                                             >
                                                 <Trash2 size={18} />
