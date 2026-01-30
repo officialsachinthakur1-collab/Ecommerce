@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ArrowRight, Lock, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -118,6 +118,11 @@ const Login = () => {
                                 }}
                                 required
                             />
+                        </div>
+                        <div style={{ textAlign: 'right', marginTop: '0.5rem' }}>
+                            <Link to="/forgot-password" style={{ fontSize: '0.75rem', color: 'var(--primary-red)', textDecoration: 'none' }}>
+                                Forgot Password?
+                            </Link>
                         </div>
                     </div>
 
