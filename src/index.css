@@ -206,6 +206,25 @@
    border-radius: 4px;
  }
 
+ /* Admin Modal Scrollbar */
+ .custom-scrollbar::-webkit-scrollbar {
+   width: 6px;
+ }
+
+ .custom-scrollbar::-webkit-scrollbar-track {
+   background: #111;
+   border-radius: 10px;
+ }
+
+ .custom-scrollbar::-webkit-scrollbar-thumb {
+   background: #333;
+   border-radius: 10px;
+ }
+
+ .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+   background: #444;
+ }
+
  /* Split Featured Desktop Styles */
  .split-image {
    position: relative;

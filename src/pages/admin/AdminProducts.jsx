@@ -222,9 +222,10 @@ export default function AdminProducts() {
                     position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100
                 }}>
-                    <div style={{
+                    <div className="custom-scrollbar" style={{
                         background: '#111', padding: '2rem', borderRadius: '24px',
-                        width: '100%', maxWidth: '500px', border: '1px solid #333'
+                        width: '95%', maxWidth: '500px', border: '1px solid #333',
+                        maxHeight: '90vh', overflowY: 'auto'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
                             <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{editingProduct ? 'Edit Product' : 'Add Product'}</h2>
