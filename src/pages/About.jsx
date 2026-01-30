@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { Stars, Float, MeshDistortMaterial } from '@react-three/drei';
+import API_URL from '../config';
 
 const About = () => {
     return (
@@ -157,20 +159,99 @@ const About = () => {
                     </div>
 
                     <div style={{ background: '#0a0a0a', padding: '3rem', borderRadius: '24px', border: '1px solid #1a1a1a' }}>
-                        <form style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }} onSubmit={(e) => { e.preventDefault(); alert("Message Sent! We'll get back to you soon."); }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                                <input placeholder="Your Name" style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }} required />
-                                <input type="email" placeholder="Email Address" style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }} required />
-                            </div>
-                            <input placeholder="Subject" style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }} required />
-                            <textarea placeholder="Your Message" rows={5} style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white', resize: 'none' }} required></textarea>
-                            <button className="btn-primary" style={{ padding: '1.25rem', justifyContent: 'center' }}>Send Message</button>
-                        </form>
+                        <ContactForm />
                     </div>
                 </div>
             </section>
-
         </div>
+    );
+};
+
+const ContactForm = () => {
+    const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+    const [loading, setLoading] = useState(false);
+    const [msg, setMsg] = useState({ type: '', text: '' });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMsg({ type: '', text: '' });
+
+        try {
+            const res = await fetch(`${API_URL}/api/contact`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const data = await res.json();
+            if (data.success) {
+                setMsg({ type: 'success', text: data.message });
+                setFormData({ name: '', email: '', subject: '', message: '' });
+            } else {
+                setMsg({ type: 'error', text: data.message || 'Error sending message' });
+            }
+        } catch (error) {
+            setMsg({ type: 'error', text: 'Network error. Please try again.' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <form style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }} onSubmit={handleSubmit}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <input
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }}
+                    required
+                />
+                <input
+                    type="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }}
+                    required
+                />
+            </div>
+            <input
+                placeholder="Subject"
+                value={formData.subject}
+                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white' }}
+                required
+            />
+            <textarea
+                placeholder="Your Message"
+                rows={5}
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                style={{ padding: '1rem', background: '#111', border: '1px solid #222', borderRadius: '8px', color: 'white', resize: 'none' }}
+                required
+            ></textarea>
+
+            {msg.text && (
+                <div style={{
+                    padding: '1rem',
+                    borderRadius: '8px',
+                    fontSize: '0.875rem',
+                    background: msg.type === 'success' ? 'rgba(74, 222, 128, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                    color: msg.type === 'success' ? '#4ade80' : '#ef4444'
+                }}>
+                    {msg.text}
+                </div>
+            )}
+
+            <button
+                className="btn-primary"
+                style={{ padding: '1.25rem', justifyContent: 'center', opacity: loading ? 0.7 : 1 }}
+                disabled={loading}
+            >
+                {loading ? 'Sending...' : 'Send Message'}
+            </button>
+        </form>
     );
 };
 
