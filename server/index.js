@@ -240,10 +240,13 @@ app.post('/api/razorpay/verify', (req, res) => {
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../dist')));
 
-    // Final Robust Catch-all for Express 5+
-    app.get('/*', (req, res, next) => {
-        if (req.path.startsWith('/api')) return next();
-        res.sendFile(path.join(__dirname, '../dist/index.html'));
+    // Final Robust Catch-all for Express 5+ (Pathless middleware to bypass parser)
+    app.use((req, res) => {
+        // Only serve index.html for non-API routes
+        if (!req.path.startsWith('/api')) {
+            return res.sendFile(path.join(__dirname, '../dist/index.html'));
+        }
+        res.status(404).send('API Route Not Found');
     });
 }
 
