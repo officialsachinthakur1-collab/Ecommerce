@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X, Star, Ticket } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const AdminSidebar = ({ isOpen, onClose }) => {
@@ -11,6 +11,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { icon: Package, label: 'Products', path: '/admin/products' },
         { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
         { icon: Star, label: 'Reviews', path: '/admin/reviews' },
+        { icon: Ticket, label: 'Coupons', path: '/admin/coupons' },
         { icon: Settings, label: 'Settings', path: '/admin/settings' },
     ];
 
