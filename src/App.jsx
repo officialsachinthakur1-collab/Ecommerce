@@ -17,6 +17,7 @@ import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -51,8 +52,9 @@ function App() {
           <Route path="settings" element={<div style={{ padding: '2rem' }}>Settings (Coming Soon)</div>} />
         </Route>
 
-        {/* Login Route */}
+        {/* Login & Reset Routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </AuthProvider>
   );

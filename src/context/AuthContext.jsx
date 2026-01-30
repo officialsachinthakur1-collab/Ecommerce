@@ -74,10 +74,38 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
     };
 
+    const forgotPassword = async (email) => {
+        try {
+            const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+            return await response.json();
+        } catch (error) {
+            return { success: false, error: 'Server error. Please try again.' };
+        }
+    };
+
+    const resetPassword = async (token, password) => {
+        try {
+            const response = await fetch(`${API_URL}/api/auth/reset-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, password }),
+            });
+            return await response.json();
+        } catch (error) {
+            return { success: false, error: 'Server error. Please try again.' };
+        }
+    };
+
     const value = {
         user,
         login,
         signup,
+        forgotPassword,
+        resetPassword,
         logout,
         isAuthenticated: !!user,
         loading
