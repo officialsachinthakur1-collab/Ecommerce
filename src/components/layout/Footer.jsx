@@ -1,8 +1,40 @@
-﻿import { Link } from 'react-router-dom';
+﻿import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import useMobile from '../../hooks/useMobile';
+import API_URL from '../../../config';
 
 const Footer = () => {
     const isMobile = useMobile();
+    const [email, setEmail] = useState('');
+    const [status, setStatus] = useState('idle'); // idle, loading, success, error
+    const [message, setMessage] = useState('');
+
+    const handleSubscribe = async (e) => {
+        e.preventDefault();
+        setStatus('loading');
+        setMessage('');
+
+        try {
+            const res = await fetch(`${API_URL}/api/newsletter`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                setStatus('success');
+                setMessage(data.message);
+                setEmail('');
+            } else {
+                setStatus('error');
+                setMessage(data.message || 'Something went wrong.');
+            }
+        } catch (error) {
+            setStatus('error');
+            setMessage('Network error. Please try again.');
+        }
+    };
 
     return (
         <footer className="footer-section">
@@ -13,23 +45,44 @@ const Footer = () => {
                         <h3 className="section-header-title" style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase', textAlign: 'left', width: '100%', marginLeft: 0 }}>Join the Movement</h3>
                         <div style={{ marginLeft: 0, marginRight: 0, width: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                             <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', textAlign: 'left', width: '100%' }}>Sign up for exclusive drops and early access.</p>
-                            <div style={{ display: 'flex', gap: '1rem', maxWidth: '400px', width: '100%' }}>
-                                <input
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    style={{
-                                        flex: 1,
-                                        padding: '1rem',
-                                        background: 'transparent',
-                                        border: '1px solid #333',
-                                        color: 'white',
-                                        borderRadius: '4px',
-                                        minWidth: 0,
-                                        textAlign: 'left'
-                                    }}
-                                />
-                                <button className="btn-primary">Subscribe</button>
-                            </div>
+                            <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '1rem', maxWidth: '400px', width: '100%', flexDirection: 'column' }}>
+                                <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                                    <input
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        style={{
+                                            flex: 1,
+                                            padding: '1rem',
+                                            background: 'transparent',
+                                            border: '1px solid #333',
+                                            color: 'white',
+                                            borderRadius: '4px',
+                                            minWidth: 0,
+                                            textAlign: 'left'
+                                        }}
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={status === 'loading'}
+                                        className="btn-primary"
+                                        style={{ opacity: status === 'loading' ? 0.7 : 1 }}
+                                    >
+                                        {status === 'loading' ? 'Wait...' : 'Subscribe'}
+                                    </button>
+                                </div>
+                                {message && (
+                                    <div style={{
+                                        fontSize: '0.875rem',
+                                        color: status === 'success' ? '#4ade80' : '#ef4444',
+                                        marginTop: '0.5rem'
+                                    }}>
+                                        {message}
+                                    </div>
+                                )}
+                            </form>
                         </div>
                     </div>
 
