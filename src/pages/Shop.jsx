@@ -91,7 +91,7 @@ const Shop = () => {
                         marginBottom: '1rem'
                     }}
                 >
-                    {category === 'All' ? 'Our Collection' : `${category} Style`}
+                    {category === 'All' ? 'Our Catalog' : `${category} Style`}
                 </motion.h1>
                 <p style={{ color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', fontSize: '1rem' }}>
                     Engineered for performance, tailored for the street.

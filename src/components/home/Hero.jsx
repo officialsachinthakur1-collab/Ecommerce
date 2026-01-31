@@ -95,7 +95,7 @@ const Hero = () => {
                             className="btn-primary"
                             style={{ padding: '1.2rem 3.5rem', fontSize: '1.1rem', borderRadius: '4px' }}
                         >
-                            Shop Collection
+                            Shop Now
                         </motion.button>
                     </Link>
                 </div>
