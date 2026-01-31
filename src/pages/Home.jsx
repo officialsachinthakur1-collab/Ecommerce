@@ -38,9 +38,11 @@ const Home = () => {
             </Suspense>
 
 
-            <CuratedSections title="New Arrivals" tag="New" limit={4} />
-
             <CuratedSections title="Trending Now" tag="Trending" limit={4} />
+
+            <CuratedSections title="Best Sellers" tag="Bestseller" limit={4} />
+
+            <CuratedSections title="New Arrivals" tag="New" limit={4} />
 
             <SplitFeatured
                 title="For Him"
@@ -62,7 +64,7 @@ const Home = () => {
                 image="/assets/banners/women_fashion.png"
             />
 
-            <CuratedSections title="Best Sellers" tag="Bestseller" limit={4} />
+
 
             <BlogGrid />
             <Testimonials />
