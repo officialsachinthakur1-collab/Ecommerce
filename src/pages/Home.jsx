@@ -69,6 +69,7 @@ const Home = () => {
             <BlogGrid />
             <Testimonials />
             <ValueProps />
+
         </>
     );
 };
