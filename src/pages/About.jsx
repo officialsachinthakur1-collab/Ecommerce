@@ -147,7 +147,7 @@ const About = () => {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                             <div>
                                 <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>HQ Address</h4>
-                                <p style={{ color: 'var(--text-muted)' }}>123 Innovation Drive, Tech City, Metaverse 404</p>
+                                <p style={{ color: 'var(--text-muted)' }}>Noida, Uttar Pradesh, India</p>
                             </div>
                             <div>
                                 <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>Email</h4>
