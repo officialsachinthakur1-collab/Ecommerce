@@ -51,34 +51,17 @@ const Navbar = () => {
                 <div className="container" style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
+                    gap: isMobile ? '1rem' : '2.5rem',
                     width: '100%',
                     position: 'relative'
                 }}>
-                    {/* Left Section: Menu (Mobile) / Nav (Desktop) */}
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-                        <div className="desktop-nav">
-                            <Link to="/shop" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Shop</Link>
-                            <Link to="/blog" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Insights</Link>
-                            {user ? (
-                                <Link to="/account" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase', color: 'var(--primary-red)' }}>Account</Link>
-                            ) : (
-                                <Link to="/login" style={{ fontWeight: 500, fontSize: '0.9rem', textTransform: 'uppercase' }}>Sign In</Link>
-                            )}
-                        </div>
-                        <div className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
+                    {/* Left Section: Logo & Mobile Toggle */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <div className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)} style={{ display: isMobile ? 'flex' : 'none' }}>
                             <Menu size={24} />
                         </div>
-                    </div>
-
-                    {/* Center Section: Logo (Perfectly Centered) */}
-                    <div style={{
-                        flex: '0 0 auto',
-                        textAlign: 'center',
-                        zIndex: 2
-                    }}>
                         <Link to="/" style={{
-                            fontSize: isMobile ? '1.1rem' : '1.5rem',
+                            fontSize: isMobile ? '1.1rem' : '1.4rem',
                             fontWeight: 800,
                             letterSpacing: '-0.05em',
                             color: 'white',
@@ -88,22 +71,82 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* Right Section: Utilities */}
+                    {/* Center Section: Persistent Search Bar (Amazon Style) */}
                     <div style={{
                         flex: 1,
-                        display: 'flex',
-                        gap: isMobile ? '1rem' : '1.5rem',
-                        alignItems: 'center',
-                        justifyContent: 'flex-end'
+                        maxWidth: '800px',
+                        display: isMobile ? 'none' : 'block' // Hide on mobile to save space, or show smaller
                     }}>
-                        <div onClick={() => setSearchOpen(true)} style={{ cursor: 'pointer' }}>
-                            <Search size={isMobile ? 18 : 20} />
-                        </div>
+                        <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }}>
+                            <input
+                                type="text"
+                                placeholder="Search Style Essentials..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.75rem 1.25rem',
+                                    paddingRight: '3.5rem',
+                                    background: 'rgba(255,255,255,0.05)',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    borderRadius: '8px',
+                                    color: 'white',
+                                    fontSize: '0.9rem',
+                                    outline: 'none',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = 'var(--primary-red)'}
+                                onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                            />
+                            <button type="submit" style={{
+                                position: 'absolute',
+                                right: '0.5rem',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                background: 'var(--primary-red)',
+                                border: 'none',
+                                borderRadius: '4px',
+                                width: '2.5rem',
+                                height: '2.2rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                color: 'white'
+                            }}>
+                                <Search size={18} />
+                            </button>
+                        </form>
+                    </div>
+
+                    {/* Right Section: Utilities & Desktop Nav */}
+                    <div style={{
+                        display: 'flex',
+                        gap: isMobile ? '1rem' : '2rem',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        flexShrink: 0
+                    }}>
+                        {/* Desktop Links (Repositioned) */}
+                        {!isMobile && (
+                            <>
+                                <Link to="/shop" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Shop</Link>
+                                <Link to="/blog" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Insights</Link>
+                            </>
+                        )}
+
+                        {isMobile && (
+                            <div onClick={() => setSearchOpen(true)} style={{ cursor: 'pointer' }}>
+                                <Search size={22} />
+                            </div>
+                        )}
+
                         <Link to="/wishlist" style={{ cursor: 'pointer', color: 'inherit' }}>
-                            <Heart size={isMobile ? 18 : 20} />
+                            <Heart size={isMobile ? 22 : 20} />
                         </Link>
+
                         <div style={{ position: 'relative', cursor: 'pointer' }} onClick={toggleCart}>
-                            <ShoppingBag size={isMobile ? 18 : 20} />
+                            <ShoppingBag size={isMobile ? 22 : 20} />
                             {cartCount > 0 && (
                                 <span style={{
                                     position: 'absolute',
@@ -122,6 +165,14 @@ const Navbar = () => {
                                 }}>{cartCount}</span>
                             )}
                         </div>
+
+                        {user ? (
+                            <Link to="/account" style={{ display: isMobile ? 'none' : 'block' }}>
+                                <div style={{ border: '1px solid #333', padding: '0.4rem 0.8rem', borderRadius: '4px', fontSize: '0.8rem' }}>Me</div>
+                            </Link>
+                        ) : (
+                            <Link to="/login" style={{ display: isMobile ? 'none' : 'block', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Sign In</Link>
+                        )}
                     </div>
                 </div>
             </nav>
