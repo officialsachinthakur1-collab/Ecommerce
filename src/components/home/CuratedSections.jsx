@@ -49,8 +49,7 @@ const CuratedSections = ({ title, tag, limit = 4 }) => {
                         fontWeight: '900',
                         textTransform: 'uppercase',
                         letterSpacing: '-0.02em',
-                        marginTop: '0.5rem',
-                        marginLeft: 0 // Class handles it on mobile, but we clear inline
+                        marginTop: '0.5rem'
                     }}>
                         {title.split(' ')[0]} <span className="text-gradient">{title.split(' ').slice(1).join(' ')}</span>
                     </h2>

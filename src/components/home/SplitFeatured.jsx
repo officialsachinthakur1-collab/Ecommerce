@@ -9,7 +9,7 @@ const SplitFeatured = ({ title, subtitle, buttonText, imageLeft = false, linkTo 
             <div className="split-section split-section-container">
                 {/* Content Side */}
                 <div className="split-content" style={{ order: imageLeft ? 2 : 1 }}>
-                    <h2 className="split-title section-header-title" style={{ marginLeft: 0 }}>
+                    <h2 className="split-title section-header-title">
                         {title}
                     </h2>
                     <div style={{ padding: isMobile ? '0 1.5rem' : '0' }}>
