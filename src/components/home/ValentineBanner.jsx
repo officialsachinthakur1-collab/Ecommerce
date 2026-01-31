@@ -70,15 +70,30 @@ const ValentineBanner = () => {
                     <ambientLight intensity={0.5} />
                     <pointLight position={[10, 10, 10]} intensity={1} />
 
+                    {/* Main Hearts */}
                     <Heart position={[-6, 2, 0]} rotation={[0, 0, Math.PI]} scale={0.15} color="#ff4d4d" speed={0.5} />
                     <Heart position={[5, -1, 2]} rotation={[0, 0.5, Math.PI]} scale={0.1} color="#ff8080" speed={0.8} />
                     <Heart position={[-2, -3, 1]} rotation={[0.2, -0.2, Math.PI]} scale={0.12} color="#cc0000" speed={0.6} />
+
+                    {/* Additional Small Hearts for Depth */}
+                    <Heart position={[-10, 4, -5]} rotation={[0.5, 0.5, Math.PI]} scale={0.05} color="#ffdada" speed={1.5} />
+                    <Heart position={[12, -5, -3]} rotation={[-0.5, -0.5, Math.PI]} scale={0.04} color="#ffcccc" speed={1.1} />
+                    <Heart position={[2, 6, -8]} rotation={[0.1, 0.8, Math.PI]} scale={0.06} color="#ffa1a1" speed={0.9} />
+                    <Heart position={[-7, -7, -2]} rotation={[-0.2, 0.3, Math.PI]} scale={0.05} color="#ff8585" speed={1.3} />
+
                     {!isMobile && (
                         <>
                             <Heart position={[8, 3, -2]} rotation={[0, 0.2, Math.PI]} scale={0.08} color="#ff3333" speed={1.2} />
                             <Heart position={[-8, -2, 0]} rotation={[0, -0.5, Math.PI]} scale={0.1} color="#ffb3b3" speed={0.7} />
+                            <Heart position={[0, 7, -5]} rotation={[0.3, -0.7, Math.PI]} scale={0.07} color="#ff5e5e" speed={1.0} />
                         </>
                     )}
+
+                    {/* Sparkles/Particles Effect */}
+                    <mesh>
+                        <sphereGeometry args={[15, 32, 32]} />
+                        <meshBasicMaterial color="#ff4d4d" wireframe transparent opacity={0.03} />
+                    </mesh>
                 </Canvas>
             </div>
 
