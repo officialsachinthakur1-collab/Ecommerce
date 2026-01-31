@@ -21,12 +21,17 @@ const Shop = () => {
     // Derived filtering and sorting logic
     const filteredProducts = useMemo(() => {
         let result = allProducts.filter(p => {
-            const matchesCategory = category === 'All' ? true : p.category === category;
-            const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                p.description.toLowerCase().includes(searchQuery.toLowerCase());
+            // Fix category name mismatch between "Clothing" and "Clothes"
+            const productCategory = p.category === 'Clothing' ? 'Clothes' : p.category;
+            const matchesCategory = category === 'All' ? true : productCategory === category;
+
+            // Defensive checks for name and description to prevent crashes if they are missing
+            const nameMatch = (p.name || "").toLowerCase().includes(searchQuery.toLowerCase());
+            const descMatch = (p.description || "").toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesSearch = nameMatch || descMatch;
 
             // Extract numeric price for comparison
-            const numericPrice = parseInt(String(p.price).replace(/[^0-9]/g, '')) || 0;
+            const numericPrice = parseInt(String(p.price || "0").replace(/[^0-9]/g, '')) || 0;
             const matchesPrice = numericPrice <= priceRange;
 
             return matchesCategory && matchesSearch && matchesPrice;
