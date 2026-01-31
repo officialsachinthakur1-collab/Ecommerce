@@ -194,7 +194,22 @@ const Navbar = () => {
 
                             {user ? (
                                 <Link to="/account">
-                                    <div style={{ border: '1px solid #333', padding: '0.4rem 0.8rem', borderRadius: '4px', fontSize: '0.8rem' }}>Me</div>
+                                    <div style={{
+                                        width: '32px',
+                                        height: '32px',
+                                        borderRadius: '50%',
+                                        background: 'var(--accent-gradient)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '0.9rem',
+                                        fontWeight: '700',
+                                        color: 'white',
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        boxShadow: '0 0 10px rgba(255,0,0,0.2)'
+                                    }}>
+                                        {(user.name || user.email || 'M').charAt(0).toUpperCase()}
+                                    </div>
                                 </Link>
                             ) : (
                                 <Link to="/login" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Sign In</Link>
