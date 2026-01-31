@@ -14,6 +14,7 @@ const ProductSchema = new mongoose.Schema({
     rating: { type: mongoose.Schema.Types.Mixed, default: 5 },
     stock: { type: Number, default: 10 },
     affiliateLink: { type: String, default: '' },
+    isHero: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }
 });
 

@@ -8,7 +8,7 @@ export default function AdminProducts() {
     const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
+    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,7 +25,8 @@ export default function AdminProducts() {
             images: Array.isArray(product.images) ? product.images : (product.image ? [product.image] : []),
             sizes: Array.isArray(product.sizes) ? product.sizes.join(', ') : (product.sizes || ''),
             stock: product.stock !== undefined ? product.stock : 10,
-            affiliateLink: product.affiliateLink || ''
+            affiliateLink: product.affiliateLink || '',
+            isHero: !!product.isHero
         });
         setIsModalOpen(true);
     };
@@ -85,7 +86,7 @@ export default function AdminProducts() {
                 alert(editingProduct ? 'Product Updated!' : 'Product Added!');
                 setIsModalOpen(false);
                 setEditingProduct(null);
-                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
+                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false });
                 refetch(); // Refetch products to update the list
             } else {
                 const errorData = await response.json();
@@ -141,6 +142,7 @@ export default function AdminProducts() {
                                 <th style={{ padding: '1rem 1.5rem' }}>Category</th>
                                 <th style={{ padding: '1rem 1.5rem' }}>Price</th>
                                 <th style={{ padding: '1rem 1.5rem' }}>Stock</th>
+                                <th style={{ padding: '1rem 1.5rem' }}>Hero?</th>
                                 <th style={{ padding: '1rem 1.5rem' }}>Status</th>
                                 <th style={{ padding: '1rem 1.5rem', textAlign: 'right' }}>Actions</th>
                             </tr>
@@ -164,6 +166,13 @@ export default function AdminProducts() {
                                     <td data-label="Price" style={{ padding: '1rem 1.5rem' }}>{product.price}</td>
                                     <td data-label="Stock" style={{ padding: '1rem 1.5rem', color: product.stock <= 0 ? '#ff3333' : 'var(--text-muted)' }}>
                                         {product.stock !== undefined ? product.stock : 10}
+                                    </td>
+                                    <td data-label="Hero?" style={{ padding: '1rem 1.5rem' }}>
+                                        {product.isHero ? (
+                                            <span style={{ color: '#ff3333', fontWeight: 'bold', fontSize: '0.75rem' }}>YES</span>
+                                        ) : (
+                                            <span style={{ color: '#444', fontSize: '0.75rem' }}>No</span>
+                                        )}
                                     </td>
                                     <td data-label="Status" style={{ padding: '1rem 1.5rem' }}>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -232,7 +241,7 @@ export default function AdminProducts() {
                             <button onClick={() => {
                                 setIsModalOpen(false);
                                 setEditingProduct(null);
-                                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '' });
+                                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false });
                             }} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X /></button>
                         </div>
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -371,6 +380,16 @@ export default function AdminProducts() {
                                 name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} rows={3}
                                 style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
                             />
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', padding: '0.5rem' }}>
+                                <input
+                                    type="checkbox"
+                                    name="isHero"
+                                    checked={formData.isHero}
+                                    onChange={(e) => setFormData({ ...formData, isHero: e.target.checked })}
+                                    style={{ width: '20px', height: '20px', accentColor: 'var(--primary-red)' }}
+                                />
+                                <span style={{ fontSize: '1rem', fontWeight: '600' }}>Show in Hero Section</span>
+                            </label>
                             <button type="submit" className="btn-primary" style={{ marginTop: '1rem', justifyContent: 'center' }}>
                                 {editingProduct ? 'Update Product' : 'Create Product'}
                             </button>
