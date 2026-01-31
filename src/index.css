@@ -545,8 +545,8 @@
 
    /* Feature Section Title Nudge */
    .section-header-title {
-     margin-left: 1rem;
-     /* Slight nudge towards center as requested */
+     margin-left: 1.5rem;
+     /* Adjusted nudge to 1.5rem as requested */
    }
 
    /* Right Align Link Indent */
@@ -556,9 +556,9 @@
 
    /* Align Home Product Grid with Layout */
    .home-product-grid {
-     margin-left: 1rem !important;
-     margin-right: 1rem !important;
-     /* Symmetrical indent for grid content */
+     margin-left: 1.5rem !important;
+     margin-right: 1.5rem !important;
+     /* Symmetrical 1.5rem indent for grid content */
      width: auto !important;
      /* Allow margins to work */
    }

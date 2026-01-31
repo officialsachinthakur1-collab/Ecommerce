@@ -40,7 +40,7 @@ const CuratedSections = ({ title, tag, limit = 4 }) => {
                         fontWeight: '800',
                         textTransform: 'uppercase',
                         letterSpacing: '0.2em',
-                        marginLeft: isMobile ? '1rem' : '0' // Manual nudge for Handpicked
+                        marginLeft: isMobile ? '1.5rem' : '0' // Manual nudge to 1.5rem
                     }}>
                         Handpicked
                     </span>

@@ -12,7 +12,7 @@ const SplitFeatured = ({ title, subtitle, buttonText, imageLeft = false, linkTo 
                     <h2 className="split-title section-header-title" style={{ marginLeft: 0 }}>
                         {title}
                     </h2>
-                    <div style={{ padding: isMobile ? '0 1rem' : '0' }}>
+                    <div style={{ padding: isMobile ? '0 1.5rem' : '0' }}>
                         <p style={{ color: 'var(--text-muted)', fontSize: '1.25rem', marginBottom: '3rem', maxWidth: '400px' }}>
                             {subtitle}
                         </p>
