@@ -7,9 +7,24 @@ const ScrollToTop = () => {
     const [isVisible, setIsVisible] = useState(false);
     const { pathname, search } = useLocation();
 
-    // Scroll to top on route change
+    // Scroll to top on route change or initial load
     useEffect(() => {
+        // Force scroll to top
         window.scrollTo(0, 0);
+
+        // Disable browser's default scroll restoration to ensure it always starts at top on refresh
+        if ('scrollRestoration' in window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
+
+        // Small timeout to catch cases where content loads asynchronously
+        const timer = setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 0);
+
+        return () => {
+            clearTimeout(timer);
+        };
     }, [pathname, search]);
 
     useEffect(() => {
