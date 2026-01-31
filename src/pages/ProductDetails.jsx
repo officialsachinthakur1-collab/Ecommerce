@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import ReviewForm from '../components/product/ReviewForm';
 import useMobile from '../hooks/useMobile';
 
-function ProductDetails() {
+export default function ProductDetails() {
     const isMobile = useMobile();
     const { id } = useParams();
     const [selectedSize, setSelectedSize] = useState(null);
@@ -318,4 +318,3 @@ function ProductDetails() {
     );
 }
 
-export default ProductDetails;

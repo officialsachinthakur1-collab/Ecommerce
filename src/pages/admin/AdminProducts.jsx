@@ -317,7 +317,7 @@ export default function AdminProducts() {
                             </div>
                             <div style={{ display: 'flex', gap: '1rem' }}>
                                 <input
-                                    name="price" placeholder="Price ($100)" value={formData.price} onChange={handleInputChange}
+                                    name="price" placeholder="Price (₹100)" value={formData.price} onChange={handleInputChange}
                                     style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
                                 />
                                 <input

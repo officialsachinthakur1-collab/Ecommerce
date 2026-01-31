@@ -118,7 +118,7 @@ const CartDrawer = () => {
                             <div style={{ padding: '1.5rem', borderTop: '1px solid #222', background: '#050505' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', fontSize: '1.25rem', fontWeight: 'bold' }}>
                                     <span>Subtotal</span>
-                                    <span>${cartTotal.toLocaleString()}</span>
+                                    <span>₹{cartTotal.toLocaleString()}</span>
                                 </div>
                                 <button
                                     onClick={() => {
