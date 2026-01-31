@@ -36,7 +36,7 @@ const Home = () => {
             <Suspense fallback={<div style={{ height: '80vh', background: '#050505' }} />}>
                 <Hero />
             </Suspense>
-            <ValueProps />
+
 
             <CuratedSections title="New Arrivals" tag="New" limit={4} />
 
@@ -66,6 +66,7 @@ const Home = () => {
 
             <Testimonials />
             <BlogGrid />
+            <ValueProps />
         </>
     );
 };
