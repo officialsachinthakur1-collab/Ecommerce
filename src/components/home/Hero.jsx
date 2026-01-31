@@ -39,6 +39,16 @@ const Hero = () => {
 
     const activeProduct = heroProducts[currentIndex] || heroProducts[0] || fallbackProducts[0];
 
+    // Preload images to prevent flickering
+    useEffect(() => {
+        heroProducts.forEach(product => {
+            if (product.image) {
+                const img = new Image();
+                img.src = product.image;
+            }
+        });
+    }, [heroProducts]);
+
     return (
         <section className="hero-section">
             <div className="hero-background-gradient" />
@@ -53,7 +63,7 @@ const Hero = () => {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 20 }}
-                                transition={{ duration: 0.5 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
                             >
                                 <span className="hero-tag">{activeProduct.tag}</span>
                                 <h1 className="hero-title">
@@ -99,7 +109,7 @@ const Hero = () => {
                                 initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
                                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                                 exit={{ opacity: 0, scale: 1.1, rotate: 5 }}
-                                transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+                                transition={{ duration: 0.5, ease: "easeOut" }}
                                 className="product-image-container"
                             >
                                 <div className="image-glow" />
