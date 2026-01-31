@@ -80,7 +80,7 @@ const Navbar = () => {
                         <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }}>
                             <input
                                 type="text"
-                                placeholder="getsetmart.com..."
+                                placeholder="Search Getsetmart.com"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 style={{
@@ -243,7 +243,7 @@ const Navbar = () => {
                         <form onSubmit={handleSearch} style={{ width: '100%', maxWidth: '600px', padding: '0 2rem' }}>
                             <input
                                 type="text"
-                                placeholder="getsetmart.com..."
+                                placeholder="Search Getsetmart.com"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 autoFocus
