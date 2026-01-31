@@ -109,8 +109,8 @@ const Footer = () => {
                             <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem', textAlign: 'left', marginLeft: 0 }}>Support</h4>
                             <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: 0, marginRight: 0, textAlign: 'left', alignItems: 'flex-start' }}>
                                 <li><Link to="/about#contact">Contact</Link></li>
-                                <li><Link to="/shipping">Shipping</Link></li>
-                                <li><Link to="/returns">Returns</Link></li>
+                                <li><Link to="/shipping">Shipping Info</Link></li>
+                                <li><Link to="/returns">Returns & Refunds</Link></li>
                             </ul>
                         </div>
                         <div>

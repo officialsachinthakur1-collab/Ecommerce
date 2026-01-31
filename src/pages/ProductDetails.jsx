@@ -3,7 +3,7 @@ import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ArrowLeft, ShoppingBag, Truck, ShieldCheck, Heart, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Truck, ShieldCheck, Heart, ExternalLink, RotateCcw } from 'lucide-react';
 import RatingStars from '../components/common/RatingStars';
 import { useAuth } from '../context/AuthContext';
 import ReviewForm from '../components/product/ReviewForm';
@@ -245,19 +245,33 @@ export default function ProductDetails() {
                             </div>
 
                             {/* Features */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', paddingTop: '2rem', borderTop: '1px solid #222' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', paddingTop: '2rem', borderTop: '1px solid #222' }}>
                                 <div style={{ display: 'flex', gap: '0.75rem' }}>
-                                    <Truck className="text-muted" size={24} />
+                                    <Truck className="text-muted" size={24} color="var(--primary-red)" />
                                     <div>
-                                        <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>Free Shipping</h4>
-                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>On orders over $200</p>
+                                        <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>Free Delivery</h4>
+                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>On orders over ₹500</p>
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '0.75rem' }}>
-                                    <ShieldCheck className="text-muted" size={24} />
+                                    <ShieldCheck className="text-muted" size={24} color="var(--primary-red)" />
                                     <div>
-                                        <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>Secure Checkout</h4>
-                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>100% Protected</p>
+                                        <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>100% Genuine</h4>
+                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Trusted Quality</p>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                                    <ShoppingBag className="text-muted" size={24} />
+                                    <div>
+                                        <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>COD Available</h4>
+                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Pay at Doorstep</p>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                                    <RotateCcw className="text-muted" size={24} />
+                                    <div>
+                                        <h4 style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>Easy Returns</h4>
+                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>7-Day Returns</p>
                                     </div>
                                 </div>
                             </div>

@@ -3,6 +3,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import AnnouncementBar from './AnnouncementBar';
 import CartDrawer from '../cart/CartDrawer';
+import WhatsAppButton from '../common/WhatsAppButton';
 import { useAuth } from '../../context/AuthContext';
 
 const Layout = () => {
@@ -15,6 +16,7 @@ const Layout = () => {
             <main>
                 <Outlet />
             </main>
+            <WhatsAppButton />
             <Footer />
         </div>
     );

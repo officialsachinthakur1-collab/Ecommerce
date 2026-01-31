@@ -57,7 +57,7 @@ const Hero = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, ease: 'easeOut' }}
                         style={{
-                            fontSize: 'clamp(2.5rem, 10vw, 8rem)',
+                            fontSize: 'clamp(2.5rem, 8vw, 6rem)',
                             lineHeight: 1.1,
                             fontWeight: 900,
                             textTransform: 'uppercase',
@@ -68,8 +68,8 @@ const Hero = () => {
                             letterSpacing: '-0.02em'
                         }}
                     >
-                        Performance <br />
-                        <span className="text-gradient">Undefined</span>
+                        Affordable <br />
+                        <span className="text-gradient">Style Essentials</span>
                     </motion.h1>
 
                     <motion.p
@@ -84,7 +84,7 @@ const Hero = () => {
                             marginInline: 'auto'
                         }}
                     >
-                        Experience the future of footwear. Engineered for speed, designed for the streets.
+                        Quality gear at everyday prices. Engineered for style, priced for you. Get set for the streets.
                     </motion.p>
 
                     <Link to="/shop">

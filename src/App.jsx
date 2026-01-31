@@ -24,6 +24,8 @@ import AdminSettings from './pages/admin/AdminSettings';
 import Login from './pages/Login';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
+import Shipping from './pages/Shipping';
+import Returns from './pages/Returns';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -45,6 +47,8 @@ function App() {
           <Route path="signup" element={<Signup />} />
           <Route path="profile" element={<Profile />} />
           <Route path="account" element={<Account />} />
+          <Route path="shipping" element={<Shipping />} />
+          <Route path="returns" element={<Returns />} />
         </Route>
 
         {/* Admin Routes */}
