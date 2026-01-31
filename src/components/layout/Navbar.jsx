@@ -44,38 +44,74 @@ const Navbar = () => {
                 backdropFilter: (scrolled && !isMobile) ? 'blur(10px)' : 'none',
                 borderBottom: scrolled ? '1px solid var(--glass-border)' : 'none',
                 transition: isMobile ? 'none' : 'all 0.3s ease',
-                height: 'var(--header-height)',
+                height: isMobile ? 'auto' : 'var(--header-height)',
+                minHeight: 'var(--header-height)',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                padding: isMobile ? '0.75rem 0' : '0'
             }}>
                 <div className="container" style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: isMobile ? '1rem' : '2.5rem',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    alignItems: isMobile ? 'stretch' : 'center',
+                    gap: isMobile ? '0.75rem' : '2.5rem',
                     width: '100%',
                     position: 'relative'
                 }}>
-                    {/* Left Section: Logo & Mobile Toggle */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)} style={{ display: isMobile ? 'flex' : 'none' }}>
-                            <Menu size={24} />
+                    {/* Top Row: Logo & Icons (Mobile) / Left Side (Desktop) */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: isMobile ? '100%' : 'auto'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div className="mobile-menu-btn" onClick={() => setMobileMenuOpen(true)} style={{ display: isMobile ? 'flex' : 'none' }}>
+                                <Menu size={24} />
+                            </div>
+                            <Link to="/" style={{
+                                fontSize: isMobile ? '1.1rem' : '1.4rem',
+                                fontWeight: 800,
+                                letterSpacing: '-0.05em',
+                                color: 'white',
+                                whiteSpace: 'nowrap'
+                            }}>
+                                GETSETMART
+                            </Link>
                         </div>
-                        <Link to="/" style={{
-                            fontSize: isMobile ? '1.1rem' : '1.4rem',
-                            fontWeight: 800,
-                            letterSpacing: '-0.05em',
-                            color: 'white',
-                            whiteSpace: 'nowrap'
-                        }}>
-                            GETSETMART
-                        </Link>
+
+                        {/* Mobile Icons - Moved to top row next to logo */}
+                        {isMobile && (
+                            <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
+                                <Link to="/wishlist"><Heart size={22} /></Link>
+                                <div style={{ position: 'relative', cursor: 'pointer' }} onClick={toggleCart}>
+                                    <ShoppingBag size={22} />
+                                    {cartCount > 0 && (
+                                        <span style={{
+                                            position: 'absolute',
+                                            top: '-5px',
+                                            right: '-8px',
+                                            background: 'var(--primary-red)',
+                                            color: 'white',
+                                            fontSize: '10px',
+                                            width: '16px',
+                                            height: '16px',
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                        }}>{cartCount}</span>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Center Section: Persistent Search Bar (Amazon Style) */}
+                    {/* Center Section: Persistent Search Bar (Amazon Style) - visible on BOTH */}
                     <div style={{
                         flex: 1,
-                        maxWidth: '800px',
-                        display: isMobile ? 'none' : 'block' // Hide on mobile to save space, or show smaller
+                        maxWidth: isMobile ? 'none' : '800px'
                     }}>
                         <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }}>
                             <input
@@ -85,7 +121,7 @@ const Navbar = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 style={{
                                     width: '100%',
-                                    padding: '0.75rem 1.25rem',
+                                    padding: isMobile ? '0.6rem 1rem' : '0.75rem 1.25rem',
                                     paddingRight: '3.5rem',
                                     background: 'rgba(255,255,255,0.05)',
                                     border: '1px solid rgba(255,255,255,0.1)',
@@ -100,14 +136,14 @@ const Navbar = () => {
                             />
                             <button type="submit" style={{
                                 position: 'absolute',
-                                right: '0.5rem',
+                                right: '0.4rem',
                                 top: '50%',
                                 transform: 'translateY(-50%)',
                                 background: 'var(--primary-red)',
                                 border: 'none',
                                 borderRadius: '4px',
-                                width: '2.5rem',
-                                height: '2.2rem',
+                                width: '2.4rem',
+                                height: isMobile ? '2rem' : '2.2rem',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -119,61 +155,52 @@ const Navbar = () => {
                         </form>
                     </div>
 
-                    {/* Right Section: Utilities & Desktop Nav */}
-                    <div style={{
-                        display: 'flex',
-                        gap: isMobile ? '1rem' : '2rem',
-                        alignItems: 'center',
-                        justifyContent: 'flex-end',
-                        flexShrink: 0
-                    }}>
-                        {/* Desktop Links (Repositioned) */}
-                        {!isMobile && (
-                            <>
-                                <Link to="/shop" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Shop</Link>
-                                <Link to="/blog" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Insights</Link>
-                            </>
-                        )}
+                    {/* Right Section: Desktop Links & Utilities (HIDDEN ON MOBILE TOP ROW) */}
+                    {!isMobile && (
+                        <div style={{
+                            display: 'flex',
+                            gap: '2rem',
+                            alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            flexShrink: 0
+                        }}>
+                            <Link to="/shop" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Shop</Link>
+                            <Link to="/blog" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Insights</Link>
 
-                        {isMobile && (
-                            <div onClick={() => setSearchOpen(true)} style={{ cursor: 'pointer' }}>
-                                <Search size={22} />
+                            <Link to="/wishlist" style={{ cursor: 'pointer', color: 'inherit' }}>
+                                <Heart size={20} />
+                            </Link>
+
+                            <div style={{ position: 'relative', cursor: 'pointer' }} onClick={toggleCart}>
+                                <ShoppingBag size={20} />
+                                {cartCount > 0 && (
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '-5px',
+                                        right: '-8px',
+                                        background: 'var(--primary-red)',
+                                        color: 'white',
+                                        fontSize: '10px',
+                                        width: '16px',
+                                        height: '16px',
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontWeight: 'bold'
+                                    }}>{cartCount}</span>
+                                )}
                             </div>
-                        )}
 
-                        <Link to="/wishlist" style={{ cursor: 'pointer', color: 'inherit' }}>
-                            <Heart size={isMobile ? 22 : 20} />
-                        </Link>
-
-                        <div style={{ position: 'relative', cursor: 'pointer' }} onClick={toggleCart}>
-                            <ShoppingBag size={isMobile ? 22 : 20} />
-                            {cartCount > 0 && (
-                                <span style={{
-                                    position: 'absolute',
-                                    top: '-5px',
-                                    right: '-8px',
-                                    background: 'var(--primary-red)',
-                                    color: 'white',
-                                    fontSize: '10px',
-                                    width: '16px',
-                                    height: '16px',
-                                    borderRadius: '50%',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontWeight: 'bold'
-                                }}>{cartCount}</span>
+                            {user ? (
+                                <Link to="/account">
+                                    <div style={{ border: '1px solid #333', padding: '0.4rem 0.8rem', borderRadius: '4px', fontSize: '0.8rem' }}>Me</div>
+                                </Link>
+                            ) : (
+                                <Link to="/login" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Sign In</Link>
                             )}
                         </div>
-
-                        {user ? (
-                            <Link to="/account" style={{ display: isMobile ? 'none' : 'block' }}>
-                                <div style={{ border: '1px solid #333', padding: '0.4rem 0.8rem', borderRadius: '4px', fontSize: '0.8rem' }}>Me</div>
-                            </Link>
-                        ) : (
-                            <Link to="/login" style={{ display: isMobile ? 'none' : 'block', fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Sign In</Link>
-                        )}
-                    </div>
+                    )}
                 </div>
             </nav>
 
