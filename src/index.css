@@ -345,7 +345,105 @@
    aspect-ratio: 1;
  }
 
+ /* Valentine Theme Specifics */
+ .hero-section.valentine-theme {
+   background: radial-gradient(circle at 30% 50%, #fffafa 0%, #ffffff 50%, #fff0f0 100%);
+ }
+
+ .valentine-theme .hero-tag {
+   background: rgba(255, 77, 77, 0.1);
+   color: #ff4d4d;
+   border-color: rgba(255, 77, 77, 0.2);
+ }
+
+ .hero-title.valentine-title {
+   color: #111;
+   background: none;
+   -webkit-text-fill-color: #111;
+ }
+
+ .valentine-italic {
+   font-family: serif;
+   font-style: italic;
+   color: #ff4d4d;
+   font-size: 1.1em;
+   font-weight: 400;
+ }
+
+ .valentine-theme .hero-description {
+   color: #333;
+ }
+
+ .valentine-theme .btn-primary {
+   background: #111;
+   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+ }
+
+ .valentine-theme .btn-primary:hover {
+   background: #ff4d4d;
+ }
+
+ .valentine-glow {
+   position: absolute;
+   inset: -10%;
+   background: radial-gradient(circle, rgba(255, 77, 77, 0.15) 0%, transparent 70%);
+   filter: blur(40px);
+   z-index: -1;
+ }
+
+ .valentine-img {
+   filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.12));
+ }
+
+ .valentine-badge {
+   position: absolute;
+   bottom: 5%;
+   right: 5%;
+   background: linear-gradient(135deg, #ff4d4d, #cc0000);
+   padding: 0.8rem 1.5rem;
+   border-radius: 12px;
+   font-weight: 900;
+   color: #fff;
+   box-shadow: 0 20px 40px rgba(204, 0, 0, 0.3);
+   z-index: 3;
+   text-align: center;
+   transform: rotate(-12deg);
+ }
+
+ .badge-small {
+   font-size: 0.6rem;
+   text-transform: uppercase;
+   opacity: 0.8;
+ }
+
+ .badge-large {
+   font-size: 1.5rem;
+   line-height: 1;
+ }
+
  @media (max-width: 768px) {
+   .hero-section.valentine-theme {
+     background: #fff;
+   }
+
+   .valentine-title {
+     font-size: 3.5rem !important;
+   }
+
+   .valentine-italic {
+     font-size: 1.25em !important;
+   }
+
+   .valentine-badge {
+     bottom: -10px;
+     right: 0;
+     padding: 0.5rem 1rem;
+   }
+
+   .badge-large {
+     font-size: 1.2rem;
+   }
+
    .product-image-container {
      height: 300px !important;
    }
