@@ -27,11 +27,10 @@ const CuratedSections = ({ title, tag, limit = 4 }) => {
         <section className="container section-padding">
             <div style={{
                 display: 'flex',
-                flexDirection: isMobile ? 'column' : 'row',
                 justifyContent: 'space-between',
-                alignItems: isMobile ? 'center' : 'end',
-                marginBottom: isMobile ? '2rem' : '2.5rem',
-                textAlign: isMobile ? 'center' : 'left',
+                alignItems: isMobile ? 'flex-start' : 'end',
+                marginBottom: isMobile ? '1.5rem' : '2.5rem',
+                flexDirection: isMobile ? 'column' : 'row',
                 gap: isMobile ? '1rem' : '0'
             }}>
                 <div>
@@ -41,26 +40,26 @@ const CuratedSections = ({ title, tag, limit = 4 }) => {
                         fontWeight: '800',
                         textTransform: 'uppercase',
                         letterSpacing: '0.2em',
-                        display: 'block'
+                        marginLeft: isMobile ? '1rem' : '0' // Manual nudge for Handpicked
                     }}>
                         Handpicked
                     </span>
-                    <h2 style={{
+                    <h2 className="section-header-title" style={{
                         fontSize: isMobile ? '1.8rem' : '2.5rem',
                         fontWeight: '900',
                         textTransform: 'uppercase',
                         letterSpacing: '-0.02em',
-                        marginTop: '0.5rem'
+                        marginTop: '0.5rem',
+                        marginLeft: 0 // Class handles it on mobile, but we clear inline
                     }}>
                         {title.split(' ')[0]} <span className="text-gradient">{title.split(' ').slice(1).join(' ')}</span>
                     </h2>
                 </div>
-                <Link to="/shop" className="hover-link" style={{
+                <Link to="/shop" className="section-header-link hover-link" style={{
                     fontSize: '0.9rem',
                     fontWeight: '700',
                     color: '#666',
-                    borderBottom: '1px solid #333',
-                    paddingBottom: '2px'
+                    borderBottom: '1px solid #333'
                 }}>
                     EXPLORE ALL
                 </Link>
