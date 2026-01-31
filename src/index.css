@@ -552,6 +552,7 @@
    /* Right Align Link Indent */
    .section-header-link {
      margin-right: 1.5rem;
+     margin-left: 1.5rem;
    }
 
    /* Align Home Product Grid with Layout */
