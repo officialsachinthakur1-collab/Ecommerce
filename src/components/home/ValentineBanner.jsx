@@ -52,13 +52,13 @@ const ValentineBanner = () => {
     return (
         <div style={{
             width: '100%',
-            height: isMobile ? '500px' : '400px',
+            height: isMobile ? '700px' : '650px',
             background: 'linear-gradient(to right, #fff5f5, #ffffff)',
             position: 'relative',
             overflow: 'hidden',
-            borderRadius: '24px',
+            borderRadius: isMobile ? '0' : '32px',
             border: '1px solid #fee2e2',
-            margin: '2rem 0',
+            margin: isMobile ? '0' : '2rem 0',
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: 'center'
@@ -155,11 +155,11 @@ const ValentineBanner = () => {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3 }}
                     style={{
-                        fontSize: isMobile ? '2.5rem' : '3.5rem',
-                        fontWeight: '900',
-                        lineHeight: 1,
+                        fontSize: isMobile ? '3.5rem' : '5.5rem',
+                        fontWeight: '1000',
+                        lineHeight: 0.9,
                         color: '#111',
-                        marginBottom: '1.5rem'
+                        marginBottom: '2rem'
                     }}
                 >
                     HAPPY <br />

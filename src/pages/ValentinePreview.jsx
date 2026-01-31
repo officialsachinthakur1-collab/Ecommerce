@@ -15,7 +15,7 @@ const ValentinePreview = () => {
         }}>
             <h1 style={{ color: '#111', marginBottom: '2rem', fontWeight: '900', textTransform: 'uppercase' }}>Valentine's Day Banner Preview</h1>
 
-            <div style={{ width: '100%', maxWidth: '1200px' }}>
+            <div style={{ width: '100%' }}>
                 <ValentineBanner />
             </div>
 
