@@ -62,10 +62,11 @@ const Home = () => {
                 image="/assets/banners/women_fashion.png"
             />
 
-            <CuratedSections title="Best Sellers" tag="Bestseller" limit={4} />
+
 
             <Testimonials />
             <BlogGrid />
+            <CuratedSections title="Best Sellers" tag="Bestseller" limit={4} />
             <ValueProps />
         </>
     );
