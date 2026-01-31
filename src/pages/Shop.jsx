@@ -14,18 +14,19 @@ const Shop = () => {
     // States for filtering
     const category = searchParams.get('category') || 'All';
     const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || "");
-    const [priceRange, setPriceRange] = useState(50000); // Max possible price for now
+    const [priceRange, setPriceRange] = useState(1000000); // Massive default to show all affiliate items
     const [sortBy, setSortBy] = useState('Newest');
     const [showMobileFilters, setShowMobileFilters] = useState(false);
 
     // Derived filtering and sorting logic
     const filteredProducts = useMemo(() => {
         let result = allProducts.filter(p => {
-            // Fix category name mismatch between "Clothing" and "Clothes"
-            const productCategory = p.category === 'Clothing' ? 'Clothes' : p.category;
+            // Trim and fix category name mismatch
+            const rawCategory = (p.category || "").trim();
+            const productCategory = rawCategory === 'Clothing' ? 'Clothes' : rawCategory;
             const matchesCategory = category === 'All' ? true : productCategory === category;
 
-            // Defensive checks for name and description to prevent crashes if they are missing
+            // Robust checks for name and description
             const nameMatch = (p.name || "").toLowerCase().includes(searchQuery.toLowerCase());
             const descMatch = (p.description || "").toLowerCase().includes(searchQuery.toLowerCase());
             const matchesSearch = nameMatch || descMatch;
@@ -37,13 +38,27 @@ const Shop = () => {
             return matchesCategory && matchesSearch && matchesPrice;
         });
 
-        // Sorting
+        // Robust Sorting
         if (sortBy === 'Price: Low to High') {
-            result.sort((a, b) => parseInt(String(a.price).replace(/[^0-9]/g, '')) - parseInt(String(b.price).replace(/[^0-9]/g, '')));
+            result.sort((a, b) => {
+                const priceA = parseInt(String(a.price || "0").replace(/[^0-9]/g, '')) || 0;
+                const priceB = parseInt(String(b.price || "0").replace(/[^0-9]/g, '')) || 0;
+                return priceA - priceB;
+            });
         } else if (sortBy === 'Price: High to Low') {
-            result.sort((a, b) => parseInt(String(b.price).replace(/[^0-9]/g, '')) - parseInt(String(a.price).replace(/[^0-9]/g, '')));
+            result.sort((a, b) => {
+                const priceA = parseInt(String(a.price || "0").replace(/[^0-9]/g, '')) || 0;
+                const priceB = parseInt(String(b.price || "0").replace(/[^0-9]/g, '')) || 0;
+                return priceB - priceA;
+            });
         } else {
-            result.sort((a, b) => b.id - a.id); // Newest
+            // "Newest" - Sort by createdAt (Date) or fall back to ID string comparison
+            result.sort((a, b) => {
+                const dateA = new Date(a.createdAt || 0).getTime();
+                const dateB = new Date(b.createdAt || 0).getTime();
+                if (dateA !== dateB) return dateB - dateA;
+                return String(b.id || "").localeCompare(String(a.id || ""));
+            });
         }
 
         return result;
@@ -187,8 +202,8 @@ const Shop = () => {
                                     <input
                                         type="range"
                                         min="0"
-                                        max="50000"
-                                        step="1000"
+                                        max="1000000"
+                                        step="10000"
                                         value={priceRange}
                                         onChange={(e) => setPriceRange(parseInt(e.target.value))}
                                         style={{ width: '100%', accentColor: 'var(--primary-red)', cursor: 'pointer' }}
@@ -217,7 +232,7 @@ const Shop = () => {
                                 <button
                                     onClick={() => {
                                         setSearchQuery("");
-                                        setPriceRange(50000);
+                                        setPriceRange(1000000);
                                         setSearchParams({ category: 'All' });
                                     }}
                                     style={{ marginTop: '2rem', padding: '0.75rem 2rem', background: 'transparent', border: '1px solid #333', color: 'white', borderRadius: '8px', cursor: 'pointer' }}
@@ -274,7 +289,7 @@ const Shop = () => {
                         <div>
                             <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: '#666' }}>Price Up To</h3>
                             <input
-                                type="range" min="0" max="50000" step="1000" value={priceRange}
+                                type="range" min="0" max="1000000" step="10000" value={priceRange}
                                 onChange={(e) => setPriceRange(parseInt(e.target.value))}
                                 style={{ width: '100%', accentColor: 'var(--primary-red)' }}
                             />
