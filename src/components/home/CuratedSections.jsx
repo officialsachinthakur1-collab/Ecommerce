@@ -3,7 +3,10 @@ import ProductCard from '../common/ProductCard';
 import { useProducts } from '../../hooks/useProducts';
 import { motion } from 'framer-motion';
 
+import useMobile from '../../hooks/useMobile';
+
 const CuratedSections = ({ title, tag, limit = 4 }) => {
+    const isMobile = useMobile();
     const { products: allProducts, loading } = useProducts();
 
     if (loading) return (
@@ -22,16 +25,43 @@ const CuratedSections = ({ title, tag, limit = 4 }) => {
 
     return (
         <section className="container section-padding">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '2.5rem' }}>
+            <div style={{
+                display: 'flex',
+                flexDirection: isMobile ? 'column' : 'row',
+                justifyContent: 'space-between',
+                alignItems: isMobile ? 'center' : 'end',
+                marginBottom: isMobile ? '2rem' : '2.5rem',
+                textAlign: isMobile ? 'center' : 'left',
+                gap: isMobile ? '1rem' : '0'
+            }}>
                 <div>
-                    <span style={{ color: 'var(--primary-red)', fontSize: '0.8rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                    <span style={{
+                        color: 'var(--primary-red)',
+                        fontSize: '0.8rem',
+                        fontWeight: '800',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.2em',
+                        display: 'block'
+                    }}>
                         Handpicked
                     </span>
-                    <h2 style={{ fontSize: '2.5rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '-0.02em', marginTop: '0.5rem' }}>
+                    <h2 style={{
+                        fontSize: isMobile ? '1.8rem' : '2.5rem',
+                        fontWeight: '900',
+                        textTransform: 'uppercase',
+                        letterSpacing: '-0.02em',
+                        marginTop: '0.5rem'
+                    }}>
                         {title.split(' ')[0]} <span className="text-gradient">{title.split(' ').slice(1).join(' ')}</span>
                     </h2>
                 </div>
-                <Link to="/shop" className="hover-link" style={{ fontSize: '0.9rem', fontWeight: '700', color: '#666', borderBottom: '1px solid #333' }}>
+                <Link to="/shop" className="hover-link" style={{
+                    fontSize: '0.9rem',
+                    fontWeight: '700',
+                    color: '#666',
+                    borderBottom: '1px solid #333',
+                    paddingBottom: '2px'
+                }}>
                     EXPLORE ALL
                 </Link>
             </div>
