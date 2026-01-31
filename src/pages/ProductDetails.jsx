@@ -8,6 +8,7 @@ import RatingStars from '../components/common/RatingStars';
 import { useAuth } from '../context/AuthContext';
 import ReviewForm from '../components/product/ReviewForm';
 import useMobile from '../hooks/useMobile';
+import RelatedProducts from '../components/product/RelatedProducts';
 
 export default function ProductDetails() {
     const isMobile = useMobile();
@@ -279,6 +280,9 @@ export default function ProductDetails() {
                     </div>
                 </div>
             </div>
+
+            {/* Recommended Products */}
+            <RelatedProducts currentProduct={product} />
 
             {/* Reviews Section Separator */}
             <div className="container" style={{ marginTop: '8rem' }}>
