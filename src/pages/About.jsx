@@ -129,9 +129,9 @@ const About = () => {
 
             {/* Team Header (Placeholder) */}
             <section className="section-padding container" style={{ textAlign: 'center' }}>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '3rem', textTransform: 'uppercase' }}>Global Design Team</h2>
+                <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '3rem', textTransform: 'uppercase' }}>Indian Design Team</h2>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', flexWrap: 'wrap', color: 'var(--text-muted)' }}>
-                    <span>Tokyo</span> • <span>Berlin</span> • <span>New York</span> • <span>London</span>
+                    <span>New Delhi</span> • <span>Mumbai</span> • <span>Bangalore</span> • <span>Noida</span>
                 </div>
             </section>
 
