@@ -57,7 +57,7 @@ const Hero = () => {
                             >
                                 <span className="hero-tag">{activeProduct.tag}</span>
                                 <h1 className="hero-title">
-                                    {(activeProduct.name || '').split(' ').map((word, i) => (
+                                    {(activeProduct.heroTitle || activeProduct.name || '').split(' ').map((word, i) => (
                                         <span key={i}>
                                             {word} {i === 1 && <br />}
                                         </span>

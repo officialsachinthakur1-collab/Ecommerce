@@ -30,7 +30,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         try {
-            const { name, price, category, description, image, images, tag, affiliateLink, isHero } = req.body;
+            const { name, price, category, description, image, images, tag, affiliateLink, isHero, heroTitle } = req.body;
             const password = req.headers['x-admin-password'];
 
             if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
@@ -56,7 +56,8 @@ export default async function handler(req, res) {
                 tag: tag || "New",
                 sizes: req.body.sizes || [],
                 affiliateLink: affiliateLink || "",
-                isHero: !!isHero
+                isHero: !!isHero,
+                heroTitle: heroTitle || ""
             });
 
             return res.status(201).json({ success: true, product });
@@ -93,6 +94,10 @@ export default async function handler(req, res) {
 
             if (updateData.isHero !== undefined) {
                 updateData.isHero = !!updateData.isHero;
+            }
+
+            if (updateData.heroTitle !== undefined) {
+                updateData.heroTitle = updateData.heroTitle || "";
             }
 
             if (!product) return res.status(404).json({ success: false, message: 'Product not found' });

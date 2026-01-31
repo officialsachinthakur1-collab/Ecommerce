@@ -8,7 +8,7 @@ export default function AdminProducts() {
     const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false });
+    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false, heroTitle: '' });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,7 +26,8 @@ export default function AdminProducts() {
             sizes: Array.isArray(product.sizes) ? product.sizes.join(', ') : (product.sizes || ''),
             stock: product.stock !== undefined ? product.stock : 10,
             affiliateLink: product.affiliateLink || '',
-            isHero: !!product.isHero
+            isHero: !!product.isHero,
+            heroTitle: product.heroTitle || ''
         });
         setIsModalOpen(true);
     };
@@ -86,7 +87,7 @@ export default function AdminProducts() {
                 alert(editingProduct ? 'Product Updated!' : 'Product Added!');
                 setIsModalOpen(false);
                 setEditingProduct(null);
-                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false });
+                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false, heroTitle: '' });
                 refetch(); // Refetch products to update the list
             } else {
                 const errorData = await response.json();
@@ -390,6 +391,15 @@ export default function AdminProducts() {
                                 />
                                 <span style={{ fontSize: '1rem', fontWeight: '600' }}>Show in Hero Section</span>
                             </label>
+                            {formData.isHero && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <label style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>Hero Display Name (Short)</label>
+                                    <input
+                                        name="heroTitle" placeholder="e.g. Premium Kurta" value={formData.heroTitle} onChange={handleInputChange}
+                                        style={{ padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                    />
+                                </div>
+                            )}
                             <button type="submit" className="btn-primary" style={{ marginTop: '1rem', justifyContent: 'center' }}>
                                 {editingProduct ? 'Update Product' : 'Create Product'}
                             </button>
