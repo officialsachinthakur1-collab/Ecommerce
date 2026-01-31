@@ -91,6 +91,10 @@ export default async function handler(req, res) {
                 updateData.image = updateData.images[0];
             }
 
+            if (updateData.isHero !== undefined) {
+                updateData.isHero = !!updateData.isHero;
+            }
+
             if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
             return res.status(200).json({ success: true, product });
         } catch (error) {

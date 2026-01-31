@@ -118,7 +118,7 @@ async function handleDeleteOrder(id, req, res) {
 app.post('/api/products', async (req, res) => {
     try {
         console.log("[POST] Adding new product. Data:", JSON.stringify(req.body));
-        const { name, price, category, description, image, images, sizes, tag, stock, affiliateLink } = req.body;
+        const { name, price, category, description, image, images, sizes, tag, stock, affiliateLink, isHero } = req.body;
         const password = req.headers['x-admin-password'];
 
         if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
@@ -144,7 +144,8 @@ app.post('/api/products', async (req, res) => {
             tag: tag || "New",
             sizes: Array.isArray(sizes) ? sizes : [],
             stock: parsedStock,
-            affiliateLink: affiliateLink || ""
+            affiliateLink: affiliateLink || "",
+            isHero: !!isHero
         });
 
         console.log("Product added successfully:", newProduct.name);
@@ -163,7 +164,7 @@ async function handleUpdateProduct(id, req, res) {
     const { _id, id: bodyId, reviews, rating, ...updateData } = req.body; // Strip immutable and sensitive fields
     const password = req.headers['x-admin-password'];
 
-    console.log(`[UPDATE] Attempting to update product. Received ID: "${id}", Name in body: "${updateData.name}"`);
+    console.log(`[UPDATE] Attempting to update product. Received ID: "${id}", Name in body: "${updateData.name}", isHero: ${req.body.isHero}`);
 
     if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
         return res.status(403).json({ success: false, message: 'Unauthorized - Admin Password Required' });
@@ -185,6 +186,11 @@ async function handleUpdateProduct(id, req, res) {
         }
         if (updateData.stock !== undefined) {
             updateData.stock = parseInt(updateData.stock) || 0;
+        }
+
+        // Explicitly handle isHero if passed
+        if (req.body.isHero !== undefined) {
+            updateData.isHero = !!req.body.isHero;
         }
 
         let product = await Product.findOneAndUpdate({ $or: queryOr }, updateData, { new: true });
