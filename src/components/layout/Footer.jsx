@@ -116,7 +116,7 @@ const Footer = () => {
                         <div>
                             <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem', textAlign: 'left', marginLeft: 0 }}>Social</h4>
                             <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: 0, marginRight: 0, textAlign: 'left', alignItems: 'flex-start' }}>
-                                <li><a href="#">Instagram</a></li>
+                                <li><a href="https://www.instagram.com/getset.mart?igsh=MWZkZmUwNTk3aWIwdA==" target="_blank" rel="noopener noreferrer">Instagram</a></li>
                                 <li><a href="#">Twitter</a></li>
                                 <li><a href="#">TikTok</a></li>
                             </ul>
