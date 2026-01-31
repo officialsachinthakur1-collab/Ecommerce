@@ -129,17 +129,21 @@ app.post('/api/products', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Name and Price are required' });
         }
 
+        // Explicitly parse and validate numeric fields
+        const parsedStock = parseInt(stock) || 0;
+        const cleanPrice = String(price).startsWith('₹') ? price : `₹${price}`;
+
         const newProduct = await Product.create({
             id: Date.now(),
             name,
-            price,
+            price: cleanPrice,
             category: category || 'Men',
             description: description || "Engineered for performance.",
             image: image || "",
             images: Array.isArray(images) ? images : [],
             tag: tag || "New",
             sizes: Array.isArray(sizes) ? sizes : [],
-            stock: stock !== undefined ? Number(stock) : 10,
+            stock: parsedStock,
             affiliateLink: affiliateLink || ""
         });
 
@@ -173,6 +177,14 @@ async function handleUpdateProduct(id, req, res) {
 
         if (queryOr.length === 0) {
             return res.status(400).json({ success: false, message: 'Invalid Product ID' });
+        }
+
+        // Clean price and stock if present
+        if (updateData.price) {
+            updateData.price = String(updateData.price).startsWith('₹') ? updateData.price : `₹${updateData.price}`;
+        }
+        if (updateData.stock !== undefined) {
+            updateData.stock = parseInt(updateData.stock) || 0;
         }
 
         let product = await Product.findOneAndUpdate({ $or: queryOr }, updateData, { new: true });
