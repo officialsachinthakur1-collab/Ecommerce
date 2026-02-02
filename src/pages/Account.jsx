@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { Package, Truck, CheckCircle, Clock, ShoppingBag, ExternalLink } from 'lucide-react';
+import { Package, Truck, CheckCircle, Clock, ShoppingBag, ExternalLink, LogOut } from 'lucide-react';
 import API_URL from '../config';
 
 const Account = () => {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -75,6 +75,36 @@ const Account = () => {
                                     <span style={{ fontSize: '0.875rem' }}>{orders.length}</span>
                                 </div>
                             </div>
+
+                            <button
+                                onClick={logout}
+                                style={{
+                                    width: '100%',
+                                    marginTop: '2rem',
+                                    padding: '1rem',
+                                    background: 'rgba(255, 68, 68, 0.1)',
+                                    color: '#ff4444',
+                                    border: '1px solid rgba(255, 68, 68, 0.2)',
+                                    borderRadius: '12px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '0.75rem',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(255, 68, 68, 0.15)';
+                                    e.target.style.borderColor = 'rgba(255, 68, 68, 0.4)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(255, 68, 68, 0.1)';
+                                    e.target.style.borderColor = 'rgba(255, 68, 68, 0.2)';
+                                }}
+                            >
+                                <LogOut size={18} /> Logout
+                            </button>
                         </div>
                     </div>
 

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, Heart, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, X, LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
@@ -9,7 +9,7 @@ import useMobile from '../../hooks/useMobile';
 
 const Navbar = () => {
     const isMobile = useMobile();
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -212,101 +212,142 @@ const Navbar = () => {
                                         {(user.name || user.email || 'M').charAt(0).toUpperCase()}
                                     </div>
                                 </Link>
-                            ) : (
-                                <Link to="/login" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Sign In</Link>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </nav>
-
-            {/* Mobile Menu Overlay */}
-            <AnimatePresence>
-                {mobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, x: '100%' }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: '100%' }}
-                        style={{
-                            position: 'fixed',
-                            inset: 0,
-                            background: 'black',
-                            zIndex: 200,
-                            padding: '2rem',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            gap: '2rem'
-                        }}
-                    >
-                        <div style={{ position: 'absolute', top: '2rem', right: '2rem', cursor: 'pointer' }} onClick={() => setMobileMenuOpen(false)}>
-                            <X size={32} />
-                        </div>
-                        <Link to="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem', color: 'white' }}>GETSETMART</Link>
-
-                        <Link to="/shop" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SHOP</Link>
-                        <Link to="/valentines-day" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary-red)' }}>V-DAY SPECIAL</Link>
-                        <Link to="/blog" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>INSIGHTS</Link>
-                        {user ? (
-                            <Link to="/account" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--primary-red)' }}>MY ACCOUNT</Link>
-                        ) : (
-                            <>
-                                <Link to="/login" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SIGN IN</Link>
-                                <Link to="/signup" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1rem', fontWeight: 500, color: '#666' }}>CREATE ACCOUNT</Link>
+                                <button
+                                    onClick={logout}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        color: '#666',
+                                        cursor: 'pointer',
+                                        padding: '0.5rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        transition: 'color 0.3s ease'
+                                    }}
+                                    onMouseEnter={(e) => e.target.style.color = '#ff4444'}
+                                    onMouseLeave={(e) => e.target.style.color = '#666'}
+                                    title="Logout"
+                                >
+                                    <LogOut size={18} />
+                                </button>
                             </>
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    ) : (
+                    <Link to="/login" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase' }}>Sign In</Link>
+                            )}
+                </div>
+                    )}
+            </div>
+        </nav >
 
-            {/* Search Overlay */}
-            <AnimatePresence>
-                {searchOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100vh',
-                            background: 'rgba(0,0,0,0.9)',
-                            zIndex: 150,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <div style={{ position: 'absolute', top: '2rem', right: '2rem', cursor: 'pointer' }} onClick={() => setSearchOpen(false)}>
-                            <X size={32} />
-                        </div>
-                        <form onSubmit={handleSearch} style={{ width: '100%', maxWidth: '600px', padding: '0 2rem' }}>
-                            <input
-                                type="text"
-                                placeholder="Search Getsetmart.com"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                autoFocus
-                                style={{
-                                    width: '100%',
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '2px solid var(--primary-red)',
-                                    color: 'white',
-                                    fontSize: '2rem',
-                                    padding: '1rem 0',
-                                    outline: 'none',
-                                    textAlign: 'center'
+            {/* Mobile Menu Overlay */ }
+            < AnimatePresence >
+            { mobileMenuOpen && (
+                <motion.div
+                    initial={{ opacity: 0, x: '100%' }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: '100%' }}
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        background: 'black',
+                        zIndex: 200,
+                        padding: '2rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '2rem'
+                    }}
+                >
+                    <div style={{ position: 'absolute', top: '2rem', right: '2rem', cursor: 'pointer' }} onClick={() => setMobileMenuOpen(false)}>
+                        <X size={32} />
+                    </div>
+                    <Link to="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem', color: 'white' }}>GETSETMART</Link>
+
+                    <Link to="/shop" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SHOP</Link>
+                    <Link to="/valentines-day" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary-red)' }}>V-DAY SPECIAL</Link>
+                    <Link to="/blog" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>INSIGHTS</Link>
+                    {user ? (
+                        <>
+                            <Link to="/account" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--primary-red)' }}>MY ACCOUNT</Link>
+                            <button
+                                onClick={() => {
+                                    logout();
+                                    setMobileMenuOpen(false);
                                 }}
-                            />
-                        </form>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: '#ff4444',
+                                    fontSize: '1.2rem',
+                                    fontWeight: 600,
+                                    marginTop: '1rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}
+                            >
+                                <LogOut size={20} /> LOGOUT
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SIGN IN</Link>
+                            <Link to="/signup" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1rem', fontWeight: 500, color: '#666' }}>CREATE ACCOUNT</Link>
+                        </>
+                    )}
+                </motion.div>
+            )
+}
+            </AnimatePresence >
+
+    {/* Search Overlay */ }
+    < AnimatePresence >
+    { searchOpen && (
+        <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100vh',
+                background: 'rgba(0,0,0,0.9)',
+                zIndex: 150,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <div style={{ position: 'absolute', top: '2rem', right: '2rem', cursor: 'pointer' }} onClick={() => setSearchOpen(false)}>
+                <X size={32} />
+            </div>
+            <form onSubmit={handleSearch} style={{ width: '100%', maxWidth: '600px', padding: '0 2rem' }}>
+                <input
+                    type="text"
+                    placeholder="Search Getsetmart.com"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    autoFocus
+                    style={{
+                        width: '100%',
+                        background: 'transparent',
+                        border: 'none',
+                        borderBottom: '2px solid var(--primary-red)',
+                        color: 'white',
+                        fontSize: '2rem',
+                        padding: '1rem 0',
+                        outline: 'none',
+                        textAlign: 'center'
+                    }}
+                />
+            </form>
+        </motion.div>
+    )}
+            </AnimatePresence >
         </>
     );
 };
