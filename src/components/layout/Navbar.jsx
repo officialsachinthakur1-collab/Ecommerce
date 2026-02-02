@@ -165,7 +165,28 @@ const Navbar = () => {
                             flexShrink: 0
                         }}>
                             <Link to="/shop" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Shop</Link>
-                            <Link to="/valentines-day" style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary-red)' }}>V-Day Special</Link>
+
+                            {/* Animated V-Day Link */}
+                            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                <Link to="/valentines-day" style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary-red)', position: 'relative', zIndex: 1 }}>
+                                    V-Day Special
+                                </Link>
+                                <motion.div
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                    style={{ position: 'absolute', inset: -10, pointerEvents: 'none' }}
+                                >
+                                    <Heart size={8} fill="currentColor" style={{ position: 'absolute', top: 0, left: '50%', color: 'var(--primary-red)', transform: 'translateX(-50%)' }} />
+                                </motion.div>
+                                <motion.div
+                                    animate={{ rotate: -360 }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                    style={{ position: 'absolute', inset: -15, pointerEvents: 'none' }}
+                                >
+                                    <Heart size={6} fill="currentColor" style={{ position: 'absolute', bottom: 0, left: '50%', color: 'var(--primary-red)', transform: 'translateX(-50%)' }} />
+                                </motion.div>
+                            </div>
+
                             <Link to="/blog" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Insights</Link>
 
                             <Link to="/wishlist" style={{ cursor: 'pointer', color: 'inherit' }}>
@@ -266,7 +287,27 @@ const Navbar = () => {
                         <Link to="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem', color: 'white' }}>GETSETMART</Link>
 
                         <Link to="/shop" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SHOP</Link>
-                        <Link to="/valentines-day" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary-red)' }}>V-DAY SPECIAL</Link>
+
+                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Link to="/valentines-day" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary-red)', position: 'relative', zIndex: 1 }}>
+                                V-DAY SPECIAL
+                            </Link>
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                style={{ position: 'absolute', inset: -20, pointerEvents: 'none' }}
+                            >
+                                <Heart size={12} fill="currentColor" style={{ position: 'absolute', top: 0, left: '50%', color: 'var(--primary-red)', transform: 'translateX(-50%)' }} />
+                            </motion.div>
+                            <motion.div
+                                animate={{ rotate: -360 }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                                style={{ position: 'absolute', inset: -25, pointerEvents: 'none' }}
+                            >
+                                <Heart size={10} fill="currentColor" style={{ position: 'absolute', bottom: 0, left: '50%', color: 'var(--primary-red)', transform: 'translateX(-50%)' }} />
+                            </motion.div>
+                        </div>
+
                         <Link to="/blog" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>INSIGHTS</Link>
                         {user ? (
                             <>
