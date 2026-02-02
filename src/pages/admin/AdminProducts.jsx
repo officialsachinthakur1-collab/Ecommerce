@@ -215,7 +215,7 @@ export default function AdminProducts() {
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                             {/* Simple color block for image placeholder if no image */}
                                             {/* Image placeholder or actual image */}
-                                            <div style={{ width: '40px', height: '40px', borderRadius: '4px', background: '#333', overflow: 'hidden' }}>
+                                            <div style={{ width: '40px', height: '40px', borderRadius: '4px', background: '#fff', overflow: 'hidden', border: '1px solid #ddd' }}>
                                                 {product.image ? (
                                                     <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px' }} />
                                                 ) : null}
@@ -318,7 +318,7 @@ export default function AdminProducts() {
                                 />
                                 {formData.image && (
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem', background: '#1a1a1a', borderRadius: '8px' }}>
-                                        <img src={formData.image} alt="Thumbnail Preview" style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '4px', background: '#000', padding: '2px' }} />
+                                        <img src={formData.image} alt="Thumbnail Preview" style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '4px', background: '#fff', padding: '2px', border: '1px solid #ddd' }} />
                                         <span style={{ fontSize: '0.7rem', color: '#4ade80' }}>✓ Thumbnail Active</span>
                                     </div>
                                 )}
@@ -341,7 +341,7 @@ export default function AdminProducts() {
                                 </div>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(60px, 1fr))', gap: '0.5rem' }}>
                                     {formData.images.map((img, idx) => (
-                                        <div key={idx} style={{ position: 'relative', width: '60px', height: '60px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #444' }}>
+                                        <div key={idx} style={{ position: 'relative', width: '60px', height: '60px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #ddd', background: '#fff' }}>
                                             <img src={img} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px' }} />
                                             <button
                                                 type="button"

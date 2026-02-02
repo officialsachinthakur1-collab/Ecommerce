@@ -17,12 +17,12 @@ const ProductCard = ({ product }) => {
             >
                 {/* Image Placeholder */}
                 <div className="product-image-container" style={{
-                    background: '#111',
+                    background: '#fff',
                     borderRadius: '24px',
                     overflow: 'hidden',
                     position: 'relative',
                     marginBottom: '1rem',
-                    border: '1px solid #222'
+                    border: '1px solid #333'
                 }}>
                     <div style={{
                         position: 'absolute',

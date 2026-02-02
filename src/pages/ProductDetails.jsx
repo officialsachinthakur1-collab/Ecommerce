@@ -68,7 +68,7 @@ export default function ProductDetails() {
                 {/* Left: Product Image Area */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <div style={{
-                        background: 'linear-gradient(135deg, #181818 0%, #0a0a0a 100%)',
+                        background: '#fff',
                         position: 'relative',
                         height: isMobile ? '350px' : '550px',
                         marginTop: '2rem',
@@ -77,7 +77,7 @@ export default function ProductDetails() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        border: '1px solid #222'
+                        border: '1px solid #333'
                     }} className="product-image-container">
 
                         <motion.img
@@ -109,7 +109,7 @@ export default function ProductDetails() {
                                         borderRadius: '12px',
                                         overflow: 'hidden',
                                         border: activeImage === img ? '2px solid var(--primary-red)' : '1px solid #333',
-                                        background: '#111',
+                                        background: '#fff',
                                         cursor: 'pointer',
                                         padding: 0,
                                         flexShrink: 0,
