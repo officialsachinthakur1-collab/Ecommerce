@@ -62,7 +62,7 @@ const Hero = () => {
         description: "Make this February unforgettable with our curated collection of love-inspired essentials.",
         image: "/assets/vday/teddy.png",
         btnText: "EXPLORE THE GUIDE",
-        btnLink: "/shop"
+        btnLink: "/valentines-day"
     };
 
     const heroSlides = useMemo(() => {

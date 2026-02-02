@@ -165,6 +165,7 @@ const Navbar = () => {
                             flexShrink: 0
                         }}>
                             <Link to="/shop" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Shop</Link>
+                            <Link to="/valentines-day" style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary-red)' }}>V-Day Special</Link>
                             <Link to="/blog" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Insights</Link>
 
                             <Link to="/wishlist" style={{ cursor: 'pointer', color: 'inherit' }}>
@@ -245,6 +246,7 @@ const Navbar = () => {
                         <Link to="/" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '2rem', color: 'white' }}>GETSETMART</Link>
 
                         <Link to="/shop" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>SHOP</Link>
+                        <Link to="/valentines-day" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--primary-red)' }}>V-DAY SPECIAL</Link>
                         <Link to="/blog" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600 }}>INSIGHTS</Link>
                         {user ? (
                             <Link to="/account" onClick={() => setMobileMenuOpen(false)} style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--primary-red)' }}>MY ACCOUNT</Link>
