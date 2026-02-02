@@ -120,29 +120,30 @@ const Navbar = () => {
                         <form onSubmit={handleSearch} style={{
                             display: 'flex',
                             width: '100%',
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid rgba(255,255,255,0.1)',
+                            background: '#fff', // Amazon style white search bar
+                            border: '1px solid #fff',
                             borderRadius: '8px',
-                            overflow: 'hidden'
+                            overflow: 'hidden',
+                            height: isMobile ? '2.4rem' : '2.8rem'
                         }}>
                             {!isMobile && (
                                 <select
                                     value={searchCategory}
                                     onChange={(e) => setSearchCategory(e.target.value)}
                                     style={{
-                                        background: '#f3f3f3',
+                                        background: '#f3f3f3', // Amazon style light grey dropdown
                                         border: 'none',
-                                        borderRight: '1px solid rgba(255,255,255,0.1)',
+                                        borderRight: '1px solid #ddd',
                                         color: '#000',
                                         padding: '0 1rem',
-                                        fontWeight: '800',
+                                        fontWeight: '700',
                                         fontSize: '0.85rem',
                                         cursor: 'pointer',
                                         outline: 'none',
                                         WebkitAppearance: 'none'
                                     }}
                                 >
-                                    <option value="All">All</option>
+                                    <option value="All">All Categories</option>
                                     <option value="Men">Men</option>
                                     <option value="Women">Women</option>
                                     <option value="Chocolates">Chocolates</option>
@@ -150,40 +151,41 @@ const Navbar = () => {
                                     <option value="Gifts">Gifts</option>
                                 </select>
                             )}
-                            <div style={{ position: 'relative', flex: 1 }}>
+                            <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
                                 <input
                                     type="text"
-                                    placeholder={isMobile ? "Search..." : "Search Getsetmart.com"}
+                                    placeholder={isMobile ? "Search..." : "Search for gifts, chocolates, and more..."}
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     style={{
                                         width: '100%',
-                                        padding: isMobile ? '0.6rem 1rem' : '0.75rem 1.25rem',
+                                        height: '100%',
+                                        padding: '0 1rem',
                                         paddingRight: '3.5rem',
                                         background: 'transparent',
                                         border: 'none',
-                                        color: 'white',
-                                        fontSize: '0.9rem',
+                                        color: '#000', // Solid black text
+                                        fontSize: '0.95rem',
+                                        fontWeight: '700', // Extra bold text
                                         outline: 'none'
                                     }}
                                 />
                                 <button type="submit" style={{
                                     position: 'absolute',
-                                    right: '0.4rem',
-                                    top: '50%',
-                                    transform: 'translateY(-50%)',
+                                    right: '2px',
+                                    top: '2px',
+                                    bottom: '2px',
                                     background: 'var(--primary-red)',
                                     border: 'none',
-                                    borderRadius: '4px',
-                                    width: '2.4rem',
-                                    height: isMobile ? '2rem' : '2.2rem',
+                                    borderRadius: '6px',
+                                    width: '3rem',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     cursor: 'pointer',
                                     color: 'white'
                                 }}>
-                                    <Search size={18} />
+                                    <Search size={20} />
                                 </button>
                             </div>
                         </form>
