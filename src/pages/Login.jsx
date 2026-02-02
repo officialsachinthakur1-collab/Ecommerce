@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ArrowRight, Lock, Mail } from 'lucide-react';
+import { ArrowRight, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Login = () => {
@@ -9,6 +9,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -103,7 +104,7 @@ const Login = () => {
                         <div style={{ position: 'relative' }}>
                             <Lock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#666' }} />
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
@@ -118,6 +119,25 @@ const Login = () => {
                                 }}
                                 required
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={{
+                                    position: 'absolute',
+                                    right: '1rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: '#666',
+                                    cursor: 'pointer',
+                                    padding: '0',
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                         <div style={{ textAlign: 'right', marginTop: '0.5rem' }}>
                             <Link to="/forgot-password" style={{ fontSize: '0.75rem', color: 'var(--primary-red)', textDecoration: 'none' }}>
