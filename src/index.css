@@ -254,6 +254,15 @@
    align-items: center;
    width: 100%;
    z-index: 10;
+   pointer-events: none;
+   /* Let clicks pass through empty grid space */
+ }
+
+ .hero-info {
+   position: relative;
+   z-index: 20;
+   pointer-events: auto;
+   /* Re-enable for content */
  }
 
  .hero-tag {
@@ -294,6 +303,8 @@
    display: flex;
    gap: 1.5rem;
    margin-bottom: 4rem;
+   position: relative;
+   z-index: 30;
  }
 
  .btn-outline {
@@ -336,6 +347,8 @@
    display: flex;
    justify-content: center;
    align-items: center;
+   pointer-events: none;
+   /* Visuals should not block clicks */
  }
 
  .product-image-container {
@@ -343,6 +356,8 @@
    width: 100%;
    max-width: 500px;
    aspect-ratio: 1;
+   pointer-events: auto;
+   /* Let clicks on product image work if needed, though buttons are main target */
  }
 
  /* Valentine Theme Specifics */

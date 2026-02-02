@@ -126,7 +126,7 @@ const Hero = () => {
                 <div className="hero-background-gradient" />
             )}
 
-            <div className="container hero-container" style={{ position: 'relative', zIndex: 2 }}>
+            <div className="container hero-container" style={{ position: 'relative', zIndex: 10 }}>
                 <div className="hero-content-grid">
                     <div className="hero-info">
                         <AnimatePresence mode="wait">
