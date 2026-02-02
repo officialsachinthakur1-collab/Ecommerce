@@ -21,8 +21,20 @@ console.log(">>> Current Commit Fix: Robust app.use Catch-all <<<");
 // Deployment Trigger: 2026-01-30T21:15
 
 // Database Connection
-dbConnect().then(() => {
+dbConnect().then(async () => {
     console.log(">>> MongoDB Connected Successfully <<<");
+
+    // Auto-seed if database is empty
+    try {
+        const count = await Product.countDocuments();
+        if (count === 0) {
+            console.log(">>> Database is empty. Seeding initial products... <<<");
+            await Product.insertMany(initialProducts);
+            console.log(">>> Seeding complete! <<<");
+        }
+    } catch (seedErr) {
+        console.error(">>> Auto-seeding failed <<<", seedErr);
+    }
 }).catch(err => {
     console.error(">>> MongoDB Connection Failed <<<", err);
 });

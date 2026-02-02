@@ -10,7 +10,8 @@
     "server": "node server/index.js",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed-db": "node scripts/seed_all.js"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
