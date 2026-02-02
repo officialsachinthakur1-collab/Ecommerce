@@ -34,16 +34,16 @@ export default function ProductDetailsPreview() {
 
     useEffect(() => {
         if (!loading && products.length > 0) {
-            const p = products.find(prod => String(prod.id) === String(id));
+            const p = products.find(prod => String(prod.id) === String(id) || String(prod._id) === String(id));
             if (p && !activeImage) {
                 setActiveImage(p.image);
             }
         }
     }, [loading, products, id, activeImage]);
 
-    if (loading) return <div className="loading-screen">Loading Premium Preview...</div>;
+    if (loading) return <div className="loading-screen" style={{ color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>Loading Premium Preview...</div>;
 
-    const product = products.find(p => String(p.id) === String(id));
+    const product = products.find(p => String(p.id) === String(id) || String(p._id) === String(id));
     if (!product) return <div className="not-found">Product Not Found</div>;
 
     return (
