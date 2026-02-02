@@ -64,5 +64,35 @@ export const products = [
         description: "Stunning ruby red traditional earrings with royal peacock motifs.",
         image: "/assets/products/earrings_red_user.jpg",
         sizes: ["One Size"]
+    },
+    {
+        id: 7,
+        name: "Dark Truffle Selection",
+        price: "₹1,499",
+        tag: "Premium",
+        category: "Chocolates",
+        description: "Handcrafted Belgian dark chocolate truffles with a silky smooth ganache center.",
+        image: "/assets/products/chocolate_box.png",
+        sizes: ["12 Pieces", "24 Pieces"]
+    },
+    {
+        id: 8,
+        name: "Gourmet Healthy Hamper",
+        price: "₹2,999",
+        tag: "Best Seller",
+        category: "Food",
+        description: "Assorted gourmet healthy treats, nuts, and exotic fruits curated for health enthusiasts.",
+        image: "/assets/products/food_hamper.png",
+        sizes: ["Standard"]
+    },
+    {
+        id: 9,
+        name: "Luxury Surprise Gift Box",
+        price: "₹4,999",
+        tag: "New",
+        category: "Gifts",
+        description: "An elegant gift box featuring a premium watch, leather wallet, and signature fragrance.",
+        image: "/assets/products/gift_box.png",
+        sizes: ["Gift Set"]
     }
 ];

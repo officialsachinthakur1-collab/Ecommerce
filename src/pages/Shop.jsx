@@ -174,7 +174,7 @@ const Shop = () => {
                             <div style={{ marginBottom: '3rem' }}>
                                 <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>Category</h3>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', listStyle: 'none' }}>
-                                    {['All', 'Men', 'Women', 'Unisex', 'Clothes', 'Accessories'].map(cat => (
+                                    {['All', 'Men', 'Women', 'Unisex', 'Chocolates', 'Food', 'Gifts', 'Accessories'].map(cat => (
                                         <li key={cat}>
                                             <button
                                                 onClick={() => setSearchParams({ category: cat })}
@@ -264,7 +264,7 @@ const Shop = () => {
                         <div style={{ marginBottom: '3rem' }}>
                             <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: '#666' }}>Categories</h3>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                {['All', 'Men', 'Women', 'Unisex', 'Clothes'].map(cat => (
+                                {['All', 'Men', 'Women', 'Unisex', 'Chocolates', 'Food', 'Gifts'].map(cat => (
                                     <button
                                         key={cat}
                                         onClick={() => {
