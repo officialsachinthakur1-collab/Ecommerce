@@ -130,13 +130,13 @@ const Navbar = () => {
                                     value={searchCategory}
                                     onChange={(e) => setSearchCategory(e.target.value)}
                                     style={{
-                                        background: '#f3f3f3', // Amazon style light grey
+                                        background: '#f3f3f3',
                                         border: 'none',
                                         borderRight: '1px solid rgba(255,255,255,0.1)',
-                                        color: '#000', // Black text for maximum readability
+                                        color: '#000',
                                         padding: '0 1rem',
-                                        fontWeight: '700',
-                                        fontSize: '0.8rem',
+                                        fontWeight: '800',
+                                        fontSize: '0.85rem',
                                         cursor: 'pointer',
                                         outline: 'none',
                                         WebkitAppearance: 'none'
