@@ -445,11 +445,20 @@ app.post('/api/utils/scrape', async (req, res) => {
 
         if (!response.ok) throw new Error('Failed to fetch URL');
 
-        const html = await response.text();
+        // Check content size - limit to 5MB for scraping
+        const contentLength = response.headers.get('content-length');
+        if (contentLength && parseInt(contentLength) > 5 * 1024 * 1024) {
+            throw new Error('Page too large to scrape safely');
+        }
 
-        // Basic Regex Based Extraction
-        const title = html.match(/<meta property="og:title" content="(.*?)"/i)?.[1] ||
-            html.match(/<title>(.*?)<\/title>/i)?.[1] || "";
+        let html = await response.text();
+        if (html.length > 2 * 1024 * 1024) { // Truncate if > 2MB
+            html = html.substring(0, 2 * 1024 * 1024);
+        }
+
+        // Basic Regex Based Extraction (Improved truncation)
+        const title = (html.match(/<meta property="og:title" content="(.*?)"/i)?.[1] ||
+            html.match(/<title>(.*?)<\/title>/i)?.[1] || "").substring(0, 200);
 
         const image = html.match(/<meta property="og:image" content="(.*?)"/i)?.[1] || "";
 

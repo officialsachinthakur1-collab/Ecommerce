@@ -14,6 +14,36 @@ export default function AdminProducts() {
         isHero: false, heroTitle: '', isCombo: false, comboLinks: ['', '', '']
     });
 
+    const compressImage = (base64Str, maxWidth = 800, maxHeight = 800) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = base64Str;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL('image/jpeg', 0.7)); // Compress to 70% quality JPEG
+            };
+        });
+    };
+
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -61,12 +91,16 @@ export default function AdminProducts() {
 
                 setFormData(prev => ({
                     ...prev,
-                    name: comboName,
+                    name: comboName.substring(0, 200),
                     image: comboImages[0] || prev.image,
-                    images: [...new Set([...prev.images, ...comboImages])],
+                    images: [...new Set([...prev.images, ...comboImages])].slice(0, 10), // Limit total images
                     price: `₹${totalPrice}`,
-                    description: `This combo includes:\n${successfulResults.map(p => `• ${p.name}`).join('\n')}`,
-                    comboProducts: successfulResults // Store full products for frontend display
+                    description: `This combo includes:\n${successfulResults.map(p => `• ${p.name}`).join('\n')}`.substring(0, 1000),
+                    comboProducts: successfulResults.map(p => ({
+                        name: p.name.substring(0, 100),
+                        image: p.image,
+                        price: p.price
+                    })) // Only store essential fields to save space
                 }));
                 alert(`${successfulResults.length} product(s) fetched for combo!`);
             } else {
@@ -90,6 +124,12 @@ export default function AdminProducts() {
                 ? `${API_URL}/api/products?id=${editingProduct.id || editingProduct._id}`
                 : `${API_URL}/api/products`;
             const method = editingProduct ? 'PUT' : 'POST';
+
+            const payloadSize = JSON.stringify(payload).length;
+            if (payloadSize > 15 * 1024 * 1024) { // 15MB limit
+                alert("Error: Total product data is too large (>15MB). Please remove some images or use smaller ones.");
+                return;
+            }
 
             const response = await fetch(url, {
                 method: method,
@@ -332,10 +372,11 @@ export default function AdminProducts() {
                                                 const files = Array.from(e.target.files);
                                                 files.forEach(file => {
                                                     const reader = new FileReader();
-                                                    reader.onloadend = () => {
+                                                    reader.onloadend = async () => {
+                                                        const compressed = await compressImage(reader.result);
                                                         setFormData(prev => ({
                                                             ...prev,
-                                                            images: [...prev.images, reader.result]
+                                                            images: [...prev.images, compressed].slice(0, 10)
                                                         }));
                                                     };
                                                     reader.readAsDataURL(file);
