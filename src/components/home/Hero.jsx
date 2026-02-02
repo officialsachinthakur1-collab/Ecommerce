@@ -202,6 +202,7 @@ const Hero = () => {
                                     src={activeSlide.image}
                                     alt={activeSlide.title || activeSlide.name}
                                     className={`hero-product-img ${activeSlide.isValentine ? 'valentine-img' : ''}`}
+                                    style={{ objectFit: 'contain', padding: isMobile ? '1rem' : '2rem' }}
                                 />
                                 {activeSlide.isValentine && (
                                     <motion.div

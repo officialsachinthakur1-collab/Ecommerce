@@ -116,7 +116,7 @@ export default function ProductDetails() {
                                         transition: 'all 0.2s'
                                     }}
                                 >
-                                    <img src={img} alt={`view-${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={img} alt={`view-${idx}`} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }} />
                                 </button>
                             ))}
                         </div>
@@ -164,7 +164,7 @@ export default function ProductDetails() {
                                         {product.comboProducts.map((p, idx) => (
                                             <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
                                                 <div style={{ width: '50px', height: '50px', background: '#111', borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
-                                                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '2px' }} />
                                                 </div>
                                                 <div style={{ flex: 1 }}>
                                                     <div style={{ fontSize: '0.9rem', fontWeight: '700', color: 'white' }}>{p.name}</div>
