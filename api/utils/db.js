@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://officialsachinthakur1_db_user:Sachin%40321@cluster0.qq5oztp.mongodb.net/getsetmart?retryWrites=true&w=majority&appName=Cluster0';
 
 if (!MONGODB_URI) {
-    console.warn('Warning: MONGODB_URI is not defined in environment variables. Falling back to local/default if applicable.');
+    console.error('CRITICAL: MONGODB_URI is not defined and no fallback available.');
 }
 
 let cached = global.mongoose;
