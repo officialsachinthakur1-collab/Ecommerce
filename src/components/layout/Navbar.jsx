@@ -130,11 +130,12 @@ const Navbar = () => {
                                     value={searchCategory}
                                     onChange={(e) => setSearchCategory(e.target.value)}
                                     style={{
-                                        background: 'rgba(255,255,255,0.08)',
+                                        background: 'rgba(255,255,255,0.15)',
                                         border: 'none',
                                         borderRight: '1px solid rgba(255,255,255,0.1)',
-                                        color: '#aaa',
+                                        color: 'white',
                                         padding: '0 1rem',
+                                        fontWeight: '600',
                                         fontSize: '0.8rem',
                                         cursor: 'pointer',
                                         outline: 'none',
