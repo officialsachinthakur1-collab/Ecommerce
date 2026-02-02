@@ -359,7 +359,9 @@ export default function AdminProducts() {
                                     <option value="Men">Men</option>
                                     <option value="Women">Women</option>
                                     <option value="Unisex">Unisex</option>
-                                    <option value="Clothing">Clothing</option>
+                                    <option value="Chocolates">Chocolates</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Gifts">Gifts</option>
                                     <option value="Accessories">Accessories</option>
                                 </select>
                                 <select
