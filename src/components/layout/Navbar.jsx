@@ -14,6 +14,7 @@ const Navbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchCategory, setSearchCategory] = useState('All');
     const { toggleCart, cartCount } = useCart();
     const navigate = useNavigate();
 
@@ -27,11 +28,14 @@ const Navbar = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        if (searchQuery.trim()) {
-            setSearchOpen(false);
-            navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
-            setSearchQuery('');
+        const query = searchQuery.trim();
+        let url = `/shop?category=${encodeURIComponent(searchCategory)}`;
+        if (query) {
+            url += `&search=${encodeURIComponent(query)}`;
         }
+        setSearchOpen(false);
+        navigate(url);
+        setSearchQuery('');
     };
 
     return (
@@ -113,45 +117,74 @@ const Navbar = () => {
                         flex: 1,
                         maxWidth: isMobile ? 'none' : '800px'
                     }}>
-                        <form onSubmit={handleSearch} style={{ position: 'relative', width: '100%' }}>
-                            <input
-                                type="text"
-                                placeholder="Search Getsetmart.com"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                style={{
-                                    width: '100%',
-                                    padding: isMobile ? '0.6rem 1rem' : '0.75rem 1.25rem',
-                                    paddingRight: '3.5rem',
-                                    background: 'rgba(255,255,255,0.05)',
-                                    border: '1px solid rgba(255,255,255,0.1)',
-                                    borderRadius: '8px',
-                                    color: 'white',
-                                    fontSize: '0.9rem',
-                                    outline: 'none',
-                                    transition: 'all 0.3s ease'
-                                }}
-                                onFocus={(e) => e.target.style.borderColor = 'var(--primary-red)'}
-                                onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
-                            />
-                            <button type="submit" style={{
-                                position: 'absolute',
-                                right: '0.4rem',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                background: 'var(--primary-red)',
-                                border: 'none',
-                                borderRadius: '4px',
-                                width: '2.4rem',
-                                height: isMobile ? '2rem' : '2.2rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                color: 'white'
-                            }}>
-                                <Search size={18} />
-                            </button>
+                        <form onSubmit={handleSearch} style={{
+                            display: 'flex',
+                            width: '100%',
+                            background: 'rgba(255,255,255,0.05)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '8px',
+                            overflow: 'hidden'
+                        }}>
+                            {!isMobile && (
+                                <select
+                                    value={searchCategory}
+                                    onChange={(e) => setSearchCategory(e.target.value)}
+                                    style={{
+                                        background: 'rgba(255,255,255,0.08)',
+                                        border: 'none',
+                                        borderRight: '1px solid rgba(255,255,255,0.1)',
+                                        color: '#aaa',
+                                        padding: '0 1rem',
+                                        fontSize: '0.8rem',
+                                        cursor: 'pointer',
+                                        outline: 'none',
+                                        WebkitAppearance: 'none'
+                                    }}
+                                >
+                                    <option value="All">All</option>
+                                    <option value="Men">Men</option>
+                                    <option value="Women">Women</option>
+                                    <option value="Chocolates">Chocolates</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Gifts">Gifts</option>
+                                </select>
+                            )}
+                            <div style={{ position: 'relative', flex: 1 }}>
+                                <input
+                                    type="text"
+                                    placeholder={isMobile ? "Search..." : "Search Getsetmart.com"}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: isMobile ? '0.6rem 1rem' : '0.75rem 1.25rem',
+                                        paddingRight: '3.5rem',
+                                        background: 'transparent',
+                                        border: 'none',
+                                        color: 'white',
+                                        fontSize: '0.9rem',
+                                        outline: 'none'
+                                    }}
+                                />
+                                <button type="submit" style={{
+                                    position: 'absolute',
+                                    right: '0.4rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'var(--primary-red)',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    width: '2.4rem',
+                                    height: isMobile ? '2rem' : '2.2rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    color: 'white'
+                                }}>
+                                    <Search size={18} />
+                                </button>
+                            </div>
                         </form>
                     </div>
 
