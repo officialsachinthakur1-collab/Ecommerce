@@ -68,7 +68,7 @@ const Account = () => {
                             <div style={{ borderTop: '1px solid #222', paddingTop: '1.5rem' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                                     <span style={{ fontSize: '0.875rem', color: '#666' }}>Joined</span>
-                                    <span style={{ fontSize: '0.875rem' }}>Dec 2024</span>
+                                    <span style={{ fontSize: '0.875rem' }}>{user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'New Member'}</span>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <span style={{ fontSize: '0.875rem', color: '#666' }}>Total Orders</span>

@@ -289,7 +289,7 @@ app.post('/api/auth/signup', async (req, res) => {
 
         res.status(201).json({
             success: true,
-            user: { id: user._id, name: user.name, email: user.email, role: user.role }
+            user: { id: user._id, name: user.name, email: user.email, role: user.role, createdAt: user.createdAt }
         });
     } catch (error) {
         console.error("Signup error:", error);
@@ -324,7 +324,7 @@ app.post('/api/auth/login', async (req, res) => {
 
         res.json({
             success: true,
-            user: { id: user._id, name: user.name, email: user.email, role: user.role }
+            user: { id: user._id, name: user.name, email: user.email, role: user.role, createdAt: user.createdAt }
         });
     } catch (error) {
         console.error("Login error:", error);
