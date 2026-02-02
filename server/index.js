@@ -462,8 +462,8 @@ app.post('/api/utils/scrape', async (req, res) => {
 
         const image = html.match(/<meta property="og:image" content="(.*?)"/i)?.[1] || "";
 
-        const description = html.match(/<meta property="og:description" content="(.*?)"/i)?.[1] ||
-            html.match(/<meta name="description" content="(.*?)"/i)?.[1] || "";
+        const description = (html.match(/<meta property="og:description" content="(.*?)"/i)?.[1] ||
+            html.match(/<meta name="description" content="(.*?)"/i)?.[1] || "").substring(0, 500);
 
         const priceMatch = html.match(/<meta property="product:price:amount" content="(.*?)"/i)?.[1] ||
             html.match(/priceAmount":(.*?),/i)?.[1];
