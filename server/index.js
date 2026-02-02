@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import dbConnect from '../api/utils/db.js';
 import Product from '../api/models/Product.js';
 import Order from '../api/models/Order.js';
+import User from '../api/models/User.js';
 import { products as initialProducts } from '../src/data/products.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -261,27 +262,129 @@ async function handleDeleteProduct(id, req, res) {
     }
 }
 
-// Auth Route
-app.post('/api/auth/login', (req, res) => {
-    const { email, password } = req.body;
-    console.log("Login attempt received for:", email);
+// --- AUTHENTICATION ROUTES ---
 
-    // Simple Mock Auth Logic
-    if (email === (process.env.ADMIN_EMAIL || 'admin@getsetmart.com') && password === (process.env.ADMIN_PASSWORD || 'admin')) {
+// Signup
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({ success: false, message: 'Please provide all fields' });
+        }
+
+        const userExists = await User.findOne({ email: email.toLowerCase() });
+        if (userExists) {
+            return res.status(400).json({ success: false, message: 'User already exists' });
+        }
+
+        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
+        const user = await User.create({
+            name,
+            email: email.toLowerCase(),
+            password: hashedPassword,
+            role: 'user'
+        });
+
+        res.status(201).json({
+            success: true,
+            user: { id: user._id, name: user.name, email: user.email, role: user.role }
+        });
+    } catch (error) {
+        console.error("Signup error:", error);
+        res.status(500).json({ success: false, message: 'Server error during signup' });
+    }
+});
+
+// Login
+app.post('/api/auth/login', async (req, res) => {
+    const { email, password } = req.body;
+    console.log("Login attempt for:", email);
+
+    try {
+        // 1. Admin Legacy Support (Environment Variables)
+        if (email === (process.env.ADMIN_EMAIL || 'admin@getsetmart.com') && password === (process.env.ADMIN_PASSWORD || 'admin')) {
+            return res.json({
+                success: true,
+                user: { email, name: 'Admin User', role: 'admin', token: 'mock-jwt-token-12345' }
+            });
+        }
+
+        // 2. Database User Check
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'Invalid email or password' });
+        }
+
+        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+        if (user.password !== hashedPassword) {
+            return res.status(401).json({ success: false, message: 'Invalid email or password' });
+        }
+
         res.json({
             success: true,
-            user: {
-                email,
-                name: 'Admin User',
-                role: 'admin',
-                token: 'mock-jwt-token-12345'
-            }
+            user: { id: user._id, name: user.name, email: user.email, role: user.role }
         });
-    } else {
-        res.status(401).json({
-            success: false,
-            message: 'Invalid email or password'
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ success: false, message: 'Server error during login' });
+    }
+});
+
+// Forgot Password
+app.post('/api/auth/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
+
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            // Security: Don't reveal user existence
+            return res.json({ success: true, message: 'If an account exists, a reset link has been sent.' });
+        }
+
+        const token = crypto.randomBytes(20).toString('hex');
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5173'}/reset-password?token=${token}`;
+
+        console.log("\n--- [FORGOT PASSWORD] ---");
+        console.log(`User: ${user.email}`);
+        console.log(`Link: ${resetUrl}`);
+        console.log("--------------------------\n");
+
+        res.json({ success: true, message: 'If an account exists, a reset link has been sent.' });
+    } catch (error) {
+        console.error("Forgot password error:", error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// Reset Password
+app.post('/api/auth/reset-password', async (req, res) => {
+    try {
+        const { token, password } = req.body;
+        if (!token || !password) return res.status(400).json({ success: false, message: 'Token and new password required' });
+
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() }
         });
+
+        if (!user) return res.status(400).json({ success: false, message: 'Invalid or expired token' });
+
+        user.password = crypto.createHash('sha256').update(password).digest('hex');
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.json({ success: true, message: 'Password reset successful. You can now login.' });
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
