@@ -8,7 +8,11 @@ export default function AdminProducts() {
     const { products, loading, refetch } = useProducts(false); // Only show DB products to avoid 404 deletion errors
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false, heroTitle: '' });
+    const [formData, setFormData] = useState({
+        name: '', price: '', category: 'Men', tag: 'New', description: '',
+        image: '', images: [], sizes: '', stock: 10, affiliateLink: '',
+        isHero: false, heroTitle: '', isCombo: false, comboLinks: ['', '', '']
+    });
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,38 +31,50 @@ export default function AdminProducts() {
             stock: product.stock !== undefined ? product.stock : 10,
             affiliateLink: product.affiliateLink || '',
             isHero: !!product.isHero,
-            heroTitle: product.heroTitle || ''
+            heroTitle: product.heroTitle || '',
+            isCombo: !!product.isCombo,
+            comboLinks: product.comboLinks || ['', '', '']
         });
         setIsModalOpen(true);
     };
 
-    const handleFetchMetadata = async () => {
-        if (!formData.affiliateLink) return alert("Please enter a link first!");
+    const handleFetchCombo = async () => {
+        const links = formData.comboLinks.filter(l => l.trim() !== '');
+        if (links.length === 0) return alert("Please enter at least one link!");
 
         try {
-            const response = await fetch(`${API_URL}/api/utils/scrape`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: formData.affiliateLink })
-            });
-            const result = await response.json();
-            if (result.success) {
-                const { name, image, description, price } = result.data;
+            const results = await Promise.all(links.map(async (link) => {
+                const res = await fetch(`${API_URL}/api/utils/scrape`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: link })
+                });
+                return res.json();
+            }));
+
+            const successfulResults = results.filter(r => r.success).map(r => r.data);
+            if (successfulResults.length > 0) {
+                // Combine names for title
+                const comboName = "Combo: " + successfulResults.map(p => p.name).join(" + ");
+                const comboImages = successfulResults.map(p => p.image).filter(Boolean);
+                const totalPrice = successfulResults.reduce((sum, p) => sum + (parseFloat(p.price?.replace(/[^0-9.]/g, '') || 0)), 0);
+
                 setFormData(prev => ({
                     ...prev,
-                    name: name || prev.name,
-                    image: image || prev.image,
-                    images: image ? [...new Set([...prev.images, image])] : prev.images,
-                    description: description || prev.description,
-                    price: price || prev.price
+                    name: comboName,
+                    image: comboImages[0] || prev.image,
+                    images: [...new Set([...prev.images, ...comboImages])],
+                    price: `₹${totalPrice}`,
+                    description: `This combo includes:\n${successfulResults.map(p => `• ${p.name}`).join('\n')}`,
+                    comboProducts: successfulResults // Store full products for frontend display
                 }));
-                alert("Product details fetched!");
+                alert(`${successfulResults.length} product(s) fetched for combo!`);
             } else {
-                alert("Failed to fetch details: " + result.message);
+                alert("Failed to fetch details for any of the links.");
             }
         } catch (error) {
-            console.error("Fetch metadata error:", error);
-            alert("Error fetching metadata");
+            console.error("Combo fetch error:", error);
+            alert("Error fetching combo details");
         }
     };
 
@@ -87,7 +103,11 @@ export default function AdminProducts() {
                 alert(editingProduct ? 'Product Updated!' : 'Product Added!');
                 setIsModalOpen(false);
                 setEditingProduct(null);
-                setFormData({ name: '', price: '', category: 'Men', tag: 'New', description: '', image: '', images: [], sizes: '', stock: 10, affiliateLink: '', isHero: false, heroTitle: '' });
+                setFormData({
+                    name: '', price: '', category: 'Men', tag: 'New', description: '',
+                    image: '', images: [], sizes: '', stock: 10, affiliateLink: '',
+                    isHero: false, heroTitle: '', isCombo: false, comboLinks: ['', '', '']
+                });
                 refetch(); // Refetch products to update the list
             } else {
                 const errorData = await response.json();
@@ -336,21 +356,76 @@ export default function AdminProducts() {
                                     style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }} required
                                 />
                             </div>
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', padding: '0.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px solid #333' }}>
                                 <input
-                                    name="affiliateLink" placeholder="Affiliate Link (Optional - e.g. Amazon URL)" value={formData.affiliateLink} onChange={handleInputChange}
-                                    style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                    type="checkbox"
+                                    checked={formData.isCombo}
+                                    onChange={(e) => setFormData({ ...formData, isCombo: e.target.checked })}
+                                    style={{ width: '20px', height: '20px', accentColor: 'var(--primary-red)' }}
                                 />
-                                {formData.affiliateLink && formData.affiliateLink.startsWith('http') && (
+                                <span style={{ fontSize: '1rem', fontWeight: '800', color: 'var(--primary-red)' }}>MAKE THIS A COMBO PRODUCT</span>
+                            </label>
+
+                            {formData.isCombo ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1rem', background: '#0a0a0a', border: '1px solid #333', borderRadius: '12px' }}>
+                                    <h3 style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text-muted)' }}>Combo Product Links</h3>
+                                    {[0, 1, 2].map((idx) => (
+                                        <input
+                                            key={idx}
+                                            placeholder={`Product Link ${idx + 1}`}
+                                            value={formData.comboLinks[idx]}
+                                            onChange={(e) => {
+                                                const newLinks = [...formData.comboLinks];
+                                                newLinks[idx] = e.target.value;
+                                                setFormData({ ...formData, comboLinks: newLinks });
+                                            }}
+                                            style={{ padding: '0.75rem', background: '#050505', border: '1px solid #222', color: 'white', borderRadius: '8px', fontSize: '0.85rem' }}
+                                        />
+                                    ))}
                                     <button
                                         type="button"
-                                        onClick={handleFetchMetadata}
-                                        style={{ background: '#333', color: 'white', border: '1px solid #444', borderRadius: '8px', padding: '0 1rem', cursor: 'pointer', fontSize: '0.75rem' }}
+                                        onClick={handleFetchCombo}
+                                        style={{ background: 'var(--primary-red)', color: 'white', border: 'none', borderRadius: '8px', padding: '0.75rem', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.85rem' }}
                                     >
-                                        Fetch Details
+                                        FETCH ALL COMBO DETAILS
                                     </button>
-                                )}
-                            </div>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <input
+                                        name="affiliateLink" placeholder="Affiliate Link (Optional - e.g. Amazon URL)" value={formData.affiliateLink} onChange={handleInputChange}
+                                        style={{ flex: 1, padding: '0.75rem', background: '#050505', border: '1px solid #333', color: 'white', borderRadius: '8px' }}
+                                    />
+                                    {formData.affiliateLink && formData.affiliateLink.startsWith('http') && (
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                const res = await fetch(`${API_URL}/api/utils/scrape`, {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ url: formData.affiliateLink })
+                                                });
+                                                const result = await res.json();
+                                                if (result.success) {
+                                                    const { name, image, description, price } = result.data;
+                                                    setFormData(prev => ({
+                                                        ...prev,
+                                                        name: name || prev.name,
+                                                        image: image || prev.image,
+                                                        images: image ? [...new Set([...prev.images, image])] : prev.images,
+                                                        description: description || prev.description,
+                                                        price: price || prev.price
+                                                    }));
+                                                    alert("Product details fetched!");
+                                                }
+                                            }}
+                                            style={{ background: '#333', color: 'white', border: '1px solid #444', borderRadius: '8px', padding: '0 1rem', cursor: 'pointer', fontSize: '0.75rem' }}
+                                        >
+                                            Fetch Details
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                             <div style={{ display: 'flex', gap: '1rem' }}>
                                 <select
                                     name="category" value={formData.category} onChange={handleInputChange}

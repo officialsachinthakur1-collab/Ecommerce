@@ -144,9 +144,40 @@ export default function ProductDetails() {
                             <h1 className="product-title" style={{ fontWeight: '800', lineHeight: 1, marginBottom: '0.5rem' }}>{product.name}</h1>
                             <p className="product-price" style={{ color: 'var(--primary-red)', fontWeight: '600', marginBottom: '2rem' }}>{product.price}</p>
 
-                            <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', marginBottom: '3rem' }}>
+                            <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', marginBottom: '2rem' }}>
                                 {product.description}
                             </p>
+
+                            {/* Combo Items Section */}
+                            {product.isCombo && product.comboProducts && product.comboProducts.length > 0 && (
+                                <div style={{
+                                    marginBottom: '3rem',
+                                    padding: '1.5rem',
+                                    background: 'rgba(255,255,255,0.03)',
+                                    borderRadius: '20px',
+                                    border: '1px solid rgba(255,255,255,0.05)'
+                                }}>
+                                    <h3 style={{ fontSize: '0.875rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '1.5rem', letterSpacing: '2px', color: 'var(--primary-red)' }}>
+                                        What's in this combo?
+                                    </h3>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                        {product.comboProducts.map((p, idx) => (
+                                            <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                                <div style={{ width: '50px', height: '50px', background: '#111', borderRadius: '8px', overflow: 'hidden', flexShrink: 0 }}>
+                                                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                </div>
+                                                <div style={{ flex: 1 }}>
+                                                    <div style={{ fontSize: '0.9rem', fontWeight: '700', color: 'white' }}>{p.name}</div>
+                                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{p.price}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', fontStyle: 'italic' }}>
+                                        Bundled together for a special price 🎁
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Size Selector */}
                             {product.sizes && product.sizes.filter(s => s && s.trim() !== "").length > 0 && !(product.sizes.length === 1 && (product.sizes[0] === "One Size" || product.sizes[0] === "")) && (
