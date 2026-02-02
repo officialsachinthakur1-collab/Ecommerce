@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, User, Lock, Globe, Bell } from 'lucide-react';
+import { Save, User, Lock, Globe, Bell, Eye, EyeOff } from 'lucide-react';
 import API_URL from '../../config';
 
 export default function AdminSettings() {
@@ -15,6 +15,9 @@ export default function AdminSettings() {
         newPassword: '',
         confirmPassword: ''
     });
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -204,30 +207,57 @@ export default function AdminSettings() {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                 <div>
                                     <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.875rem' }}>Current Password</label>
-                                    <input
-                                        type="password"
-                                        value={formData.currentPassword}
-                                        onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
-                                        style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
-                                    />
+                                    <div style={{ position: 'relative' }}>
+                                        <input
+                                            type={showCurrentPassword ? "text" : "password"}
+                                            value={formData.currentPassword}
+                                            onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
+                                            style={{ width: '100%', padding: '1rem', paddingRight: '3rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white', outline: 'none' }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                            style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#666', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                        >
+                                            {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
                                 </div>
                                 <div>
                                     <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.875rem' }}>New Password</label>
-                                    <input
-                                        type="password"
-                                        value={formData.newPassword}
-                                        onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
-                                        style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
-                                    />
+                                    <div style={{ position: 'relative' }}>
+                                        <input
+                                            type={showNewPassword ? "text" : "password"}
+                                            value={formData.newPassword}
+                                            onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
+                                            style={{ width: '100%', padding: '1rem', paddingRight: '3rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white', outline: 'none' }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowNewPassword(!showNewPassword)}
+                                            style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#666', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                        >
+                                            {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
                                 </div>
                                 <div>
                                     <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.875rem' }}>Confirm New Password</label>
-                                    <input
-                                        type="password"
-                                        value={formData.confirmPassword}
-                                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                        style={{ width: '100%', padding: '1rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
-                                    />
+                                    <div style={{ position: 'relative' }}>
+                                        <input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            value={formData.confirmPassword}
+                                            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                                            style={{ width: '100%', padding: '1rem', paddingRight: '3rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white', outline: 'none' }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#666', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                        >
+                                            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <button className="btn-primary" style={{ marginTop: '2rem' }} disabled={loading}>

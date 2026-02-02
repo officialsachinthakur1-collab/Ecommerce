@@ -128,7 +128,7 @@ const ResetPassword = () => {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    style={{ width: '100%', padding: '1.1rem 1.1rem 1.1rem 3.5rem', background: '#111', border: '1px solid #222', borderRadius: '14px', color: 'white', outline: 'none' }}
+                                    style={{ width: '100%', padding: '1.1rem 3.5rem 1.1rem 3.5rem', background: '#111', border: '1px solid #222', borderRadius: '14px', color: 'white', outline: 'none' }}
                                 />
                                 <button
                                     type="button"
@@ -147,7 +147,7 @@ const ResetPassword = () => {
                                         alignItems: 'center'
                                     }}
                                 >
-                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
 
@@ -159,7 +159,7 @@ const ResetPassword = () => {
                                     required
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    style={{ width: '100%', padding: '1.1rem 1.1rem 1.1rem 3.5rem', background: '#111', border: '1px solid #222', borderRadius: '14px', color: 'white', outline: 'none' }}
+                                    style={{ width: '100%', padding: '1.1rem 3.5rem 1.1rem 3.5rem', background: '#111', border: '1px solid #222', borderRadius: '14px', color: 'white', outline: 'none' }}
                                 />
                                 <button
                                     type="button"
@@ -178,7 +178,7 @@ const ResetPassword = () => {
                                         alignItems: 'center'
                                     }}
                                 >
-                                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
 
@@ -194,7 +194,7 @@ const ResetPassword = () => {
                     </>
                 )}
             </motion.div>
-        </div>
+        </div >
     );
 };
 

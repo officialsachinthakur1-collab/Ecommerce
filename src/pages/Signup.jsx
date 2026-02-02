@@ -79,7 +79,7 @@ const Signup = () => {
                             required
                             value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            style={{ width: '100%', padding: '1.25rem 1.25rem 1.25rem 3.5rem', background: '#1a1a1a', border: '1px solid #333', borderRadius: '12px', color: 'white', outline: 'none' }}
+                            style={{ width: '100%', padding: '1.1rem 3.5rem 1.1rem 3.5rem', background: '#111', border: '1px solid #222', borderRadius: '14px', color: 'white', outline: 'none' }}
                         />
                         <button
                             type="button"
@@ -98,7 +98,7 @@ const Signup = () => {
                                 alignItems: 'center'
                             }}
                         >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                     </div>
 

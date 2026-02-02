@@ -87,7 +87,7 @@ const Login = () => {
                                 placeholder="user@getsetmart.com"
                                 style={{
                                     width: '100%',
-                                    padding: '0.75rem 1rem 0.75rem 2.75rem',
+                                    padding: '0.75rem 3rem 0.75rem 2.75rem',
                                     background: '#050505',
                                     border: '1px solid #333',
                                     borderRadius: '16px',
@@ -110,7 +110,7 @@ const Login = () => {
                                 placeholder="••••••••"
                                 style={{
                                     width: '100%',
-                                    padding: '0.75rem 1rem 0.75rem 2.75rem',
+                                    padding: '0.75rem 3rem 0.75rem 2.75rem',
                                     background: '#050505',
                                     border: '1px solid #333',
                                     borderRadius: '8px',
