@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const AnnouncementBar = () => {
   return (
@@ -14,7 +15,7 @@ const AnnouncementBar = () => {
       letterSpacing: '0.1em'
     }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <a href="/valentines-day" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to="/valentines-day" style={{ textDecoration: 'none', color: 'inherit' }}>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -25,7 +26,7 @@ const AnnouncementBar = () => {
             <span>Valentine's Special: Free Shipping & Gift Packs on all V-Day Orders!</span>
             <Sparkles size={14} fill="white" />
           </motion.div>
-        </a>
+        </Link>
       </div>
     </div>
   );
