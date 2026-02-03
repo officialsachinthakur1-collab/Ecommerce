@@ -264,7 +264,7 @@ const Shop = () => {
                         <div style={{ marginBottom: '3rem' }}>
                             <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', marginBottom: '1.5rem', color: '#666' }}>Categories</h3>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                {['All', 'Men', 'Women', 'Unisex', 'Chocolates', 'Food', 'Gifts'].map(cat => (
+                                {['All', 'Men', 'Women', 'Unisex', 'Chocolates', 'Food', 'Gifts', 'Accessories'].map(cat => (
                                     <button
                                         key={cat}
                                         onClick={() => {

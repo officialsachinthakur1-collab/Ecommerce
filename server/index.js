@@ -9,6 +9,7 @@ import dbConnect from '../api/utils/db.js';
 import Product from '../api/models/Product.js';
 import Order from '../api/models/Order.js';
 import User from '../api/models/User.js';
+import Newsletter from '../api/models/Newsletter.js';
 import { products as initialProducts } from '../src/data/products.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -497,6 +498,25 @@ app.post('/api/utils/scrape', async (req, res) => {
     } catch (error) {
         console.error(`[SCRAPE] Error:`, error.message);
         res.status(500).json({ success: false, message: 'Could not fetch metadata' });
+    }
+});
+
+// Newsletter: Subscribe
+app.post('/api/newsletter', async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
+
+        const existing = await Newsletter.findOne({ email: email.toLowerCase() });
+        if (existing) {
+            return res.json({ success: true, message: 'You are already subscribed! 💌' });
+        }
+
+        await Newsletter.create({ email: email.toLowerCase() });
+        res.status(201).json({ success: true, message: 'Welcome to the movement! 🥂✨' });
+    } catch (error) {
+        console.error("Newsletter error:", error);
+        res.status(500).json({ success: false, message: 'Failed to subscribe' });
     }
 });
 

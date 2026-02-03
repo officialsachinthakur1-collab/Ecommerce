@@ -1,33 +1,66 @@
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Truck, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AnnouncementBar = () => {
+  const marqueeVariant = {
+    animate: {
+      x: [0, -1000],
+      transition: {
+        x: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 25,
+          ease: "linear",
+        },
+      },
+    },
+  };
+
+  const messages = [
+    { icon: <Sparkles size={14} />, text: "VALENTINE'S SPECIAL: FREE GIFT PACKS ON ALL V-DAY ORDERS ❤️" },
+    { icon: <Truck size={14} />, text: "FREE PAN-INDIA DELIVERY ON ORDERS ABOVE ₹999 🚚" },
+    { icon: <Gift size={14} />, text: "USE CODE: LOVE10 FOR FLAT 10% OFF ON CHOCOLATES 🍫" },
+    { icon: <Sparkles size={14} />, text: "PREMIUM STREETWEAR COLLECTIONS NOW LIVE 👕" },
+  ];
+
   return (
     <div style={{
-      background: 'var(--accent-gradient)',
+      background: 'var(--primary-red)',
       color: 'white',
-      padding: '0.5rem 0',
+      padding: '8px 0',
       overflow: 'hidden',
-      fontSize: '0.75rem',
-      fontWeight: '600',
+      fontSize: 'max(0.65rem, 10px)',
+      fontWeight: '800',
       textTransform: 'uppercase',
-      letterSpacing: '0.1em'
+      letterSpacing: '0.15em',
+      whiteSpace: 'nowrap',
+      position: 'relative',
+      zIndex: 1001,
+      borderBottom: '1px solid rgba(255,255,255,0.1)'
     }}>
-      <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Link to="/valentines-day" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+      <motion.div
+        variants={marqueeVariant}
+        animate="animate"
+        style={{ display: 'flex', gap: '4rem', width: 'fit-content' }}
+      >
+        {[...messages, ...messages, ...messages].map((item, index) => (
+          <Link
+            key={index}
+            to="/valentines-day"
+            style={{
+              textDecoration: 'none',
+              color: 'inherit',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}
           >
-            <Sparkles size={14} fill="white" />
-            <span>Valentine's Special: Free Shipping & Gift Packs on all V-Day Orders!</span>
-            <Sparkles size={14} fill="white" />
-          </motion.div>
-        </Link>
-      </div>
+            {item.icon}
+            <span>{item.text}</span>
+          </Link>
+        ))}
+      </motion.div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import API_URL from '../config';
+import API_URL, { RAZORPAY_KEY } from '../config';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
@@ -131,7 +131,7 @@ const Checkout = () => {
 
             // 2. Open Razorpay Modal
             const options = {
-                key: 'rzp_live_S7fi6DftRGCZQo',
+                key: RAZORPAY_KEY,
                 amount: orderData.order.amount,
                 currency: orderData.order.currency,
                 name: 'GETSETMART',

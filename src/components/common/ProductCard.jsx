@@ -24,20 +24,46 @@ const ProductCard = ({ product }) => {
                     marginBottom: '1rem',
                     border: '1px solid #333'
                 }}>
-                    <div style={{
-                        position: 'absolute',
-                        top: '1rem',
-                        left: '1rem',
-                        background: 'var(--primary-red)',
-                        color: 'white',
-                        padding: '0.25rem 0.75rem',
-                        fontSize: '0.75rem',
-                        fontWeight: 'bold',
-                        borderRadius: '12px',
-                        textTransform: 'uppercase'
-                    }}>
-                        {product.tag}
-                    </div>
+                    {product.tag && (
+                        <div style={{
+                            position: 'absolute',
+                            top: '1rem',
+                            left: '1rem',
+                            background: product.tag.toLowerCase() === 'sale' ? '#ff4444' : 'var(--primary-red)',
+                            color: 'white',
+                            padding: '0.25rem 0.75rem',
+                            fontSize: '0.75rem',
+                            fontWeight: 'bold',
+                            borderRadius: '12px',
+                            textTransform: 'uppercase',
+                            zIndex: 3
+                        }}>
+                            {product.tag}
+                        </div>
+                    )}
+
+                    {product.stock > 0 && product.stock < 5 && (
+                        <motion.div
+                            animate={{ opacity: [1, 0.5, 1], scale: [1, 1.02, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            style={{
+                                position: 'absolute',
+                                top: '3rem',
+                                left: '1rem',
+                                background: '#f59e0b',
+                                color: 'black',
+                                padding: '0.25rem 0.75rem',
+                                fontSize: '0.65rem',
+                                fontWeight: '900',
+                                borderRadius: '12px',
+                                textTransform: 'uppercase',
+                                zIndex: 3,
+                                boxShadow: '0 0 15px rgba(245, 158, 11, 0.4)'
+                            }}
+                        >
+                            Low Stock
+                        </motion.div>
+                    )}
                     <div
                         onClick={(e) => {
                             e.preventDefault();
@@ -79,7 +105,7 @@ const ProductCard = ({ product }) => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
                         <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.25rem' }}>{product.name}</h3>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Men's Running</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{product.category || "Lifestyle"}</p>
                     </div>
                     <span style={{ fontWeight: '600', color: 'var(--primary-red)' }}>{product.price}</span>
                 </div>

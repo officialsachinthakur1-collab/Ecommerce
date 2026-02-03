@@ -1,5 +1,6 @@
 // Main App Component - Vercel Deployment Sync
-import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
@@ -32,9 +33,32 @@ import ValentinesDay from './pages/ValentinesDay';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
+// Dynamic Title SEO Handler
+const TitleUpdater = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname;
+    let title = "GetSetMart | Affordable Premium Fashion";
+
+    if (path === '/') title = "GetSetMart | Streetwear & Lifestyle Essentials";
+    else if (path.includes('/shop')) title = "Shop Collection | GetSetMart";
+    else if (path.includes('/product/')) title = "Product Details | GetSetMart";
+    else if (path === '/wishlist') title = "My Wishlist | GetSetMart";
+    else if (path === '/account') title = "My Account | GetSetMart";
+    else if (path === '/checkout') title = "Checkout | GetSetMart";
+    else if (path === '/valentines-day') title = "Valentine's Special ❤️ | GetSetMart";
+
+    document.title = title;
+  }, [location]);
+
+  return null;
+};
+
 function App() {
   return (
     <AuthProvider>
+      <TitleUpdater />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
