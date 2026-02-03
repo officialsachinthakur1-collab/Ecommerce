@@ -311,9 +311,26 @@ export default function ProductDetails() {
                                     )}
                                 </button>
                             )}
-                            <button style={{ width: '60px', borderRadius: '100px', border: '1px solid #333', background: 'transparent', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                                <Heart size={22} />
-                            </button>
+                            <motion.button
+                                whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'var(--primary-red)' }}
+                                whileTap={{ scale: 0.95 }}
+                                style={{
+                                    width: '64px',
+                                    minHeight: '64px',
+                                    borderRadius: '24px',
+                                    border: '1px solid #222',
+                                    background: 'rgba(255,255,255,0.02)',
+                                    color: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    backdropFilter: 'blur(10px)'
+                                }}
+                            >
+                                <Heart size={24} style={{ transition: '0.3s' }} />
+                            </motion.button>
                         </div>
 
                         {/* Accordions */}
