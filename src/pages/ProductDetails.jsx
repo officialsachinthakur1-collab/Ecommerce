@@ -32,6 +32,9 @@ export default function ProductDetails() {
     const { user } = useAuth();
     const product = products.find(p => String(p.id) === String(id) || String(p._id) === String(id));
 
+    // Support for affiliate links and combos
+    const buyLink = product?.affiliateLink || (product?.isCombo && Array.isArray(product?.comboLinks) ? product.comboLinks.find(l => l && l.trim() !== '') : null);
+
     // Image navigation logic
     const allImages = product ? [product.image, ...(product.images || [])].filter((v, i, a) => a.indexOf(v) === i) : [];
 
@@ -83,10 +86,7 @@ export default function ProductDetails() {
     }
 
     return (
-        <div className="product-page-wrapper" style={{ background: '#050505', color: 'white', minHeight: '100vh', paddingTop: '2rem', border: '10px solid pink' }}>
-            <div style={{ position: 'fixed', top: 50, left: 10, background: 'pink', color: 'black', padding: '10px', zIndex: 9999, fontWeight: 'bold' }}>
-                V3.2 - TESTING LIVE UPDATE
-            </div>
+        <div className="product-page-wrapper" style={{ background: '#050505', color: 'white', minHeight: '100vh', paddingTop: '2rem' }}>
             {/* Breadcrumbs */}
             <div className="container">
                 <nav style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8rem', color: '#888', marginBottom: '2rem' }}>
@@ -176,7 +176,7 @@ export default function ProductDetails() {
                         </div>
 
                         {/* Size & Qty - Only for Direct Purchase */}
-                        {!product.affiliateLink && (
+                        {!buyLink && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                 {product.sizes?.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size") && (
                                     <div>
@@ -205,9 +205,9 @@ export default function ProductDetails() {
 
                         {/* Actions */}
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
-                            {product.affiliateLink ? (
+                            {buyLink ? (
                                 <a
-                                    href={product.affiliateLink}
+                                    href={buyLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="btn-primary"
