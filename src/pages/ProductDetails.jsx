@@ -216,10 +216,50 @@ export default function ProductDetails() {
                         )}
 
                         {/* Actions */}
-                        <div style={{ display: 'flex', gap: '0.75rem' }}>
-                            {allBuyLinks.length > 0 ? (
-                                <button
-                                    onClick={handleBuyNow}
+                        <div style={{ display: 'flex', gap: '0.75rem', flexDirection: 'column' }}>
+                            {allBuyLinks.length > 1 ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
+                                    <p style={{ fontSize: '0.75rem', fontWeight: '800', color: '#666', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                                        Combo Includes {allBuyLinks.length} Items:
+                                    </p>
+                                    {allBuyLinks.map((link, idx) => {
+                                        const item = product.comboProducts?.[idx];
+                                        return (
+                                            <a
+                                                key={idx}
+                                                href={link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="btn-primary"
+                                                style={{
+                                                    padding: '1rem 1.5rem',
+                                                    borderRadius: '16px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    gap: '1rem',
+                                                    fontSize: '0.9rem',
+                                                    textDecoration: 'none',
+                                                    fontWeight: '700',
+                                                    background: idx === 0 ? 'var(--primary-red)' : '#111',
+                                                    border: idx === 0 ? 'none' : '1px solid #333',
+                                                    color: 'white',
+                                                    transition: '0.3s'
+                                                }}
+                                            >
+                                                <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                    {item?.name ? `Buy ${item.name}` : `Buy Item ${idx + 1}`}
+                                                </span>
+                                                <ExternalLink size={18} />
+                                            </a>
+                                        );
+                                    })}
+                                </div>
+                            ) : allBuyLinks.length === 1 ? (
+                                <a
+                                    href={allBuyLinks[0]}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="btn-primary"
                                     style={{
                                         flex: 1,
@@ -230,14 +270,12 @@ export default function ProductDetails() {
                                         justifyContent: 'center',
                                         gap: '0.75rem',
                                         fontSize: '1rem',
-                                        fontWeight: '800',
-                                        cursor: 'pointer',
-                                        border: 'none',
-                                        color: 'white'
+                                        textDecoration: 'none',
+                                        fontWeight: '800'
                                     }}
                                 >
-                                    {allBuyLinks.length > 1 ? `Buy Combo (${allBuyLinks.length} Items)` : 'Buy Now'} <ExternalLink size={20} />
-                                </button>
+                                    Buy Now <ExternalLink size={20} />
+                                </a>
                             ) : (
                                 <button
                                     className="btn-primary"
