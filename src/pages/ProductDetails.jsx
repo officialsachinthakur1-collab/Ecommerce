@@ -19,7 +19,7 @@ export default function ProductDetails() {
     const { id } = useParams();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const isPreview = queryParams.get('preview')?.toLowerCase() === 'true';
+    const isPreview = queryParams.get('preview')?.toLowerCase() === 'true' || location.pathname.startsWith('/product-preview/');
 
     console.log('DEBUG PRODUCT DETAILS:', { id, search: location.search, isPreview });
 
