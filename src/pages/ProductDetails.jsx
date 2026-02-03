@@ -1,6 +1,7 @@
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import {
@@ -28,6 +29,7 @@ export default function ProductDetails() {
     const [activeTab, setActiveTab] = useState('description');
 
     const { addToCart } = useCart();
+    const { toggleWishlist, isInWishlist } = useWishlist();
     const { products, loading, refetch } = useProducts();
     const { user } = useAuth();
     const product = products.find(p => String(p.id) === String(id) || String(p._id) === String(id));
@@ -257,6 +259,10 @@ export default function ProductDetails() {
                                         })}
                                     </div>
                                     <motion.button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            toggleWishlist(product);
+                                        }}
                                         whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,0,0,0.1)', borderColor: 'var(--primary-red)' }}
                                         whileTap={{ scale: 0.95 }}
                                         style={{
@@ -265,7 +271,7 @@ export default function ProductDetails() {
                                             borderRadius: '50%',
                                             border: '1px solid #222',
                                             background: 'radial-gradient(circle at center, rgba(255,0,0,0.15) 0%, rgba(255,255,255,0.02) 100%)',
-                                            color: 'white',
+                                            color: isInWishlist(product?._id || product?.id) ? 'var(--primary-red)' : 'white',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -274,7 +280,7 @@ export default function ProductDetails() {
                                             marginTop: '1.8rem' // Align with first button
                                         }}
                                     >
-                                        <Heart size={24} />
+                                        <Heart size={24} fill={isInWishlist(product?._id || product?.id) ? 'var(--primary-red)' : 'transparent'} />
                                     </motion.button>
                                 </div>
                             ) : (
@@ -336,6 +342,10 @@ export default function ProductDetails() {
                                         </button>
                                     )}
                                     <motion.button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            toggleWishlist(product);
+                                        }}
                                         whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,0,0,0.1)', borderColor: 'var(--primary-red)' }}
                                         whileTap={{ scale: 0.95 }}
                                         style={{
@@ -344,7 +354,7 @@ export default function ProductDetails() {
                                             borderRadius: '50%',
                                             border: '1px solid #222',
                                             background: 'radial-gradient(circle at center, rgba(255,0,0,0.15) 0%, rgba(255,255,255,0.02) 100%)',
-                                            color: 'white',
+                                            color: isInWishlist(product?._id || product?.id) ? 'var(--primary-red)' : 'white',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -352,7 +362,7 @@ export default function ProductDetails() {
                                             transition: '0.3s'
                                         }}
                                     >
-                                        <Heart size={24} />
+                                        <Heart size={24} fill={isInWishlist(product?._id || product?.id) ? 'var(--primary-red)' : 'transparent'} />
                                     </motion.button>
                                 </div>
                             )}

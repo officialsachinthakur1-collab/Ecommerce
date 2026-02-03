@@ -56,8 +56,8 @@ const ProductCard = ({ product }) => {
                     >
                         <Heart
                             size={18}
-                            color={isInWishlist(product.id) ? 'var(--primary-red)' : 'white'}
-                            fill={isInWishlist(product.id) ? 'var(--primary-red)' : 'transparent'}
+                            color={isInWishlist(product._id || product.id) ? 'var(--primary-red)' : 'white'}
+                            fill={isInWishlist(product._id || product.id) ? 'var(--primary-red)' : 'transparent'}
                         />
                     </div>
 

@@ -21,24 +21,29 @@ export const WishlistProvider = ({ children }) => {
     }, [wishlist]);
 
     const addToWishlist = (product) => {
-        setWishlist(prev => [...prev, product]);
+        setWishlist(prev => {
+            const id = product._id || product.id;
+            if (prev.some(item => (item._id || item.id) === id)) return prev;
+            return [...prev, product];
+        });
     };
 
     const removeFromWishlist = (productId) => {
-        setWishlist(prev => prev.filter(item => item.id !== productId));
+        setWishlist(prev => prev.filter(item => (item._id || item.id) !== productId));
     };
 
     const toggleWishlist = (product) => {
-        const exists = wishlist.find(item => item.id === product.id);
+        const id = product._id || product.id;
+        const exists = wishlist.some(item => (item._id || item.id) === id);
         if (exists) {
-            removeFromWishlist(product.id);
+            removeFromWishlist(id);
         } else {
             addToWishlist(product);
         }
     };
 
     const isInWishlist = (productId) => {
-        return wishlist.some(item => item.id === productId);
+        return wishlist.some(item => (item._id || item.id) === productId);
     };
 
     return (

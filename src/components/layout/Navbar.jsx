@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingBag, Heart, Menu, X, LogOut } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -16,6 +17,8 @@ const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchCategory, setSearchCategory] = useState('All');
     const { toggleCart, cartCount } = useCart();
+    const { wishlist } = useWishlist();
+    const wishlistCount = wishlist?.length || 0;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -87,7 +90,26 @@ const Navbar = () => {
                         {/* Mobile Icons - Moved to top row next to logo */}
                         {isMobile && (
                             <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
-                                <Link to="/wishlist"><Heart size={22} /></Link>
+                                <Link to="/wishlist" style={{ position: 'relative' }}>
+                                    <Heart size={22} />
+                                    {wishlistCount > 0 && (
+                                        <span style={{
+                                            position: 'absolute',
+                                            top: '-5px',
+                                            right: '-8px',
+                                            background: 'var(--primary-red)',
+                                            color: 'white',
+                                            fontSize: '10px',
+                                            width: '16px',
+                                            height: '16px',
+                                            borderRadius: '50%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontWeight: 'bold'
+                                        }}>{wishlistCount}</span>
+                                    )}
+                                </Link>
                                 <div style={{ position: 'relative', cursor: 'pointer' }} onClick={toggleCart}>
                                     <ShoppingBag size={22} />
                                     {cartCount > 0 && (
@@ -225,8 +247,25 @@ const Navbar = () => {
 
                             <Link to="/blog" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Insights</Link>
 
-                            <Link to="/wishlist" style={{ cursor: 'pointer', color: 'inherit' }}>
+                            <Link to="/wishlist" style={{ cursor: 'pointer', color: 'inherit', position: 'relative' }}>
                                 <Heart size={20} />
+                                {wishlistCount > 0 && (
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '-5px',
+                                        right: '-8px',
+                                        background: 'var(--primary-red)',
+                                        color: 'white',
+                                        fontSize: '10px',
+                                        width: '16px',
+                                        height: '16px',
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontWeight: 'bold'
+                                    }}>{wishlistCount}</span>
+                                )}
                             </Link>
 
                             <div style={{ position: 'relative', cursor: 'pointer' }} onClick={toggleCart}>

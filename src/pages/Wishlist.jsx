@@ -48,7 +48,7 @@ const Wishlist = () => {
                 ) : (
                     <div className="grid-3" style={{ marginTop: '4rem', textAlign: 'left' }}>
                         {wishlist.map(product => (
-                            <ProductCard key={product.id} product={product} />
+                            <ProductCard key={product._id || product.id} product={product} />
                         ))}
                     </div>
                 )}
