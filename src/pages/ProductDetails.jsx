@@ -34,6 +34,18 @@ export default function ProductDetails() {
 
     // Support for affiliate links and combos
     const buyLink = product?.affiliateLink || (product?.isCombo && Array.isArray(product?.comboLinks) ? product.comboLinks.find(l => l && l.trim() !== '') : null);
+    const allBuyLinks = product?.affiliateLink ? [product.affiliateLink] : (product?.isCombo && Array.isArray(product?.comboLinks) ? product.comboLinks.filter(l => l && l.trim() !== '') : []);
+
+    const handleBuyNow = () => {
+        if (allBuyLinks.length === 0) return;
+
+        allBuyLinks.forEach((link, idx) => {
+            // Adding a tiny delay might help some browsers not block them as popups
+            setTimeout(() => {
+                window.open(link, '_blank', 'noopener,noreferrer');
+            }, idx * 200);
+        });
+    };
 
     // Image navigation logic
     const allImages = product ? [product.image, ...(product.images || [])].filter((v, i, a) => a.indexOf(v) === i) : [];
@@ -176,7 +188,7 @@ export default function ProductDetails() {
                         </div>
 
                         {/* Size & Qty - Only for Direct Purchase */}
-                        {!buyLink && (
+                        {allBuyLinks.length === 0 && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                 {product.sizes?.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size") && (
                                     <div>
@@ -205,11 +217,9 @@ export default function ProductDetails() {
 
                         {/* Actions */}
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
-                            {buyLink ? (
-                                <a
-                                    href={buyLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                            {allBuyLinks.length > 0 ? (
+                                <button
+                                    onClick={handleBuyNow}
                                     className="btn-primary"
                                     style={{
                                         flex: 1,
@@ -220,12 +230,14 @@ export default function ProductDetails() {
                                         justifyContent: 'center',
                                         gap: '0.75rem',
                                         fontSize: '1rem',
-                                        textDecoration: 'none',
-                                        fontWeight: '800'
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        border: 'none',
+                                        color: 'white'
                                     }}
                                 >
-                                    Buy Now <ExternalLink size={20} />
-                                </a>
+                                    {allBuyLinks.length > 1 ? `Buy Combo (${allBuyLinks.length} Items)` : 'Buy Now'} <ExternalLink size={20} />
+                                </button>
                             ) : (
                                 <button
                                     className="btn-primary"
