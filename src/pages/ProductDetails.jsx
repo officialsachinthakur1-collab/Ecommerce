@@ -21,7 +21,6 @@ export default function ProductDetails() {
     const queryParams = new URLSearchParams(location.search);
     const isPreview = queryParams.get('preview')?.toLowerCase() === 'true' || location.pathname.startsWith('/product-preview/');
 
-    console.log('DEBUG PRODUCT DETAILS:', { id, search: location.search, isPreview });
 
     const [selectedSize, setSelectedSize] = useState(null);
     const [activeImage, setActiveImage] = useState("");
@@ -160,7 +159,7 @@ export default function ProductDetails() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', background: 'rgba(255,183,0,0.1)', color: '#ffb700', padding: '0.25rem 0.75rem', borderRadius: '100px', fontSize: '0.8rem', fontWeight: '800' }}>
                                         <Star size={12} fill="#ffb700" /> {product.rating || 5}
                                     </div>
-                                    <span style={{ color: '#666', fontSize: '0.875rem' }}>{product.reviews?.length || 0} reviews</span>
+                                    <span style={{ color: '#666', fontSize: '0.875rem' }}>{Array.isArray(product.reviews) ? product.reviews.length : product.reviews || 0} reviews</span>
                                 </div>
                                 <h1 style={{ fontSize: isMobile ? '2rem' : '3rem', fontWeight: '900', lineHeight: '1', marginBottom: '0.5rem' }}>{product.name}</h1>
                                 <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-red)' }}>{product.price}</div>
@@ -253,7 +252,7 @@ export default function ProductDetails() {
                         {/* Review List */}
                         <div>
                             <h2 style={{ fontSize: '1.75rem', fontWeight: '800', marginBottom: '2rem' }}>CUSTOMER REVIEWS</h2>
-                            {(!product.reviews || product.reviews.length === 0) ? (
+                            {(!Array.isArray(product.reviews) || product.reviews.length === 0) ? (
                                 <p style={{ color: 'var(--text-muted)' }}>No reviews yet. Be the first to share your experience!</p>
                             ) : (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -382,7 +381,7 @@ export default function ProductDetails() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
                                 <RatingStars rating={Number(product.rating) || 5} size={16} />
                                 <a href="#review-form-section" style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginLeft: '0.5rem', textDecoration: 'underline' }}>
-                                    ({product.reviews?.length || 0} Reviews) - Write a Review
+                                    ({Array.isArray(product.reviews) ? product.reviews.length : product.reviews || 0} Reviews) - Write a Review
                                 </a>
                             </div>
 
@@ -572,7 +571,7 @@ export default function ProductDetails() {
                     {/* Review List */}
                     <div>
                         <h2 style={{ fontSize: '1.75rem', fontWeight: '800', marginBottom: '2rem' }}>CUSTOMER REVIEWS</h2>
-                        {(!product.reviews || product.reviews.length === 0) ? (
+                        {(!Array.isArray(product.reviews) || product.reviews.length === 0) ? (
                             <p style={{ color: 'var(--text-muted)' }}>No reviews yet. Be the first to share your experience!</p>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
