@@ -30,7 +30,10 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
         try {
-            const { name, price, category, description, image, images, tag, affiliateLink, isHero, heroTitle } = req.body;
+            const {
+                name, price, category, description, image, images, tag,
+                affiliateLink, isHero, heroTitle, isCombo, comboLinks, comboProducts
+            } = req.body;
             const password = req.headers['x-admin-password'];
 
             if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
@@ -57,7 +60,10 @@ export default async function handler(req, res) {
                 sizes: req.body.sizes || [],
                 affiliateLink: affiliateLink || "",
                 isHero: !!isHero,
-                heroTitle: heroTitle || ""
+                heroTitle: heroTitle || "",
+                isCombo: !!isCombo,
+                comboLinks: Array.isArray(comboLinks) ? comboLinks : [],
+                comboProducts: Array.isArray(comboProducts) ? comboProducts : []
             });
 
             return res.status(201).json({ success: true, product });
@@ -98,6 +104,17 @@ export default async function handler(req, res) {
 
             if (updateData.heroTitle !== undefined) {
                 updateData.heroTitle = updateData.heroTitle || "";
+            }
+
+            // Explicitly handle combo fields if passed
+            if (updateData.isCombo !== undefined) {
+                updateData.isCombo = !!updateData.isCombo;
+            }
+            if (updateData.comboLinks !== undefined) {
+                updateData.comboLinks = Array.isArray(updateData.comboLinks) ? updateData.comboLinks : [];
+            }
+            if (updateData.comboProducts !== undefined) {
+                updateData.comboProducts = Array.isArray(updateData.comboProducts) ? updateData.comboProducts : [];
             }
 
             if (!product) return res.status(404).json({ success: false, message: 'Product not found' });

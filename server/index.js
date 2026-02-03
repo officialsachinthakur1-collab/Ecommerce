@@ -131,7 +131,10 @@ async function handleDeleteOrder(id, req, res) {
 app.post('/api/products', async (req, res) => {
     try {
         console.log("[POST] Adding new product. Data:", JSON.stringify(req.body));
-        const { name, price, category, description, image, images, sizes, tag, stock, affiliateLink, isHero, heroTitle } = req.body;
+        const {
+            name, price, category, description, image, images, sizes, tag, stock,
+            affiliateLink, isHero, heroTitle, isCombo, comboLinks, comboProducts
+        } = req.body;
         const password = req.headers['x-admin-password'];
 
         if (password !== (process.env.ADMIN_PASSWORD || 'admin')) {
@@ -159,7 +162,10 @@ app.post('/api/products', async (req, res) => {
             stock: parsedStock,
             affiliateLink: affiliateLink || "",
             isHero: !!isHero,
-            heroTitle: heroTitle || ""
+            heroTitle: heroTitle || "",
+            isCombo: !!isCombo,
+            comboLinks: Array.isArray(comboLinks) ? comboLinks : [],
+            comboProducts: Array.isArray(comboProducts) ? comboProducts : []
         });
 
         console.log("Product added successfully:", newProduct.name);
@@ -210,6 +216,17 @@ async function handleUpdateProduct(id, req, res) {
         // Explicitly handle heroTitle if passed
         if (req.body.heroTitle !== undefined) {
             updateData.heroTitle = req.body.heroTitle || "";
+        }
+
+        // Explicitly handle combo fields if passed
+        if (req.body.isCombo !== undefined) {
+            updateData.isCombo = !!req.body.isCombo;
+        }
+        if (req.body.comboLinks !== undefined) {
+            updateData.comboLinks = Array.isArray(req.body.comboLinks) ? req.body.comboLinks : [];
+        }
+        if (req.body.comboProducts !== undefined) {
+            updateData.comboProducts = Array.isArray(req.body.comboProducts) ? req.body.comboProducts : [];
         }
 
         let product = await Product.findOneAndUpdate({ $or: queryOr }, updateData, { new: true });

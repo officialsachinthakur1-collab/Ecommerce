@@ -17,6 +17,7 @@ const ProductSchema = new mongoose.Schema({
     isHero: { type: Boolean, default: false },
     heroTitle: { type: String, default: '' },
     isCombo: { type: Boolean, default: false },
+    comboLinks: { type: [String], default: [] },
     comboProducts: { type: [mongoose.Schema.Types.Mixed], default: [] }, // Stores details of 3 linked products
     createdAt: { type: Date, default: Date.now }
 });
