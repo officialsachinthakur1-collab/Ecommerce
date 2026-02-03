@@ -42,8 +42,8 @@ dbConnect().then(async () => {
 
 // Razorpay Instance
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_live_S7fi6DftRGCZQo',
-    key_secret: process.env.RAZORPAY_KEY_SECRET || 'l5UTCj7s9NG7keJ0YoiA4TdZ'
+    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_live_SBaXSYbdg2lOOO',
+    key_secret: process.env.RAZORPAY_KEY_SECRET || 'vbDmFHP2TUxKFDUOw4kIE6MM'
 });
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -74,7 +74,7 @@ app.get('/api/orders', async (req, res) => {
 
 app.post('/api/orders', async (req, res) => {
     try {
-        const { customer, items, total, address, city, zip, email } = req.body;
+        const { customer, items, total, address, city, zip, email, userId, payment_id, discount, couponCode } = req.body;
 
         const newOrder = await Order.create({
             orderId: `#ORD-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -84,7 +84,11 @@ app.post('/api/orders', async (req, res) => {
             total,
             date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             status: 'Pending',
-            address: `${address}, ${city} ${zip}`
+            address: `${address}, ${city} ${zip}`,
+            userId,
+            payment_id,
+            discount: Number(discount) || 0,
+            couponCode
         });
 
         res.status(201).json({ success: true, order: newOrder });
@@ -405,45 +409,41 @@ app.post('/api/auth/reset-password', async (req, res) => {
     }
 });
 
-// Razorpay: Create Order
-app.post('/api/razorpay/order', async (req, res) => {
+// Razorpay: Unified Route (matches serverless API pattern)
+app.post('/api/razorpay', async (req, res) => {
+    const { action } = req.query;
+
     try {
-        const { amount, currency = 'INR' } = req.body;
-
-        const options = {
-            amount: Math.round(amount * 100), // convert to paise
-            currency,
-            receipt: `receipt_${Date.now()}`
-        };
-
-        const order = await razorpay.orders.create(options);
-        res.json({ success: true, order });
-    } catch (error) {
-        console.error("Razorpay Order Error:", error);
-        res.status(500).json({ success: false, message: 'Could not create order' });
-    }
-});
-
-// Razorpay: Verify Payment
-app.post('/api/razorpay/verify', (req, res) => {
-    try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-
-        const body = razorpay_order_id + "|" + razorpay_payment_id;
-
-        const expectedSignature = crypto
-            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'l5UTCj7s9NG7keJ0YoiA4TdZ')
-            .update(body.toString())
-            .digest('hex');
-
-        if (expectedSignature === razorpay_signature) {
-            res.json({ success: true, message: 'Payment verified successfully' });
-        } else {
-            res.status(400).json({ success: false, message: 'Invalid signature' });
+        if (action === 'order') {
+            const { amount, currency = 'INR' } = req.body;
+            const options = {
+                amount: Math.round(amount * 100),
+                currency,
+                receipt: `receipt_${Date.now()}`
+            };
+            const order = await razorpay.orders.create(options);
+            return res.json({ success: true, order });
         }
+
+        if (action === 'verify') {
+            const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+            const body = razorpay_order_id + "|" + razorpay_payment_id;
+            const expectedSignature = crypto
+                .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'vbDmFHP2TUxKFDUOw4kIE6MM')
+                .update(body.toString())
+                .digest('hex');
+
+            if (expectedSignature === razorpay_signature) {
+                return res.json({ success: true, message: 'Payment verified successfully' });
+            } else {
+                return res.status(400).json({ success: false, message: 'Invalid signature' });
+            }
+        }
+
+        res.status(400).json({ success: false, message: 'Invalid action' });
     } catch (error) {
-        console.error("Verification Error:", error);
-        res.status(500).json({ success: false, message: 'Server error during verification' });
+        console.error("Razorpay Error:", error);
+        res.status(500).json({ success: false, message: 'Razorpay processing failed' });
     }
 });
 

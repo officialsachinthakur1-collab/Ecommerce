@@ -2,8 +2,8 @@ import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
 const razorpay = new Razorpay({
-    key_id: 'rzp_live_S7fi6DftRGCZQo',
-    key_secret: 'l5UTCj7s9NG7keJ0YoiA4TdZ'
+    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_live_SBaXSYbdg2lOOO',
+    key_secret: process.env.RAZORPAY_KEY_SECRET || 'vbDmFHP2TUxKFDUOw4kIE6MM'
 });
 
 export default async function handler(req, res) {
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
                 const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
                 const body = razorpay_order_id + "|" + razorpay_payment_id;
                 const expectedSignature = crypto
-                    .createHmac('sha256', 'l5UTCj7s9NG7keJ0YoiA4TdZ')
+                    .createHmac('sha256', 'vbDmFHP2TUxKFDUOw4kIE6MM')
                     .update(body.toString())
                     .digest('hex');
 
