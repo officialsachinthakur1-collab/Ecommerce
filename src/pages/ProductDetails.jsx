@@ -83,7 +83,10 @@ export default function ProductDetails() {
     }
 
     return (
-        <div className="product-page-wrapper" style={{ background: '#050505', color: 'white', minHeight: '100vh', paddingTop: '2rem' }}>
+        <div className="product-page-wrapper" style={{ background: '#050505', color: 'white', minHeight: '100vh', paddingTop: '2rem', border: '10px solid pink' }}>
+            <div style={{ position: 'fixed', top: 50, left: 10, background: 'pink', color: 'black', padding: '10px', zIndex: 9999, fontWeight: 'bold' }}>
+                V3.2 - TESTING LIVE UPDATE
+            </div>
             {/* Breadcrumbs */}
             <div className="container">
                 <nav style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8rem', color: '#888', marginBottom: '2rem' }}>
