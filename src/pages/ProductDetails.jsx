@@ -218,119 +218,144 @@ export default function ProductDetails() {
                         {/* Actions */}
                         <div style={{ display: 'flex', gap: '0.75rem', flexDirection: 'column' }}>
                             {allBuyLinks.length > 1 ? (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
-                                    <p style={{ fontSize: '0.75rem', fontWeight: '800', color: '#666', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
-                                        Combo Includes {allBuyLinks.length} Items:
-                                    </p>
-                                    {allBuyLinks.map((link, idx) => {
-                                        const item = product.comboProducts?.[idx];
-                                        return (
-                                            <a
-                                                key={idx}
-                                                href={link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="btn-primary"
-                                                style={{
-                                                    padding: '1rem 1.5rem',
-                                                    borderRadius: '16px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    gap: '1rem',
-                                                    fontSize: '0.9rem',
-                                                    textDecoration: 'none',
-                                                    fontWeight: '700',
-                                                    background: idx === 0 ? 'var(--primary-red)' : '#111',
-                                                    border: idx === 0 ? 'none' : '1px solid #333',
-                                                    color: 'white',
-                                                    transition: '0.3s'
-                                                }}
-                                            >
-                                                <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                                    {item?.name ? `Buy ${item.name}` : `Buy Item ${idx + 1}`}
-                                                </span>
-                                                <ExternalLink size={18} />
-                                            </a>
-                                        );
-                                    })}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'flex-start' }}>
+                                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                        <p style={{ fontSize: '0.75rem', fontWeight: '800', color: '#666', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                                            Combo Includes {allBuyLinks.length} Items:
+                                        </p>
+                                        {allBuyLinks.map((link, idx) => {
+                                            const item = product.comboProducts?.[idx];
+                                            return (
+                                                <a
+                                                    key={idx}
+                                                    href={link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="btn-primary"
+                                                    style={{
+                                                        padding: '1rem 1.5rem',
+                                                        borderRadius: '16px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between',
+                                                        gap: '1rem',
+                                                        fontSize: '0.9rem',
+                                                        textDecoration: 'none',
+                                                        fontWeight: '700',
+                                                        background: idx === 0 ? 'var(--primary-red)' : '#111',
+                                                        border: idx === 0 ? 'none' : '1px solid #333',
+                                                        color: 'white',
+                                                        transition: '0.3s'
+                                                    }}
+                                                >
+                                                    <span style={{ flex: 1, textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                        {item?.name ? `Buy ${item.name}` : `Buy Item ${idx + 1}`}
+                                                    </span>
+                                                    <ExternalLink size={18} />
+                                                </a>
+                                            );
+                                        })}
+                                    </div>
+                                    <motion.button
+                                        whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,0,0,0.1)', borderColor: 'var(--primary-red)' }}
+                                        whileTap={{ scale: 0.95 }}
+                                        style={{
+                                            width: '60px',
+                                            height: '60px',
+                                            borderRadius: '50%',
+                                            border: '1px solid #222',
+                                            background: 'radial-gradient(circle at center, rgba(255,0,0,0.15) 0%, rgba(255,255,255,0.02) 100%)',
+                                            color: 'white',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            transition: '0.3s',
+                                            marginTop: '1.8rem' // Align with first button
+                                        }}
+                                    >
+                                        <Heart size={24} />
+                                    </motion.button>
                                 </div>
-                            ) : allBuyLinks.length === 1 ? (
-                                <a
-                                    href={allBuyLinks[0]}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn-primary"
-                                    style={{
-                                        flex: 1,
-                                        padding: '1.1rem',
-                                        borderRadius: '100px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '0.75rem',
-                                        fontSize: '1rem',
-                                        textDecoration: 'none',
-                                        fontWeight: '800'
-                                    }}
-                                >
-                                    Buy Now <ExternalLink size={20} />
-                                </a>
                             ) : (
-                                <button
-                                    className="btn-primary"
-                                    disabled={product.stock <= 0}
-                                    style={{
-                                        flex: 1,
-                                        padding: '1.1rem',
-                                        borderRadius: '100px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '0.75rem',
-                                        fontSize: '1rem',
-                                        opacity: product.stock <= 0 ? 0.5 : 1,
-                                        cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
-                                        fontWeight: '800'
-                                    }}
-                                    onClick={() => {
-                                        const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
-                                        if (hasSizing && !selectedSize) {
-                                            alert('Please select a size');
-                                            return;
-                                        }
-                                        addToCart(product, selectedSize || "One Size");
-                                    }}
-                                >
-                                    {product.stock <= 0 ? (
-                                        <>Out of Stock</>
+                                <div style={{ display: 'flex', gap: '0.75rem', width: '100%' }}>
+                                    {allBuyLinks.length === 1 ? (
+                                        <a
+                                            href={allBuyLinks[0]}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn-primary"
+                                            style={{
+                                                flex: 1,
+                                                padding: '1.1rem',
+                                                borderRadius: '100px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '0.75rem',
+                                                fontSize: '1rem',
+                                                textDecoration: 'none',
+                                                fontWeight: '800'
+                                            }}
+                                        >
+                                            Buy Now <ExternalLink size={20} />
+                                        </a>
                                     ) : (
-                                        <>
-                                            <ShoppingBag size={20} /> Add to Cart
-                                        </>
+                                        <button
+                                            className="btn-primary"
+                                            disabled={product.stock <= 0}
+                                            style={{
+                                                flex: 1,
+                                                padding: '1.1rem',
+                                                borderRadius: '100px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '0.75rem',
+                                                fontSize: '1rem',
+                                                opacity: product.stock <= 0 ? 0.5 : 1,
+                                                cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
+                                                fontWeight: '800'
+                                            }}
+                                            onClick={() => {
+                                                const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
+                                                if (hasSizing && !selectedSize) {
+                                                    alert('Please select a size');
+                                                    return;
+                                                }
+                                                addToCart(product, selectedSize || "One Size");
+                                            }}
+                                        >
+                                            {product.stock <= 0 ? (
+                                                <>Out of Stock</>
+                                            ) : (
+                                                <>
+                                                    <ShoppingBag size={20} /> Add to Cart
+                                                </>
+                                            )}
+                                        </button>
                                     )}
-                                </button>
+                                    <motion.button
+                                        whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,0,0,0.1)', borderColor: 'var(--primary-red)' }}
+                                        whileTap={{ scale: 0.95 }}
+                                        style={{
+                                            width: '64px',
+                                            height: '64px',
+                                            borderRadius: '50%',
+                                            border: '1px solid #222',
+                                            background: 'radial-gradient(circle at center, rgba(255,0,0,0.15) 0%, rgba(255,255,255,0.02) 100%)',
+                                            color: 'white',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            transition: '0.3s'
+                                        }}
+                                    >
+                                        <Heart size={24} />
+                                    </motion.button>
+                                </div>
                             )}
-                            <motion.button
-                                whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'var(--primary-red)' }}
-                                whileTap={{ scale: 0.95 }}
-                                style={{
-                                    width: '64px',
-                                    minHeight: '64px',
-                                    borderRadius: '24px',
-                                    border: '1px solid #222',
-                                    background: 'rgba(255,255,255,0.02)',
-                                    color: 'white',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    backdropFilter: 'blur(10px)'
-                                }}
-                            >
-                                <Heart size={24} style={{ transition: '0.3s' }} />
-                            </motion.button>
                         </div>
 
                         {/* Accordions */}
