@@ -200,10 +200,65 @@ export default function ProductDetails() {
 
                         {/* Actions */}
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
-                            <button className="btn-primary" style={{ flex: 1, padding: '1rem', borderRadius: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1rem' }} onClick={() => addToCart(product, selectedSize || "One Size")}>
-                                <ShoppingBag size={20} /> Add to Cart
+                            {product.affiliateLink ? (
+                                <a
+                                    href={product.affiliateLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn-primary"
+                                    style={{
+                                        flex: 1,
+                                        padding: '1.1rem',
+                                        borderRadius: '100px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.75rem',
+                                        fontSize: '1rem',
+                                        textDecoration: 'none',
+                                        fontWeight: '800'
+                                    }}
+                                >
+                                    Buy Now <ExternalLink size={20} />
+                                </a>
+                            ) : (
+                                <button
+                                    className="btn-primary"
+                                    disabled={product.stock <= 0}
+                                    style={{
+                                        flex: 1,
+                                        padding: '1.1rem',
+                                        borderRadius: '100px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.75rem',
+                                        fontSize: '1rem',
+                                        opacity: product.stock <= 0 ? 0.5 : 1,
+                                        cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
+                                        fontWeight: '800'
+                                    }}
+                                    onClick={() => {
+                                        const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
+                                        if (hasSizing && !selectedSize) {
+                                            alert('Please select a size');
+                                            return;
+                                        }
+                                        addToCart(product, selectedSize || "One Size");
+                                    }}
+                                >
+                                    {product.stock <= 0 ? (
+                                        <>Out of Stock</>
+                                    ) : (
+                                        <>
+                                            <ShoppingBag size={20} /> Add to Cart
+                                        </>
+                                    )}
+                                </button>
+                            )}
+                            <button style={{ width: '60px', borderRadius: '100px', border: '1px solid #333', background: 'transparent', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                                <Heart size={22} />
                             </button>
-                            <button style={{ width: '55px', borderRadius: '100px', border: '1px solid #333', background: 'transparent', color: 'white' }}><Heart size={20} /></button>
                         </div>
 
                         {/* Accordions */}
