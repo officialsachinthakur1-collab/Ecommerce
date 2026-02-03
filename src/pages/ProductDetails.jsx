@@ -172,31 +172,33 @@ export default function ProductDetails() {
                             </span>
                         </div>
 
-                        {/* Size & Qty */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            {product.sizes?.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size") && (
-                                <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', fontSize: '0.8rem', fontWeight: '800', textTransform: 'uppercase', color: '#888' }}>
-                                        <span>Select Size</span>
-                                        <span style={{ color: 'var(--primary-red)', cursor: 'pointer', textDecoration: 'underline' }}>Guide</span>
+                        {/* Size & Qty - Only for Direct Purchase */}
+                        {!product.affiliateLink && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                {product.sizes?.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size") && (
+                                    <div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', fontSize: '0.8rem', fontWeight: '800', textTransform: 'uppercase', color: '#888' }}>
+                                            <span>Select Size</span>
+                                            <span style={{ color: 'var(--primary-red)', cursor: 'pointer', textDecoration: 'underline' }}>Guide</span>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                            {product.sizes.map(s => (
+                                                <button key={s} onClick={() => setSelectedSize(s)} style={{ minWidth: '45px', padding: '0.6rem 1rem', borderRadius: '10px', border: selectedSize === s ? '2px solid var(--primary-red)' : '1px solid #222', background: selectedSize === s ? 'rgba(255,0,0,0.1)' : 'transparent', color: selectedSize === s ? 'var(--primary-red)' : 'white', fontWeight: '700', cursor: 'pointer' }}>{s}</button>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                        {product.sizes.map(s => (
-                                            <button key={s} onClick={() => setSelectedSize(s)} style={{ minWidth: '45px', padding: '0.6rem 1rem', borderRadius: '10px', border: selectedSize === s ? '2px solid var(--primary-red)' : '1px solid #222', background: selectedSize === s ? 'rgba(255,0,0,0.1)' : 'transparent', color: selectedSize === s ? 'var(--primary-red)' : 'white', fontWeight: '700', cursor: 'pointer' }}>{s}</button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+                                )}
 
-                            <div>
-                                <span style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.8rem', fontWeight: '800', textTransform: 'uppercase', color: '#888' }}>Quantity</span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: '#111', width: 'fit-content', padding: '0.4rem 0.8rem', borderRadius: '100px', border: '1px solid #222' }}>
-                                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}><Minus size={16} /></button>
-                                    <span style={{ fontWeight: '800', width: '20px', textAlign: 'center' }}>{quantity}</span>
-                                    <button onClick={() => setQuantity(quantity + 1)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}><Plus size={16} /></button>
+                                <div>
+                                    <span style={{ display: 'block', marginBottom: '0.75rem', fontSize: '0.8rem', fontWeight: '800', textTransform: 'uppercase', color: '#888' }}>Quantity</span>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: '#111', width: 'fit-content', padding: '0.4rem 0.8rem', borderRadius: '100px', border: '1px solid #222' }}>
+                                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}><Minus size={16} /></button>
+                                        <span style={{ fontWeight: '800', width: '20px', textAlign: 'center' }}>{quantity}</span>
+                                        <button onClick={() => setQuantity(quantity + 1)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}><Plus size={16} /></button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Actions */}
                         <div style={{ display: 'flex', gap: '0.75rem' }}>
