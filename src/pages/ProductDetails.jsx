@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import {
     ArrowLeft, ShoppingBag, Truck, ShieldCheck, Heart,
-    ExternalLink, RotateCcw, ChevronRight, Minus, Plus,
+    ExternalLink, RotateCcw, ChevronRight, ChevronLeft, Minus, Plus,
     Info, Star, Package, Clock
 } from 'lucide-react';
 import RatingStars from '../components/common/RatingStars';
@@ -18,7 +18,10 @@ export default function ProductDetails() {
     const isMobile = useMobile();
     const { id } = useParams();
     const location = useLocation();
-    const isPreview = new URLSearchParams(location.search).get('preview') === 'true';
+    const queryParams = new URLSearchParams(location.search);
+    const isPreview = queryParams.get('preview')?.toLowerCase() === 'true';
+
+    console.log('DEBUG PRODUCT DETAILS:', { id, search: location.search, isPreview });
 
     const [selectedSize, setSelectedSize] = useState(null);
     const [activeImage, setActiveImage] = useState("");
@@ -28,6 +31,22 @@ export default function ProductDetails() {
     const { addToCart } = useCart();
     const { products, loading, refetch } = useProducts();
     const { user } = useAuth();
+    const product = products.find(p => String(p.id) === String(id) || String(p._id) === String(id));
+
+    // Image navigation logic
+    const allImages = product ? [product.image, ...(product.images || [])].filter((v, i, a) => a.indexOf(v) === i) : [];
+
+    const handleNextImage = () => {
+        const currentIndex = allImages.indexOf(activeImage || product.image);
+        const nextIndex = (currentIndex + 1) % allImages.length;
+        setActiveImage(allImages[nextIndex]);
+    };
+
+    const handlePrevImage = () => {
+        const currentIndex = allImages.indexOf(activeImage || product.image);
+        const prevIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+        setActiveImage(allImages[prevIndex]);
+    };
 
     // Delivery Date Calculation
     const getDeliveryDate = () => {
@@ -39,7 +58,7 @@ export default function ProductDetails() {
     // Initialize active image when product is found
     useEffect(() => {
         if (!loading && products.length > 0) {
-            const p = products.find(prod => String(prod.id) === String(id));
+            const p = products.find(prod => String(prod.id) === String(id) || String(prod._id) === String(id));
             if (p && !activeImage) {
                 setActiveImage(p.image);
             }
@@ -54,7 +73,6 @@ export default function ProductDetails() {
         );
     }
 
-    const product = products.find(p => String(p.id) === String(id));
 
     if (!product) {
         return (
@@ -83,12 +101,51 @@ export default function ProductDetails() {
                     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.2fr 0.8fr', gap: isMobile ? '2rem' : '4rem', alignItems: 'start' }}>
                         {/* IMAGES */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                            <div style={{ background: '#fff', borderRadius: '32px', overflow: 'hidden', aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #333', position: 'relative' }}>
-                                <motion.img key={activeImage} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} src={activeImage || product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: isMobile ? '1rem' : '2rem' }} />
+                            <div style={{
+                                background: '#fff',
+                                borderRadius: '32px',
+                                overflow: 'hidden',
+                                aspectRatio: '1',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                border: '1px solid #333',
+                                position: 'relative'
+                            }}>
+                                {/* Gallery Nav Icons */}
+                                {allImages.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={handlePrevImage}
+                                            style={{ position: 'absolute', left: '1.25rem', zIndex: 10, background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer', transition: '0.3s' }}
+                                            onMouseEnter={(e) => e.target.style.background = 'var(--primary-red)'}
+                                            onMouseLeave={(e) => e.target.style.background = 'rgba(0,0,0,0.6)'}
+                                        >
+                                            <ChevronLeft size={20} />
+                                        </button>
+                                        <button
+                                            onClick={handleNextImage}
+                                            style={{ position: 'absolute', right: '1.25rem', zIndex: 10, background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer', transition: '0.3s' }}
+                                            onMouseEnter={(e) => e.target.style.background = 'var(--primary-red)'}
+                                            onMouseLeave={(e) => e.target.style.background = 'rgba(0,0,0,0.6)'}
+                                        >
+                                            <ChevronRight size={20} />
+                                        </button>
+                                    </>
+                                )}
+
+                                <motion.img
+                                    key={activeImage}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    src={activeImage || product.image}
+                                    alt={product.name}
+                                    style={{ width: '80%', height: '80%', objectFit: 'contain' }}
+                                />
                                 {product.tag && <div style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', background: 'var(--primary-red)', color: 'white', padding: '0.4rem 1rem', borderRadius: '100px', fontWeight: '800', fontSize: '0.75rem' }}>{product.tag}</div>}
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem' }}>
-                                {[product.image, ...(product.images || [])].filter((v, i, a) => a.indexOf(v) === i).slice(0, 5).map((img, idx) => (
+                                {allImages.slice(0, 5).map((img, idx) => (
                                     <button key={idx} onClick={() => setActiveImage(img)} style={{ aspectRatio: '1', borderRadius: '16px', overflow: 'hidden', border: activeImage === img ? '2px solid var(--primary-red)' : '1px solid #333', background: '#fff', cursor: 'pointer', padding: '4px' }}>
                                         <img src={img} alt="thumb" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                     </button>
@@ -109,15 +166,12 @@ export default function ProductDetails() {
                                 <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-red)' }}>{product.price}</div>
                             </div>
 
-                            {/* Stock Bar */}
-                            <div style={{ background: '#111', padding: '1.25rem', borderRadius: '20px', border: '1px solid #222' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.8rem' }}>
-                                    <span style={{ color: product.stock < 5 ? '#ff4d4d' : '#4ade80', fontWeight: '800' }}>{product.stock < 5 ? `Only ${product.stock} left!` : 'In Stock'}</span>
-                                    <span style={{ color: '#444' }}>{product.stock} available</span>
-                                </div>
-                                <div style={{ height: '4px', background: '#222', borderRadius: '10px' }}>
-                                    <div style={{ height: '100%', width: `${Math.min(100, (product.stock / 20) * 100)}%`, background: product.stock < 5 ? '#ff4d4d' : 'var(--primary-red)', borderRadius: '10px' }} />
-                                </div>
+                            {/* Stock Info - Simplified */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', fontWeight: '700' }}>
+                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: product.stock < 5 ? '#ff4d4d' : '#4ade80' }} />
+                                <span style={{ color: product.stock < 5 ? '#ff4d4d' : '#4ade80' }}>
+                                    {product.stock < 5 ? `Only ${product.stock} left in stock!` : 'In Stock & Ready to Ship'}
+                                </span>
                             </div>
 
                             {/* Size & Qty */}
@@ -158,6 +212,7 @@ export default function ProductDetails() {
                             <div style={{ marginTop: '1rem', borderTop: '1px solid #222' }}>
                                 {[
                                     { id: 'description', label: 'Description', icon: <Info size={16} />, content: product.description },
+                                    { id: 'details', label: 'Item Details & Specs', icon: <Package size={16} />, content: `Material: Premium Breathable Cotton\nFit: Modern Lifestyle Fit\nCare: Machine Wash Cold` },
                                     { id: 'shipping', label: 'Shipping & Returns', icon: <Truck size={16} />, content: 'Free delivery on orders over ₹500. 7-day easy returns policy.' }
                                 ].map(tab => (
                                     <div key={tab.id} style={{ borderBottom: '1px solid #222' }}>
@@ -168,7 +223,7 @@ export default function ProductDetails() {
                                         <AnimatePresence>
                                             {activeTab === tab.id && (
                                                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: 'hidden' }}>
-                                                    <p style={{ paddingBottom: '1.25rem', color: '#888', fontSize: '0.875rem', lineHeight: '1.6' }}>{tab.content}</p>
+                                                    <p style={{ paddingBottom: '1.25rem', color: '#888', fontSize: '0.875rem', lineHeight: '1.6', whiteSpace: 'pre-line' }}>{tab.content}</p>
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
@@ -191,6 +246,49 @@ export default function ProductDetails() {
 
                 {/* Related */}
                 <RelatedProducts currentProduct={product} />
+
+                {/* Reviews Section - Restored fully in preview */}
+                <div className="container" style={{ padding: isMobile ? '4rem 0' : '8rem 0', borderTop: '1px solid #222' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '4rem' }}>
+                        {/* Review List */}
+                        <div>
+                            <h2 style={{ fontSize: '1.75rem', fontWeight: '800', marginBottom: '2rem' }}>CUSTOMER REVIEWS</h2>
+                            {(!product.reviews || product.reviews.length === 0) ? (
+                                <p style={{ color: 'var(--text-muted)' }}>No reviews yet. Be the first to share your experience!</p>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                    {product.reviews.map((rev, idx) => (
+                                        <div key={idx} style={{ paddingBottom: '2rem', borderBottom: '1px solid #222' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                                                <span style={{ fontWeight: '700', fontSize: '1rem' }}>{rev.userName}</span>
+                                                <RatingStars rating={rev.rating} size={14} />
+                                            </div>
+                                            <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '0.95rem' }}>{rev.comment}</p>
+                                            <span style={{ fontSize: '0.75rem', color: '#444', marginTop: '0.5rem', display: 'block' }}>
+                                                {new Date(rev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Submit Review Form */}
+                        <div id="review-form-section" style={{ background: '#111', padding: '2.5rem', borderRadius: '24px', border: '1px solid #222', height: 'fit-content' }}>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.5rem' }}>SHARE YOUR THOUGHTS</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '2rem' }}>How was your experience with this product?</p>
+
+                            {!user ? (
+                                <div style={{ textAlign: 'center', padding: '2rem', border: '1px dashed #333', borderRadius: '12px' }}>
+                                    <p style={{ color: '#888', marginBottom: '1rem' }}>Please log in to leave a review.</p>
+                                    <Link to="/login" className="btn-primary" style={{ display: 'inline-block' }}>Login Now</Link>
+                                </div>
+                            ) : (
+                                <ReviewForm productId={product.id || product._id} refetch={refetch} />
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
