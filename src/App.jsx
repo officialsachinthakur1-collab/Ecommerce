@@ -39,17 +39,71 @@ const TitleUpdater = () => {
 
   useEffect(() => {
     const path = location.pathname;
+    const baseUrl = "https://getsetmart.com";
+    const fullUrl = `${baseUrl}${path}`;
+
     let title = "GetSetMart | Affordable Premium Fashion";
+    let description = "GetSetMart - Your destination for affordable, high-quality fashion, streetwear, and lifestyle essentials.";
+    let image = "https://getsetmart.com/brand-logo-final.png";
 
-    if (path === '/') title = "GetSetMart | Streetwear & Lifestyle Essentials";
-    else if (path.includes('/shop')) title = "Shop Collection | GetSetMart";
-    else if (path.includes('/product/')) title = "Product Details | GetSetMart";
-    else if (path === '/wishlist') title = "My Wishlist | GetSetMart";
-    else if (path === '/account') title = "My Account | GetSetMart";
-    else if (path === '/checkout') title = "Checkout | GetSetMart";
-    else if (path === '/valentines-day') title = "Valentine's Special ❤️ | GetSetMart";
+    if (path === '/') {
+      title = "GetSetMart | Streetwear & Lifestyle Essentials";
+      description = "Shop premium streetwear and lifestyle essentials at GetSetMart. Affordable fashion for your daily lifestyle.";
+    } else if (path.includes('/shop')) {
+      title = "Shop Collection | GetSetMart";
+      description = "Explore our latest collection of premium fashion and lifestyle products at GetSetMart.";
+    } else if (path.includes('/product/')) {
+      title = "Product Details | GetSetMart";
+      description = "Check out the detailed features and premium quality of our products at GetSetMart.";
+    } else if (path === '/wishlist') {
+      title = "My Wishlist | GetSetMart";
+      description = "Your favorite items saved in one place at GetSetMart.";
+    } else if (path === '/valentines-day') {
+      title = "Valentine's Special ❤️ | GetSetMart";
+      description = "Celebrate love with our exclusive Valentine's Day collection and special offers.";
+    }
 
+    // Update Title
     document.title = title;
+
+    // Helper to update/create meta tags
+    const updateMeta = (selector, attr, value) => {
+      let element = document.querySelector(selector);
+      if (!element) {
+        if (selector.includes('meta')) {
+          element = document.createElement('meta');
+          if (selector.includes('name')) element.setAttribute('name', selector.split('"')[1]);
+          if (selector.includes('property')) element.setAttribute('property', selector.split('"')[1]);
+          document.head.appendChild(element);
+        }
+      }
+      if (element) element.setAttribute(attr, value);
+    };
+
+    // Update Meta Description
+    updateMeta('meta[name="description"]', 'content', description);
+
+    // Update Open Graph (OG) Tags
+    updateMeta('meta[property="og:title"]', 'content', title);
+    updateMeta('meta[property="og:description"]', 'content', description);
+    updateMeta('meta[property="og:url"]', 'content', fullUrl);
+    updateMeta('meta[property="og:image"]', 'content', image);
+
+    // Update Twitter Tags
+    updateMeta('meta[property="twitter:title"]', 'content', title);
+    updateMeta('meta[property="twitter:description"]', 'content', description);
+    updateMeta('meta[property="twitter:url"]', 'content', fullUrl);
+
+    // Update Canonical
+    let linkCanonical = document.querySelector('link[rel="canonical"]');
+    if (!linkCanonical) {
+      linkCanonical = document.createElement('link');
+      linkCanonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(linkCanonical);
+    }
+    // Ensure no trailing slash mismatch for sub-pages to match sitemap
+    const cleanUrl = fullUrl.endsWith('/') && fullUrl !== `${baseUrl}/` ? fullUrl.slice(0, -1) : fullUrl;
+    linkCanonical.setAttribute('href', cleanUrl);
   }, [location]);
 
   return null;
