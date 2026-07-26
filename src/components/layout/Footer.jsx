@@ -1,0 +1,152 @@
+﻿import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import useMobile from '../../hooks/useMobile';
+import API_URL from '../../config';
+
+const Footer = () => {
+    const isMobile = useMobile();
+    const [email, setEmail] = useState('');
+    const [status, setStatus] = useState('idle'); // idle, loading, success, error
+    const [message, setMessage] = useState('');
+
+    const handleSubscribe = async (e) => {
+        e.preventDefault();
+        setStatus('loading');
+        setMessage('');
+
+        try {
+            const res = await fetch(`${API_URL}/api/newsletter`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                setStatus('success');
+                setMessage(data.message);
+                setEmail('');
+            } else {
+                setStatus('error');
+                setMessage(data.message || 'Something went wrong.');
+            }
+        } catch (error) {
+            setStatus('error');
+            setMessage('Network error. Please try again.');
+        }
+    };
+
+    return (
+        <footer className="footer-section">
+            <div className="container">
+                <div className="footer-grid">
+                    {/* Newsletter */}
+                    <div className="mobile-symmetric-aligned" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left', width: '100%' }}>
+                        <h3 className="section-header-title" style={{ fontSize: '2rem', marginBottom: '1rem', textTransform: 'uppercase', textAlign: 'left', width: '100%', marginLeft: 0 }}>Join the Movement</h3>
+                        <div style={{ marginLeft: 0, marginRight: 0, width: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', textAlign: 'left', width: '100%' }}>Sign up for exclusive drops and early access.</p>
+                            <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '1rem', maxWidth: '400px', width: '100%', flexDirection: 'column' }}>
+                                <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
+                                    <input
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        style={{
+                                            flex: 1,
+                                            padding: '1rem',
+                                            background: 'transparent',
+                                            border: '1px solid #333',
+                                            color: 'white',
+                                            borderRadius: '4px',
+                                            minWidth: 0,
+                                            textAlign: 'left'
+                                        }}
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={status === 'loading'}
+                                        className="btn-primary"
+                                        style={{ opacity: status === 'loading' ? 0.7 : 1 }}
+                                    >
+                                        {status === 'loading' ? 'Wait...' : 'Subscribe'}
+                                    </button>
+                                </div>
+                                {message && (
+                                    <div style={{
+                                        fontSize: '0.875rem',
+                                        color: status === 'success' ? '#4ade80' : '#ef4444',
+                                        marginTop: '0.5rem'
+                                    }}>
+                                        {message}
+                                    </div>
+                                )}
+                            </form>
+                        </div>
+                    </div>
+
+                    {/* Links */}
+                    <div className="footer-links mobile-symmetric-aligned" style={{ textAlign: 'left', alignItems: 'flex-start', width: '100%' }}>
+                        <div>
+                            <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem', textAlign: 'left', marginLeft: 0 }}>Shop</h4>
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: 0, marginRight: 0, textAlign: 'left', alignItems: 'flex-start' }}>
+                                <li><Link to="/shop?category=Men">Men</Link></li>
+                                <li><Link to="/shop?category=Women">Women</Link></li>
+                                <li><Link to="/shop?category=Unisex">Unisex</Link></li>
+                                <li><Link to="/shop?category=New">New Arrivals</Link></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem', textAlign: 'left', marginLeft: 0 }}>Company</h4>
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: 0, marginRight: 0, textAlign: 'left', alignItems: 'flex-start' }}>
+                                <li><Link to="/about">About Us</Link></li>
+                                <li><Link to="/blog">Our Journal</Link></li>
+                                <li><Link to="/shop">Store</Link></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem', textAlign: 'left', marginLeft: 0 }}>Support</h4>
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: 0, marginRight: 0, textAlign: 'left', alignItems: 'flex-start' }}>
+                                <li><Link to="/about#contact">Contact</Link></li>
+                                <li><Link to="/shipping">Shipping Info</Link></li>
+                                <li><Link to="/returns">Returns & Refunds</Link></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 className="section-header-title" style={{ marginBottom: '1.5rem', fontWeight: '800', textTransform: 'uppercase', fontSize: '1rem', textAlign: 'left', marginLeft: 0 }}>Social</h4>
+                            <ul style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem', marginLeft: 0, marginRight: 0, textAlign: 'left', alignItems: 'flex-start' }}>
+                                <li><a href="https://www.instagram.com/getset.mart?igsh=MWZkZmUwNTk3aWIwdA==" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                                <li><a href="#">Facebook</a></li>
+                                <li><a href="#">YouTube</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Big Brand Text */}
+                <div className="footer-brand" style={isMobile ? {
+                    background: 'none',
+                    WebkitTextFillColor: '#111',
+                    color: '#111',
+                    fontSize: '4rem',
+                    backgroundClip: 'initial',
+                    WebkitBackgroundClip: 'initial'
+                } : {}}>
+                    GETSETMART
+                </div>
+
+                {/* Sub Footer */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', fontSize: '0.8rem', color: '#444', borderTop: '1px solid #111', paddingTop: '2rem' }}>
+                    <div>&copy; 2026 GETSETMART Inc. All rights reserved.</div>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <span>Privacy Policy</span>
+                        <span>Terms of Service</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
+};
+
+export default Footer;

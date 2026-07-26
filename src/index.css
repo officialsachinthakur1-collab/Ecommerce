@@ -1,0 +1,1327 @@
+﻿ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+ :root {
+   --bg-color: #050505;
+   --bg-secondary: #0a0a0a;
+   --text-main: #ffffff;
+   --text-muted: #888888;
+
+   /* Brand Colors */
+   --primary-red: #ff0000;
+   --primary-dark: #8a0000;
+   --accent-gradient: linear-gradient(90deg, #ff0000 0%, #8a0000 100%);
+   --accent-glow: 0 0 20px rgba(255, 0, 0, 0.5);
+   --glass-bg: rgba(5, 5, 5, 0.8);
+   --glass-border: rgba(255, 255, 255, 0.1);
+
+   /* Spacing */
+   --container-width: 1400px;
+   --header-height: 80px;
+
+   /* Z-index layers */
+   --z-negative: -1;
+   --z-normal: 1;
+   --z-hero-text: 10;
+   --z-hero-canvas: 1;
+   --z-hero-countdown: 5;
+ }
+
+ .hero-section {
+   position: relative;
+   min-height: calc(100vh - var(--header-height));
+   display: flex;
+   align-items: center;
+   background: #050505;
+   overflow: hidden;
+   width: 100%;
+ }
+
+ .hero-background-gradient {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: radial-gradient(circle at 70% 50%, rgba(255, 0, 0, 0.08) 0%, transparent 70%);
+   pointer-events: none;
+ }
+
+ * {
+   box-sizing: border-box;
+   margin: 0;
+   padding: 0;
+ }
+
+ body {
+   font-family: 'Inter', sans-serif;
+   background-color: var(--bg-color);
+   color: var(--text-main);
+   line-height: 1.5;
+   overflow-x: hidden;
+   -webkit-font-smoothing: antialiased;
+   width: 100%;
+ }
+
+ html {
+   overflow-x: hidden;
+   width: 100%;
+ }
+
+ a {
+   text-decoration: none;
+   color: inherit;
+   transition: color 0.3s ease;
+ }
+
+ ul {
+   list-style: none;
+ }
+
+ img {
+   max-width: 100%;
+   display: block;
+ }
+
+ /* Utility Classes */
+ .container {
+   max-width: var(--container-width);
+   margin: 0 auto;
+   padding: 0 1.25rem;
+ }
+
+ .text-gradient {
+   background: var(--accent-gradient);
+   -webkit-background-clip: text;
+   background-clip: text;
+   -webkit-text-fill-color: transparent;
+ }
+
+ .btn-primary {
+   background: var(--accent-gradient);
+   color: white;
+   padding: 0.75rem 1.5rem;
+   border-radius: 9999px;
+   border: none;
+   font-weight: 600;
+   cursor: pointer;
+   transition: transform 0.2s, box-shadow 0.2s;
+   text-transform: uppercase;
+   font-size: 0.875rem;
+   letter-spacing: 0.05em;
+ }
+
+ .btn-primary:hover {
+   transform: translateY(-2px);
+   box-shadow: var(--accent-glow);
+ }
+
+ .section-padding {
+   padding: 6rem 0;
+ }
+
+ /* Base Utility Classes replacing inline styles */
+ .shop-container {
+   padding: 4rem 2rem;
+   display: flex;
+   gap: 3rem;
+ }
+
+ .shop-sidebar {
+   width: 250px;
+   display: block;
+ }
+
+ .hero-text-content {
+   z-index: 10;
+ }
+
+ .hero-canvas-container {
+   height: 100%;
+   width: 100%;
+   position: relative;
+ }
+
+ .desktop-nav {
+   display: flex;
+   gap: 2rem;
+ }
+
+ .mobile-menu-btn {
+   display: none;
+   cursor: pointer;
+ }
+
+ /* Footer Desktop - Missing Styles Restored */
+ .footer-section {
+   background: var(--bg-secondary);
+   padding-top: 6rem;
+   padding-bottom: 2rem;
+   border-top: 1px solid #222;
+ }
+
+ .footer-grid {
+   display: grid;
+   grid-template-columns: 1.5fr 3fr;
+   /* Newsletter gets less width than links */
+   gap: 6rem;
+   margin-bottom: 6rem;
+ }
+
+ .footer-links {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 2rem;
+ }
+
+ .footer-brand {
+   font-size: clamp(2.5rem, 8vw, 12rem);
+   overflow: visible;
+   font-weight: 900;
+   line-height: 0.8;
+   text-align: center;
+   background: linear-gradient(to bottom, #333, #050505);
+   -webkit-background-clip: text;
+   background-clip: text;
+   -webkit-text-fill-color: transparent;
+   letter-spacing: -0.01em;
+   margin-top: 4rem;
+   user-select: none;
+ }
+
+
+ /* Scrollbar */
+ ::-webkit-scrollbar {
+   width: 8px;
+ }
+
+ ::-webkit-scrollbar-track {
+   background: var(--bg-color);
+ }
+
+ ::-webkit-scrollbar-thumb {
+   background: var(--primary-dark);
+   border-radius: 4px;
+ }
+
+ /* Admin Modal Scrollbar */
+ .custom-scrollbar::-webkit-scrollbar {
+   width: 6px;
+ }
+
+ .custom-scrollbar::-webkit-scrollbar-track {
+   background: #111;
+   border-radius: 10px;
+ }
+
+ .custom-scrollbar::-webkit-scrollbar-thumb {
+   background: #333;
+   border-radius: 10px;
+ }
+
+ .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+   background: #444;
+ }
+
+ /* Split Featured Desktop Styles */
+ .split-image {
+   position: relative;
+   background: #0a0a0a;
+   overflow: hidden;
+   height: 100%;
+   min-height: 100%;
+ }
+
+ .split-content {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   padding: 6rem;
+ }
+
+ .split-title {
+   font-size: 4rem;
+   font-weight: 800;
+   text-transform: uppercase;
+   line-height: 0.9;
+   margin-bottom: 2rem;
+ }
+
+ /* Hero Redesign Styles */
+ .hero-content-grid {
+   display: grid;
+   grid-template-columns: 1.2fr 1fr;
+   gap: 4rem;
+   align-items: center;
+   width: 100%;
+   z-index: 10;
+   pointer-events: none;
+   /* Let clicks pass through empty grid space */
+ }
+
+ .hero-info {
+   position: relative;
+   z-index: 20;
+   pointer-events: auto;
+   /* Re-enable for content */
+ }
+
+ .hero-tag {
+   display: inline-block;
+   padding: 0.5rem 1rem;
+   background: rgba(255, 0, 0, 0.1);
+   color: var(--primary-red);
+   border: 1px solid rgba(255, 0, 0, 0.2);
+   border-radius: 2rem;
+   font-size: 0.75rem;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
+   margin-bottom: 2rem;
+ }
+
+ .hero-title {
+   font-size: clamp(3rem, 7vw, 5.5rem);
+   line-height: 1;
+   font-weight: 900;
+   text-transform: uppercase;
+   margin-bottom: 2rem;
+   background: linear-gradient(to bottom, #fff 40%, rgba(255, 255, 255, 0.6));
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   letter-spacing: -0.04em;
+ }
+
+ .hero-description {
+   font-size: 1.25rem;
+   color: var(--text-muted);
+   margin-bottom: 3rem;
+   max-width: 500px;
+   line-height: 1.6;
+ }
+
+ .hero-actions {
+   display: flex;
+   gap: 1.5rem;
+   margin-bottom: 4rem;
+   position: relative;
+   z-index: 30;
+ }
+
+ .btn-outline {
+   padding: 0.75rem 1.5rem;
+   border-radius: 9999px;
+   border: 1px solid var(--glass-border);
+   color: white;
+   font-weight: 600;
+   text-transform: uppercase;
+   font-size: 0.875rem;
+   transition: all 0.3s ease;
+ }
+
+ .btn-outline:hover {
+   background: white;
+   color: black;
+ }
+
+ .hero-indicators {
+   display: flex;
+   gap: 1rem;
+ }
+
+ .indicator {
+   width: 40px;
+   height: 2px;
+   background: rgba(255, 255, 255, 0.2);
+   border: none;
+   cursor: pointer;
+   transition: all 0.3s ease;
+ }
+
+ .indicator.active {
+   background: var(--primary-red);
+   width: 60px;
+ }
+
+ .hero-visual {
+   position: relative;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   pointer-events: none;
+   /* Visuals should not block clicks */
+ }
+
+ .product-image-container {
+   position: relative;
+   width: 100%;
+   max-width: 500px;
+   aspect-ratio: 1;
+   pointer-events: auto;
+   /* Let clicks on product image work if needed, though buttons are main target */
+ }
+
+ /* Valentine Theme Specifics */
+ .hero-section.valentine-theme {
+   background: radial-gradient(circle at 30% 50%, #fffafa 0%, #ffffff 50%, #fff0f0 100%);
+ }
+
+ .valentine-theme .hero-tag {
+   background: rgba(255, 77, 77, 0.1);
+   color: #ff4d4d;
+   border-color: rgba(255, 77, 77, 0.2);
+ }
+
+ .hero-title.valentine-title {
+   color: #111;
+   background: none;
+   -webkit-text-fill-color: #111;
+ }
+
+ .valentine-italic {
+   font-family: serif;
+   font-style: italic;
+   color: #ff4d4d;
+   font-size: 1.1em;
+   font-weight: 400;
+ }
+
+ .valentine-theme .hero-description {
+   color: #333;
+ }
+
+ .valentine-theme .btn-primary {
+   background: #111;
+   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+ }
+
+ .valentine-theme .btn-primary:hover {
+   background: #ff4d4d;
+ }
+
+ .valentine-glow {
+   position: absolute;
+   inset: -10%;
+   background: radial-gradient(circle, rgba(255, 77, 77, 0.15) 0%, transparent 70%);
+   filter: blur(40px);
+   z-index: -1;
+ }
+
+ .valentine-img {
+   filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.12));
+ }
+
+ .valentine-badge {
+   position: absolute;
+   bottom: 5%;
+   right: 5%;
+   background: linear-gradient(135deg, #ff4d4d, #cc0000);
+   padding: 0.8rem 1.5rem;
+   border-radius: 12px;
+   font-weight: 900;
+   color: #fff;
+   box-shadow: 0 20px 40px rgba(204, 0, 0, 0.3);
+   z-index: 3;
+   text-align: center;
+   transform: rotate(-12deg);
+ }
+
+ .badge-small {
+   font-size: 0.6rem;
+   text-transform: uppercase;
+   opacity: 0.8;
+ }
+
+ .badge-large {
+   font-size: 1.5rem;
+   line-height: 1;
+ }
+
+ @media (max-width: 768px) {
+   .hero-section.valentine-theme {
+     background: #fff;
+   }
+
+   .valentine-title {
+     font-size: 3.5rem !important;
+   }
+
+   .valentine-italic {
+     font-size: 1.25em !important;
+   }
+
+   .valentine-badge {
+     bottom: -10px;
+     right: 0;
+     padding: 0.5rem 1rem;
+   }
+
+   .badge-large {
+     font-size: 1.2rem;
+   }
+
+   .product-image-container {
+     height: 300px !important;
+   }
+ }
+
+ .grid-4 {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 2rem;
+ }
+
+ .grid-3 {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 2rem;
+ }
+
+ .split-section {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   min-height: 800px;
+ }
+
+ .scroll-to-top-btn {
+   position: fixed;
+   bottom: 2rem;
+   right: 2rem;
+   background-color: #ff3333;
+   color: white;
+   border: none;
+   border-radius: 50%;
+   width: 3.5rem;
+   height: 3.5rem;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+   z-index: 1000;
+   box-shadow: 0 4px 12px rgba(255, 51, 51, 0.3);
+ }
+
+ .testimonial-quote {
+   font-size: clamp(1.5rem, 5vw, 3rem);
+   word-wrap: break-word;
+ }
+
+
+ /* Responsive Media Queries */
+ /* Responsive Media Queries */
+ @media (max-width: 768px) {
+   :root {
+     --header-height: 60px;
+   }
+
+   /* Mobile Typography & Core Resets */
+   body {
+     font-size: 16px;
+     /* Base size for readability */
+     -webkit-text-size-adjust: 100%;
+   }
+
+   h1 {
+     font-size: clamp(2rem, 10vw, 3rem) !important;
+     line-height: 1.1;
+   }
+
+   h2 {
+     font-size: 1.75rem !important;
+     /* Standardized mobile h2 */
+     line-height: 1.2;
+   }
+
+   h3 {
+     font-size: 1.25rem !important;
+     /* Standardized mobile h3 */
+   }
+
+   p {
+     font-size: 1rem !important;
+     line-height: 1.6;
+   }
+
+   /* Mobile Images */
+   img {
+     height: auto;
+     /* Ensure aspect ratio is preserved */
+     max-width: 100%;
+   }
+
+   .container {
+     padding: 0 1.25rem;
+     /* Increased to 2rem to match Shop header alignment */
+     width: 100%;
+     overflow-x: hidden;
+   }
+
+   .section-padding {
+     padding: 4rem 0;
+   }
+
+   /* Grid Stacking - Global Fix */
+   .grid-4,
+   .grid-3 {
+     display: grid !important;
+     grid-template-columns: 1fr !important;
+     /* Single column */
+     gap: 2rem !important;
+     width: 100%;
+   }
+
+   /* Keep other containers flex/stack if needed, or specific grids */
+   .footer-links,
+   .footer-grid,
+   .shop-container,
+   .hero-container,
+   .split-section {
+     display: flex !important;
+     flex-direction: column !important;
+     gap: 3rem !important;
+   }
+
+   /* Footer Specifics */
+   .footer-grid {
+     margin-bottom: 4rem;
+   }
+
+   .footer-links {
+     gap: 2rem !important;
+     display: grid !important;
+     /* Keep grid for links to save space if needed */
+     grid-template-columns: 1fr 1fr !important;
+     /* 2 columns for links looks better on mobile */
+   }
+
+   .footer-brand {
+     font-size: clamp(2.5rem, 8vw, 12rem);
+     overflow: visible;
+     margin-top: 3rem;
+   }
+
+   /* Split Featured Mobile */
+   .split-section-container {
+     border-top: 1px solid #222;
+     border-bottom: 1px solid #222;
+   }
+
+   .split-content {
+     padding: 1rem !important;
+     border-radius: 20px !important;
+     order: 2 !important;
+   }
+
+   .split-image {
+     height: 300px !important;
+     min-height: 300px !important;
+     order: 1 !important;
+   }
+
+   .split-title {
+     font-size: clamp(2.5rem, 8vw, 3.5rem);
+     margin-bottom: 1.5rem;
+   }
+
+   /* Navigation Mobile */
+   .desktop-nav {
+     display: none;
+   }
+
+   .mobile-menu-btn {
+     display: block;
+   }
+
+   /* Hero Section Mobile - Refined */
+   .hero-section {
+     height: auto !important;
+     min-height: 100vh;
+     padding: 6rem 0;
+   }
+
+   .hero-content-grid {
+     grid-template-columns: 1fr;
+     text-align: center;
+     gap: 3rem;
+   }
+
+   .hero-info {
+     order: 2;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+   }
+
+   .hero-visual {
+     order: 1;
+   }
+
+   .hero-title {
+     font-size: 3rem !important;
+   }
+
+   .hero-description {
+     font-size: 1rem !important;
+     margin-bottom: 2rem;
+   }
+
+   .hero-actions {
+     flex-direction: column;
+     width: 100%;
+     gap: 1rem;
+     margin-bottom: 2rem;
+   }
+
+   .btn-primary,
+   .btn-outline {
+     width: 100%;
+     text-align: center;
+   }
+
+   .hero-indicators {
+     justify-content: center;
+   }
+
+   .product-image-container {
+     max-width: 300px;
+   }
+
+   /* Shop Sidebar Mobile */
+   .shop-sidebar {
+     width: 100% !important;
+     margin-bottom: 2rem;
+   }
+
+   /* Feature Section Title Nudge */
+   .section-header-title {
+     margin-left: 1.5rem;
+     /* Adjusted nudge to 1.5rem as requested */
+   }
+
+   /* Right Align Link Indent */
+   .section-header-link {
+     margin-right: 1.5rem;
+     margin-left: 1.5rem;
+   }
+
+   /* Align Home Product Grid with Layout */
+   .home-product-grid {
+     margin-left: 1.5rem !important;
+     margin-right: 1.5rem !important;
+     /* Symmetrical 1.5rem indent for grid content */
+     width: auto !important;
+     /* Allow margins to work */
+   }
+
+   /* Scroll Button Mobile */
+   .scroll-to-top-btn {
+     right: 1.5rem;
+     bottom: 2rem;
+     width: 3rem;
+     height: 3rem;
+   }
+ }
+
+ /* Product Details Responsive Layout */
+ .product-page-wrapper {
+   padding-top: var(--header-height);
+   min-height: 100vh;
+   display: flex;
+   flex-direction: column;
+ }
+
+ .product-main-grid {
+   display: flex;
+   flex-direction: column;
+   /* Mobile Default: Stacked */
+   flex: 1;
+ }
+
+ /* Desktop Grid Override */
+ @media (min-width: 769px) {
+   .product-main-grid {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+   }
+ }
+
+ /* Product Details Desktop Override for Sticky Canvas */
+ @media (min-width: 769px) {
+   .product-canvas-container {
+     height: auto !important;
+     position: sticky !important;
+     top: var(--header-height);
+   }
+ }
+
+ /* Mobile Footer Alignment Fix */
+ @media (max-width: 768px) {
+
+   .footer-grid,
+   .footer-links {
+     margin-right: 1rem !important;
+   }
+ }
+
+ /* Mobile Footer Symmetric Alignment (Left & Right) */
+ @media (max-width: 768px) {
+
+   .footer-grid,
+   .footer-links {
+     margin-left: 1rem !important;
+     margin-right: 1rem !important;
+   }
+ }
+
+ /* RESET GLOBAL FOOTER MARGINS (Handled in Component now) */
+ @media (max-width: 768px) {
+   .footer-grid {
+     margin-left: 0 !important;
+     margin-right: 0 !important;
+   }
+ }
+
+ /* Unified Global Vertical Alignment (Hero & ValueProps) */
+ @media (max-width: 768px) {
+   .hero-container {
+     padding: 0 1.25rem !important;
+   }
+
+   .grid-4 {
+     margin-left: 1rem !important;
+     margin-right: 1rem !important;
+     width: auto !important;
+   }
+ }
+
+ /* FINAL MOBILE ALIGNMENT OVERRIDE */
+ @media (max-width: 768px) {
+   .hero-container {
+     padding: 0 1.25rem !important;
+   }
+
+   .grid-4 {
+     margin-left: 1rem !important;
+     margin-right: 1rem !important;
+     width: auto !important;
+   }
+
+   /* Wrapper should NOT add margin if children already have it. Reset to 0 to prevent double-indent. */
+   .mobile-symmetric-aligned {
+     margin-left: 0 !important;
+     margin-right: 0 !important;
+   }
+ }
+
+ /* Footer Specific: Move closer to edge (User Request 'or side') */
+ @media (max-width: 768px) {
+   .footer-section .container {
+     padding-left: 0.5rem !important;
+     padding-right: 0.5rem !important;
+   }
+ }
+
+ /* RESET Footer to Standard Container Alignment (2rem) - Matches 'Most Popular' */
+ @media (max-width: 768px) {
+   .footer-section .container {
+     padding-left: 2rem !important;
+     padding-right: 2rem !important;
+   }
+ }
+
+ /* Middle Ground Alignment: 1.5rem (Thoda side, not too much) */
+ @media (max-width: 768px) {
+   .footer-section .container {
+     padding-left: 1.5rem !important;
+     padding-right: 1.5rem !important;
+   }
+ }
+
+ /* Final Footer Alignment: 1rem (Explicit User Choice) */
+ @media (max-width: 768px) {
+   .footer-section .container {
+     padding-left: 1rem !important;
+     padding-right: 1rem !important;
+   }
+ }
+
+ /* Shop Sidebar Mobile Categories Alignment */
+ @media (max-width: 768px) {
+   .shop-sidebar {
+     text-align: center !important;
+     padding-left: 1rem !important;
+     padding-right: 1rem !important;
+   }
+
+   .shop-sidebar h3 {
+     text-align: center !important;
+     width: 100%;
+   }
+
+   .shop-sidebar ul {
+     align-items: center !important;
+     width: 100%;
+     padding: 0 !important;
+     margin: 0 !important;
+   }
+
+   .shop-sidebar li {
+     width: 100%;
+     text-align: center;
+   }
+
+   .shop-sidebar a {
+     font-size: 0.9rem;
+     /* Reduce font size as requested ('kam karna pade to') */
+   }
+ }
+
+ /* Shop Header Mobile Alignment */
+ @media (max-width: 768px) {
+   .shop-header {
+     padding-left: 1rem !important;
+     padding-right: 1rem !important;
+   }
+
+   .shop-header h1 {
+     font-size: 2rem !important;
+     /* Reduce font size to fit 'Men Collection' */
+   }
+ }
+
+ /* Shop Header Defaults (Desktop) */
+ .shop-header {
+   padding: 6rem 2rem;
+ }
+
+ /* Shop Header Mobile Override */
+ @media (max-width: 768px) {
+   .shop-header {
+     padding: 6rem 1rem !important;
+   }
+ }
+
+ /* ADMIN PANEL RESPONSIVE STYLES */
+ .admin-layout {
+   display: flex;
+   min-height: 100vh;
+   background: #050505;
+   color: white;
+ }
+
+ .admin-sidebar {
+   width: 250px;
+   background: #111;
+   border-right: 1px solid #222;
+   height: 100vh;
+   position: fixed;
+   left: 0;
+   top: 0;
+   display: flex;
+   flex-direction: column;
+   padding: 2rem;
+   z-index: 1000;
+   /* Sidebar should be on top of everything */
+   transition: transform 0.3s ease;
+ }
+
+ .admin-main {
+   flex: 1;
+   margin-left: 250px;
+   padding: 2rem;
+   transition: margin-left 0.3s ease;
+ }
+
+ .admin-mobile-toggle {
+   display: none;
+   position: fixed;
+   top: 1rem;
+   right: 1rem;
+   /* Right side might be better if logo is left, but sidebar is left... lets put left */
+   left: 1rem;
+   z-index: 101;
+   background: #111;
+   border: 1px solid #333;
+   padding: 0.5rem;
+   border-radius: 4px;
+   color: white;
+   cursor: pointer;
+ }
+
+ @media (max-width: 768px) {
+   .admin-sidebar {
+     transform: translateX(-100%);
+   }
+
+   .admin-sidebar.open {
+     transform: translateX(0);
+   }
+
+   .admin-main {
+     margin-left: 0 !important;
+     padding: 1rem !important;
+     padding-top: 4rem !important;
+     /* Make space for toggle button */
+   }
+
+   .admin-mobile-toggle {
+     display: flex !important;
+     align-items: center;
+     justify-content: center;
+   }
+
+   .mobile-close-btn {
+     display: block !important;
+     /* Show close button when sidebar is open */
+   }
+ }
+
+ /* Admin Table Scrollable Container */
+ .admin-table-container {
+   width: 100%;
+   overflow-x: auto;
+   /* Enable horizontal scroll */
+   -webkit-overflow-scrolling: touch;
+   padding: 2rem;
+   border-radius: 24px;
+   border: 1px solid #222;
+ }
+
+ /* Customize scrollbar for table */
+ .admin-table-container::-webkit-scrollbar {
+   height: 8px;
+ }
+
+ .admin-table-container::-webkit-scrollbar-track {
+   background: #050505;
+ }
+
+ .admin-table-container::-webkit-scrollbar-thumb {
+   background: #333;
+   border-radius: 4px;
+ }
+
+ /* Product Details Responsive Styles */
+ .product-info-section {
+   padding: 4rem 2rem;
+ }
+
+ .product-title {
+   font-size: 3rem;
+ }
+
+ .product-price {
+   font-size: 1.5rem;
+ }
+
+ .product-back-btn-container {
+   padding: 2rem 2rem 0 2rem;
+ }
+
+ @media (max-width: 768px) {
+   .product-info-section {
+     padding: 2rem 1rem !important;
+     /* Mobile 1rem alignment */
+   }
+
+   .product-title {
+     font-size: 2rem !important;
+     /* Reduce title size */
+   }
+
+   .product-price {
+     font-size: 1.25rem !important;
+   }
+
+   .product-back-btn-container {
+     padding: 2rem 1rem 0 1rem !important;
+   }
+ }
+
+ /* EMERGENCY OVERFLOW FIXES FOR PRODUCT PAGE */
+ .product-page-wrapper {
+   width: 100%;
+   max-width: 100vw;
+   overflow-x: hidden;
+   /* Force cut off any overflow */
+ }
+
+ .product-main-grid {
+   width: 100%;
+   max-width: 100%;
+ }
+
+ .product-canvas-container {
+   width: 100% !important;
+   max-width: 100% !important;
+   overflow: hidden;
+   /* Ensure 3D canvas doesn't bleed */
+ }
+
+ /* Ensure canvas itself is contained */
+ .product-canvas-container canvas {
+   width: 100% !important;
+   max-width: 100% !important;
+ }
+
+
+ /* Fix Admin Toggle Button */
+ @media (max-width: 768px) {
+   .admin-mobile-toggle {
+     width: 44px !important;
+     height: 44px !important;
+     right: auto !important;
+     /* Don't span to right */
+     border-radius: 8px !important;
+   }
+
+   /* Fix Admin Page Titles */
+   .admin-main h1 {
+     font-size: 1.5rem !important;
+     margin-top: 1rem;
+   }
+ }
+
+ /* Admin Page Header Responsive */
+ .admin-page-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 2rem;
+ }
+
+ @media (max-width: 768px) {
+   .admin-page-header {
+     flex-direction: column;
+     align-items: flex-start !important;
+     gap: 1rem;
+   }
+
+   .admin-page-header button {
+     width: 100%;
+     justify-content: center;
+   }
+ }
+
+ /* Mobile Card View for Admin Tables */
+ @media (max-width: 768px) {
+
+   /* Hide Table Header */
+   .admin-table-container thead {
+     display: none;
+   }
+
+   /* Row becomes a Card */
+   .admin-table-container tr {
+     display: block;
+     margin-bottom: 1.5rem;
+     background: #111;
+     border: 1px solid #333;
+     border-radius: 12px;
+     padding: 1.25rem;
+   }
+
+   /* Cell becomes a Row in the Card */
+   .admin-table-container td {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 0.75rem 0;
+     border-bottom: 1px solid #222;
+     text-align: right;
+     font-size: 0.95rem;
+     /* Readable font */
+   }
+
+   .admin-table-container td:last-child {
+     border-bottom: none;
+     padding-bottom: 0;
+   }
+
+   .admin-table-container td:first-child {
+     padding-top: 0;
+   }
+
+   /* Label from data attribute */
+   .admin-table-container td::before {
+     content: attr(data-label);
+     font-weight: 600;
+     color: var(--text-muted);
+     text-align: left;
+     margin-right: 1.5rem;
+   }
+
+   /* Actions container */
+   .admin-table-container td[data-label='Actions'] {
+     justify-content: flex-end;
+     margin-top: 0.5rem;
+     padding-top: 1rem;
+     border-top: 1px solid #222;
+   }
+
+   .admin-table-container td[data-label='Actions']::before {
+     display: none;
+     /* Hide 'Actions' label */
+   }
+ }
+
+ /* Fix Mobile Table Width Overflow */
+ @media (max-width: 768px) {
+   .admin-table-container table {
+     min-width: 0 !important;
+     /* Override inline min-width */
+     width: 100% !important;
+     display: block;
+     /* Make table behave like block container */
+   }
+
+   .admin-table-container tbody {
+     display: block;
+     width: 100%;
+   }
+ }
+
+ /* Restore Admin Overlay */
+ @media (max-width: 768px) {
+   .admin-overlay {
+     position: fixed;
+     inset: 0;
+     background: rgba(0, 0, 0, 0.5);
+     z-index: 99;
+     backdrop-filter: blur(2px);
+   }
+ }
+
+ /* Immersive 3D Hero Styles */
+ .hero-background-canvas {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 1;
+ }
+
+ .hero-container {
+   position: relative;
+   z-index: 10;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height: 100%;
+   width: 100%;
+   pointer-events: none;
+ }
+
+ .hero-text-content {
+   pointer-events: auto;
+ }
+
+ @media (max-width: 768px) {
+   .hero-background-canvas {
+     height: 100% !important;
+   }
+
+   .hero-container {
+     padding: 0 1.25rem !important;
+     justify-content: center !important;
+     align-items: center !important;
+     text-align: center !important;
+   }
+
+   /* Simplified mobile specific overrides */
+   .hero-countdown,
+   .glass-card,
+   .navbar,
+   .cart-drawer {
+     background: rgba(10, 10, 10, 0.98) !important;
+     backdrop-filter: none !important;
+     -webkit-backdrop-filter: none !important;
+   }
+ }
+
+ /* Marquee Animation */
+ .marquee-wrapper {
+   overflow: hidden;
+   width: 100%;
+   display: flex;
+   white-space: nowrap;
+ }
+
+ .marquee-content {
+   display: flex;
+   animation: marquee-scroll 20s linear infinite;
+ }
+
+ @media (max-width: 768px) {
+   .marquee-content {
+     animation-duration: 12s;
+   }
+ }
+
+ .marquee-item {
+   display: flex;
+   align-items: center;
+   padding-right: 4rem;
+ }
+
+ .marquee-item span {
+   font-size: clamp(1.25rem, 5vw, 2.5rem);
+   font-weight: 900;
+   letter-spacing: 2px;
+   text-transform: uppercase;
+   color: #222;
+ }
+
+ .marquee-dot {
+   width: 8px;
+   height: 8px;
+   background: var(--primary-red);
+   border-radius: 50%;
+   margin-right: 1.5rem;
+ }
+
+ @keyframes marquee-scroll {
+   0% {
+     transform: translateX(0);
+   }
+
+   100% {
+     transform: translateX(-50%);
+   }
+ }
+
+ /* AGGRESSIVE MOBILE PERFORMANCE OVERRIDES */
+ @media (max-width: 768px) {
+   * {
+     -webkit-tap-highlight-color: transparent;
+     text-rendering: optimizeSpeed !important;
+   }
+
+   .footer-brand {
+     background: none !important;
+     -webkit-background-clip: initial !important;
+     background-clip: initial !important;
+     -webkit-text-fill-color: #111 !important;
+     color: #111 !important;
+     font-size: 3rem !important;
+     text-shadow: none !important;
+     margin-top: 2rem !important;
+   }
+
+   .testimonial-quote span {
+     background: none !important;
+     -webkit-background-clip: initial !important;
+     background-clip: initial !important;
+     -webkit-text-fill-color: var(--primary-red) !important;
+     color: var(--primary-red) !important;
+   }
+
+   .section-padding {
+     padding: 3rem 0 !important;
+   }
+
+   .split-section {
+     min-height: 400px !important;
+   }
+ }
