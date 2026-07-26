@@ -2,19 +2,14 @@
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
     "framework": "vite",
-    "rewrites": [
+    "redirects": [
         {
             "source": "/admin",
-            "destination": "/admin/index.html"
-        },
-        {
-            "source": "/admin/",
-            "destination": "/admin/index.html"
-        },
-        {
-            "source": "/admin/(.*)",
-            "destination": "/admin/$1"
-        },
+            "destination": "/admin/",
+            "permanent": true
+        }
+    ],
+    "rewrites": [
         {
             "source": "/(.*)",
             "destination": "/index.html"
