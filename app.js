@@ -10,7 +10,7 @@ window.ERPState = {
   expenses: []
 };
 
-// Rich Pre-populated Seed Data
+// Seed Data
 const SeedData = {
   inventory: [
     { sku: 'GSM-HD-001', name: 'Oversized Streetwear Hoodie - Charcoal Black', category: 'Streetwear', cost: 420, price: 1499, stock: 145, minStock: 20 },
@@ -46,15 +46,10 @@ const SeedData = {
 
 function initERP() {
   try {
-    const inv = JSON.parse(localStorage.getItem('gsm_inventory'));
-    const sup = JSON.parse(localStorage.getItem('gsm_suppliers'));
-    const ord = JSON.parse(localStorage.getItem('gsm_orders'));
-    const exp = JSON.parse(localStorage.getItem('gsm_expenses'));
-
-    ERPState.inventory = (inv && Array.isArray(inv) && inv.length > 0) ? inv : SeedData.inventory;
-    ERPState.suppliers = (sup && Array.isArray(sup) && sup.length > 0) ? sup : SeedData.suppliers;
-    ERPState.orders = (ord && Array.isArray(ord) && ord.length > 0) ? ord : SeedData.orders;
-    ERPState.expenses = (exp && Array.isArray(exp) && exp.length > 0) ? exp : SeedData.expenses;
+    ERPState.inventory = JSON.parse(localStorage.getItem('gsm_inventory')) || SeedData.inventory;
+    ERPState.suppliers = JSON.parse(localStorage.getItem('gsm_suppliers')) || SeedData.suppliers;
+    ERPState.orders = JSON.parse(localStorage.getItem('gsm_orders')) || SeedData.orders;
+    ERPState.expenses = JSON.parse(localStorage.getItem('gsm_expenses')) || SeedData.expenses;
   } catch (err) {
     ERPState.inventory = SeedData.inventory;
     ERPState.suppliers = SeedData.suppliers;
@@ -388,10 +383,7 @@ window.handleSaveSupplier = function() {
   const total = parseFloat(document.getElementById('form-sup-total')?.value) || 0;
   const paid = parseFloat(document.getElementById('form-sup-paid')?.value) || 0;
 
-  if (!name || !contact) {
-    showToast('Please enter supplier name and contact!', 'danger');
-    return;
-  }
+  if (!name || !contact) return;
 
   const newSupplier = {
     id: `SUP-0${ERPState.suppliers.length + 1}`,
@@ -406,7 +398,7 @@ window.handleSaveSupplier = function() {
   ERPState.suppliers.push(newSupplier);
   saveState();
   closeModal('supplier-modal');
-  renderAllViews();
+  renderSupplierTable();
   showToast(`Supplier ${name} created successfully!`, 'success');
 };
 
@@ -422,7 +414,7 @@ window.recordSupplierPayment = function(supId) {
     sup.paid += payVal;
     sup.remaining = Math.max(0, sup.totalPurchased - sup.paid);
     saveState();
-    renderAllViews();
+    renderSupplierTable();
     showToast(`Paid ₹${payVal} to ${sup.name}`, 'success');
   }
 };
@@ -461,16 +453,14 @@ window.handleSaveSKU = function() {
   const stock = parseInt(document.getElementById('form-sku-stock')?.value) || 0;
   const minStock = parseInt(document.getElementById('form-sku-min')?.value) || 20;
 
-  if (!sku || !name) {
-    showToast('Please enter SKU code and product name!', 'danger');
-    return;
-  }
+  if (!sku || !name) return;
 
   const newSKU = { sku, category, name, cost, price, stock, minStock };
   ERPState.inventory.push(newSKU);
   saveState();
   closeModal('sku-modal');
-  renderAllViews();
+  renderInventoryTable();
+  populateOrderModalSKUs();
   showToast(`SKU ${sku} added to inventory!`, 'success');
 };
 
@@ -549,10 +539,7 @@ window.handleSaveExpense = function() {
   const desc = document.getElementById('form-exp-desc')?.value;
   const method = document.getElementById('form-exp-method')?.value;
 
-  if (!amount || !desc) {
-    showToast('Please enter expense amount and description!', 'danger');
-    return;
-  }
+  if (!amount || !desc) return;
 
   const newExpense = {
     date: new Date().toISOString().split('T')[0],
@@ -565,7 +552,8 @@ window.handleSaveExpense = function() {
   ERPState.expenses.push(newExpense);
   saveState();
   closeModal('expense-modal');
-  renderAllViews();
+  renderExpenseTable();
+  renderDashboard();
   showToast(`Logged expense of ₹${amount} for ${category}`, 'success');
 };
 
@@ -627,11 +615,6 @@ window.handleSaveOrder = function() {
   const shipping = parseFloat(document.getElementById('form-shipping-cost')?.value) || 0;
   const fee = parseFloat(document.getElementById('form-other-fee')?.value) || 0;
 
-  if (!customer) {
-    showToast('Please enter customer name & city!', 'danger');
-    return;
-  }
-
   const skuObj = ERPState.inventory.find(i => i.sku === sku);
 
   const newOrder = {
@@ -651,22 +634,16 @@ window.handleSaveOrder = function() {
   };
 
   ERPState.orders.push(newOrder);
-
-  // Auto Deduct Stock if Shipped/Delivered
-  if (skuObj && (status === 'SHIPPED' || status === 'DELIVERED')) {
-    skuObj.stock = Math.max(0, skuObj.stock - 1);
-  }
-
   saveState();
   closeModal('order-modal');
   renderAllViews();
-  showToast(`Order ${newOrder.id} created & saved successfully!`, 'success');
+  showToast(`Order ${newOrder.id} created successfully!`, 'success');
 };
 
 window.triggerLiveSyncNow = function() {
   showToast('Connecting to GetSetMart, Amazon & Flipkart APIs...', 'info');
   setTimeout(() => {
-    showToast('Live Sync Completed! New order imported.', 'success');
+    showToast('Live Sync Completed! 2 new orders imported.', 'success');
     ERPState.orders.push({
       id: `GSM-ORD-${1000 + ERPState.orders.length + 1}`,
       date: new Date().toISOString().split('T')[0],
@@ -755,9 +732,11 @@ function initChartsSafe() {
   } catch (err) {}
 }
 
+// RUN IMMEDIATELY ON SCRIPT LOAD
+initERP();
+
 // Attach Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-  initERP();
   window.navigateTo('dashboard');
 
   document.getElementById('order-channel-filter')?.addEventListener('change', renderOrdersTable);
@@ -765,12 +744,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ERPState.activeView === 'orders') renderOrdersTable();
   });
 
-  const tabs = document.querySelectorAll('#order-status-tabs .tab-btn');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-      tabs.forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-      renderOrdersTable();
-    });
-  });
+  try {
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  } catch (e) {}
 });

@@ -1,40 +1,973 @@
-<!doctype html>
-<html lang="en">
-
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/favicon-ghost-v15.png" />
-  <link rel="apple-touch-icon" href="/favicon-ghost-v15.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow" />
-  <title>GetSetMart - Affordable Fashion & Daily Lifestyle Essentials</title>
-  <meta name="description"
-    content="GetSetMart - Your destination for affordable, high-quality fashion, streetwear, and lifestyle essentials. Shop premium collections priced for your daily lifestyle." />
-  <meta name="keywords"
-    content="GetSetMart, ecommerce, fashion, ethnic wear, streetwear, jewelry, earrings, hoodies, premium lifestyle" />
+  <title>GetSetMart ERP Admin Panel - Full E-Commerce Business Suite</title>
+  
+  <!-- Official GetSetMart Favicon -->
+  <link rel="icon" type="image/png" href="brand-logo-final.png" />
+  
+  <!-- Google Fonts (Inter & Outfit) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
 
+  <!-- CORE NAVIGATION & AUTH SCRIPT DEFINED IMMEDIATELY IN HEAD -->
+  <script>
+    window.ERPState = {
+      activeView: 'dashboard',
+      orders: [],
+      suppliers: [],
+      inventory: [],
+      payments: [],
+      expenses: []
+    };
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://getsetmart.com/" />
-  <meta property="og:title" content="GetSetMart - Fast & Premium E-commerce" />
-  <meta property="og:description"
-    content="Shop affordable, high-quality fashion, streetwear, and lifestyle essentials at GetSetMart. Premium collections tailored for your daily style." />
-  <meta property="og:image" content="https://getsetmart.com/brand-logo-final.png" />
+    function checkLoginState() {
+      var isLoggedIn = localStorage.getItem('gsm_logged_in');
+      var modal = document.getElementById('login-modal-overlay');
+      if (modal) {
+        if (isLoggedIn === 'true') {
+          modal.style.display = 'none';
+        } else {
+          modal.style.display = 'flex';
+        }
+      }
+    }
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://getsetmart.com/" />
-  <meta property="twitter:title" content="GetSetMart - Fast & Premium E-commerce" />
-  <meta property="twitter:description"
-    content="Shop affordable, high-quality fashion, streetwear, and lifestyle essentials at GetSetMart. Premium collections tailored for your daily style." />
-  <meta property="twitter:image" content="https://getsetmart.com/brand-logo-final.png" />
+    function handleAdminLogin() {
+      localStorage.setItem('gsm_logged_in', 'true');
+      var modal = document.getElementById('login-modal-overlay');
+      if (modal) modal.style.display = 'none';
+      showToast('Welcome back, GetSetMart Admin!', 'success');
+    }
+
+    function handleAdminLogout() {
+      localStorage.removeItem('gsm_logged_in');
+      var modal = document.getElementById('login-modal-overlay');
+      if (modal) modal.style.display = 'flex';
+      showToast('Logged out successfully.', 'info');
+    }
+
+    function togglePasswordVisibility() {
+      var input = document.getElementById('login-password');
+      var eye = document.getElementById('pwd-toggle-btn');
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (eye) eye.innerText = '🙈';
+      } else {
+        input.type = 'password';
+        if (eye) eye.innerText = '👁️';
+      }
+    }
+
+    function navigateTo(viewId) {
+      console.log('Navigating to module:', viewId);
+      window.ERPState.activeView = viewId;
+
+      // 1. Hide all views
+      var sections = document.querySelectorAll('.view-section');
+      sections.forEach(function(sec) {
+        sec.style.display = 'none';
+        sec.classList.remove('active');
+      });
+
+      // 2. Display target view
+      var target = document.getElementById('view-' + viewId);
+      if (target) {
+        target.style.display = 'block';
+        target.classList.add('active');
+      }
+
+      // 3. Highlight sidebar nav item
+      var navItems = document.querySelectorAll('.sidebar .nav-item');
+      navItems.forEach(function(item) {
+        if (item.getAttribute('data-view') === viewId) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+
+      // 4. Update Header Titles
+      var titles = {
+        'dashboard': ['Dashboard Overview', 'Real-time business performance & profit analytics'],
+        'orders': ['All-Channel Orders', 'Order workflow, delivery statuses & profit per order'],
+        'pnl-calculator': ['Order P&L Engine', 'Live mathematical simulator for order profitability'],
+        'suppliers': ['Supplier Ledger', 'Vendor balances, purchase history & inward stock'],
+        'inventory': ['Inventory & SKUs', 'Stock levels, cost prices & low-stock alerts'],
+        'payments': ['Payments & Settlements', 'Marketplace payouts, COD reconciliation & receivables'],
+        'expenses': ['Expense Tracker', 'Log operating costs (Ads, Shipping, Salaries, Packing)'],
+        'reports': ['Sales & ROI Reports', 'Channel-wise net profit & SKU performance analysis'],
+        'import-sync': ['Excel Import & Sync', 'Drag & drop Excel files or simulate scheduled sync']
+      };
+
+      if (titles[viewId]) {
+        var tEl = document.getElementById('current-view-title');
+        var sEl = document.getElementById('current-view-subtitle');
+        if (tEl) tEl.innerText = titles[viewId][0];
+        if (sEl) sEl.innerText = titles[viewId][1];
+      }
+
+      if (window.renderAllViews) window.renderAllViews();
+    }
+
+    function openModal(id) {
+      var m = document.getElementById(id);
+      if (m) m.style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      var m = document.getElementById(id);
+      if (m) m.style.display = 'none';
+    }
+
+    function showToast(message, type) {
+      type = type || 'info';
+      var container = document.getElementById('toast-container');
+      if (!container) return;
+      var toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+      toast.innerText = message;
+      container.appendChild(toast);
+      setTimeout(function() {
+        toast.style.opacity = '0';
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 3500);
+    }
+
+    document.addEventListener('DOMContentLoaded', checkLoginState);
+  </script>
 </head>
-
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-</body>
 
+  <div id="app-container">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-header">
+        <img src="brand-logo-final.png" alt="GetSetMart Logo" class="brand-logo-img" />
+        <div>
+          <div class="brand-title">GET SET MART</div>
+          <div class="brand-subtitle">E-Commerce ERP Suite</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Operations</div>
+        <div class="nav-item active" data-view="dashboard" onclick="navigateTo('dashboard')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Dashboard & P&L</span>
+        </div>
+        <div class="nav-item" data-view="orders" onclick="navigateTo('orders')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          <span>All-Channel Orders</span>
+        </div>
+        <div class="nav-item" data-view="pnl-calculator" onclick="navigateTo('pnl-calculator')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
+          <span>Order P&L Engine</span>
+        </div>
+
+        <div class="nav-section-title">Supply Chain</div>
+        <div class="nav-item" data-view="suppliers" onclick="navigateTo('suppliers')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          <span>Supplier Ledger</span>
+        </div>
+        <div class="nav-item" data-view="inventory" onclick="navigateTo('inventory')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+          <span>Inventory & SKUs</span>
+        </div>
+
+        <div class="nav-section-title">Financials</div>
+        <div class="nav-item" data-view="payments" onclick="navigateTo('payments')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+          <span>Payments & COD</span>
+        </div>
+        <div class="nav-item" data-view="expenses" onclick="navigateTo('expenses')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path></svg>
+          <span>Expense Tracker</span>
+        </div>
+
+        <div class="nav-section-title">Analytics & Tools</div>
+        <div class="nav-item" data-view="reports" onclick="navigateTo('reports')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Sales & ROI Reports</span>
+        </div>
+        <div class="nav-item" data-view="import-sync" onclick="navigateTo('import-sync')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          <span>Excel Import & Sync</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="user-profile">
+          <img src="brand-logo-final.png" alt="GetSetMart Avatar" class="avatar-img" />
+          <div class="user-info">
+            <div class="user-name">Admin Control</div>
+            <div class="user-role">GetSetMart Brand</div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="handleAdminLogout()" title="Logout Admin" style="padding: 4px 8px; font-size: 0.7rem;">
+          🚪 Lock
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      
+      <!-- TOP HEADER NAVBAR -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="icon-btn mobile-toggle" id="mobile-menu-btn" style="display:none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <img src="brand-logo-final.png" alt="GetSetMart Logo" class="header-logo-badge" />
+          <div class="header-title-area">
+            <h2 id="current-view-title">Dashboard Overview</h2>
+            <p id="current-view-subtitle">Real-time business performance & profit analytics</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="search-box">
+            <input type="text" id="global-search-input" placeholder="Search Order ID, SKU, Customer..." />
+          </div>
+
+          <div class="sync-badge" title="Auto-Sync active with Website & Marketplaces">
+            <div class="pulse-dot"></div>
+            <span id="sync-status-text">Live Sync: Active</span>
+          </div>
+
+          <button class="btn btn-primary btn-sm" id="quick-add-order-btn" onclick="openModal('order-modal')">
+            + New Order
+          </button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTAINER FOR ALL MODULE VIEWS -->
+      <div class="page-container">
+
+        <!-- 1. DASHBOARD MODULE VIEW -->
+        <section class="view-section active" id="view-dashboard">
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Gross Revenue</span>
+                <div class="kpi-icon kpi-icon-rev">₹</div>
+              </div>
+              <div class="kpi-value" id="kpi-gross-revenue">₹0</div>
+              <div class="kpi-footer">
+                <span class="trend-badge positive">↑ 18.4%</span>
+                <span class="trend-text">vs last month</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Net Profit</span>
+                <div class="kpi-icon kpi-icon-profit">📈</div>
+              </div>
+              <div class="kpi-value" id="kpi-net-profit">₹0</div>
+              <div class="kpi-footer">
+                <span class="trend-badge positive" id="kpi-profit-margin">0% margin</span>
+                <span class="trend-text">after all costs</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">Total Orders</span>
+                <div class="kpi-icon kpi-icon-orders">🛒</div>
+              </div>
+              <div class="kpi-value" id="kpi-total-orders">0</div>
+              <div class="kpi-footer">
+                <span class="trend-text" id="kpi-orders-split">0 Pending, 0 Shipped</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-title">RTO Return Loss</span>
+                <div class="kpi-icon kpi-icon-rto">🔄</div>
+              </div>
+              <div class="kpi-value" id="kpi-rto-cost">₹0</div>
+              <div class="kpi-footer">
+                <span class="trend-badge negative" id="kpi-rto-rate">0% RTO Rate</span>
+                <span class="trend-text">returns impact</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card-box">
+              <div class="card-box-header">
+                <h3 class="card-box-title">Revenue vs Net Profit Breakdown</h3>
+              </div>
+              <div style="height: 280px; position: relative;">
+                <canvas id="revenueProfitChart"></canvas>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <div class="card-box-header">
+                <h3 class="card-box-title">Channel Share & Profit</h3>
+              </div>
+              <div style="height: 280px; position: relative;">
+                <canvas id="channelShareChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="card-box">
+              <div class="card-box-header">
+                <h3 class="card-box-title">Low Stock Alerts</h3>
+                <button class="btn btn-secondary btn-sm" onclick="navigateTo('inventory')">View All</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table" id="dashboard-low-stock-table">
+                  <thead>
+                    <tr>
+                      <th>SKU</th>
+                      <th>Product Name</th>
+                      <th>Stock</th>
+                      <th>Threshold</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <div class="card-box-header">
+                <h3 class="card-box-title">Recent High-Profit Orders</h3>
+                <button class="btn btn-secondary btn-sm" onclick="navigateTo('orders')">View Orders</button>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table" id="dashboard-recent-orders-table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Channel</th>
+                      <th>Price</th>
+                      <th>Net Profit</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. ALL-CHANNEL ORDERS MODULE VIEW -->
+        <section class="view-section" id="view-orders">
+          <div class="filter-bar">
+            <div class="tab-group" id="order-status-tabs">
+              <button class="tab-btn active" data-status="ALL">All (<span id="count-all">0</span>)</button>
+              <button class="tab-btn" data-status="PENDING">Pending (<span id="count-pending">0</span>)</button>
+              <button class="tab-btn" data-status="SHIPPED">Shipped (<span id="count-shipped">0</span>)</button>
+              <button class="tab-btn" data-status="DELIVERED">Delivered (<span id="count-delivered">0</span>)</button>
+              <button class="tab-btn" data-status="RETURNED">Returned / RTO (<span id="count-returned">0</span>)</button>
+              <button class="tab-btn" data-status="CANCELLED">Cancelled (<span id="count-cancelled">0</span>)</button>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+              <select class="form-control" id="order-channel-filter" style="width: auto;">
+                <option value="ALL">All Channels</option>
+                <option value="GetSetMart Store">GetSetMart Store</option>
+                <option value="Amazon">Amazon</option>
+                <option value="Flipkart">Flipkart</option>
+                <option value="Meesho">Meesho</option>
+              </select>
+              <button class="btn btn-primary" id="add-order-btn" onclick="openModal('order-modal')">
+                + Add Order
+              </button>
+            </div>
+          </div>
+
+          <div class="card-box">
+            <div class="table-responsive">
+              <table class="data-table" id="orders-main-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Channel</th>
+                    <th>Customer / City</th>
+                    <th>Items</th>
+                    <th>Selling Price</th>
+                    <th>Cost Breakdown</th>
+                    <th>Net Profit / Loss</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. ORDER P&L ENGINE MODULE VIEW -->
+        <section class="view-section" id="view-pnl-calculator">
+          <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="card-box">
+              <div class="card-box-header">
+                <h3 class="card-box-title">Order P&L Simulator</h3>
+              </div>
+              <form id="pnl-sim-form">
+                <div class="form-group">
+                  <label>Channel Preset</label>
+                  <select class="form-control" id="sim-channel">
+                    <option value="Website">GetSetMart Store (2% Payment Gateway Fee)</option>
+                    <option value="Amazon">Amazon (15% Commission + FBA Fee)</option>
+                    <option value="Flipkart">Flipkart (12% Commission + Shipping)</option>
+                    <option value="Meesho">Meesho (5% Fee + Standard Freight)</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Selling Price (₹)</label>
+                    <input type="number" class="form-control" id="sim-price" value="1499" />
+                  </div>
+                  <div class="form-group">
+                    <label>Product Cost (₹)</label>
+                    <input type="number" class="form-control" id="sim-cost" value="450" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Shipping Cost (₹)</label>
+                    <input type="number" class="form-control" id="sim-shipping" value="80" />
+                  </div>
+                  <div class="form-group">
+                    <label>Ads Cost (₹)</label>
+                    <input type="number" class="form-control" id="sim-ads" value="120" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Marketplace Fee (₹)</label>
+                    <input type="number" class="form-control" id="sim-fee" value="30" />
+                  </div>
+                  <div class="form-group">
+                    <label>Is Return / RTO?</label>
+                    <select class="form-control" id="sim-is-rto">
+                      <option value="NO">No (Normal Delivery)</option>
+                      <option value="YES">Yes (RTO Freight Penalty ₹150)</option>
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="card-box">
+              <div class="card-box-header">
+                <h3 class="card-box-title">Margin Breakdown</h3>
+              </div>
+              <div class="math-box">
+                <div class="math-row">
+                  <span>Selling Price (Gross):</span>
+                  <span id="calc-selling">+₹1,499</span>
+                </div>
+                <div class="math-row" style="color:var(--accent-danger)">
+                  <span>- Product Cost:</span>
+                  <span id="calc-cost">-₹450</span>
+                </div>
+                <div class="math-row" style="color:var(--accent-danger)">
+                  <span>- Shipping Fee:</span>
+                  <span id="calc-shipping">-₹80</span>
+                </div>
+                <div class="math-row" style="color:var(--accent-danger)">
+                  <span>- Ads Cost:</span>
+                  <span id="calc-ads">-₹120</span>
+                </div>
+                <div class="math-row" style="color:var(--accent-danger)">
+                  <span>- Marketplace Commission:</span>
+                  <span id="calc-fee">-₹30</span>
+                </div>
+                <div class="math-row" style="color:var(--accent-danger)" id="calc-rto-row">
+                  <span>- RTO Return Penalty:</span>
+                  <span id="calc-rto">₹0</span>
+                </div>
+                <div class="math-row total" id="calc-total-row">
+                  <span>Net Estimated Profit:</span>
+                  <span id="calc-net-profit" style="color:var(--accent-success)">+₹819 (54.6% ROI)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. SUPPLIER LEDGER MODULE VIEW -->
+        <section class="view-section" id="view-suppliers">
+          <div class="filter-bar">
+            <h3>Supplier Purchase Ledger</h3>
+            <button class="btn btn-primary" onclick="openModal('supplier-modal')">
+              + Add Supplier
+            </button>
+          </div>
+
+          <div class="card-box">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Supplier ID</th>
+                    <th>Supplier Name</th>
+                    <th>Contact Details</th>
+                    <th>Total Material Purchased</th>
+                    <th>Amount Paid</th>
+                    <th>Remaining Balance</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="supplier-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. INVENTORY & SKUs MODULE VIEW -->
+        <section class="view-section" id="view-inventory">
+          <div class="filter-bar">
+            <h3>SKU Stock & Threshold Alerts</h3>
+            <button class="btn btn-primary" onclick="openModal('sku-modal')">
+              + Add New SKU
+            </button>
+          </div>
+
+          <div class="card-box">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>SKU ID</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Cost Price (CP)</th>
+                    <th>Selling Price (SP)</th>
+                    <th>In Stock</th>
+                    <th>Alert Threshold</th>
+                    <th>Stock Health</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="inventory-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. PAYMENTS & SETTLEMENTS MODULE VIEW -->
+        <section class="view-section" id="view-payments">
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-title">Settled Marketplace Cash</div>
+              <div class="kpi-value" id="pay-settled">₹0</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-title">Pending Receivables</div>
+              <div class="kpi-value" id="pay-pending">₹0</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-title">COD Cash in Transit</div>
+              <div class="kpi-value" id="pay-cod">₹0</div>
+            </div>
+          </div>
+
+          <div class="card-box">
+            <div class="card-box-header">
+              <h3 class="card-box-title">Marketplace & COD Settlements</h3>
+              <button class="btn btn-primary btn-sm" onclick="showToast('New payout settlement batch recorded!', 'success')">+ Record Payout</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Settlement ID</th>
+                    <th>Channel</th>
+                    <th>Gross Sales</th>
+                    <th>Deductions (Fees/RTO)</th>
+                    <th>Net Payout</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="payments-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. EXPENSE TRACKER MODULE VIEW -->
+        <section class="view-section" id="view-expenses">
+          <div class="filter-bar">
+            <h3>Operational Expenses Tracker</h3>
+            <button class="btn btn-primary" onclick="openModal('expense-modal')">
+              + Log Expense
+            </button>
+          </div>
+
+          <div class="card-box">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Amount (₹)</th>
+                    <th>Payment Method</th>
+                  </tr>
+                </thead>
+                <tbody id="expense-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. SALES REPORTS & ANALYTICS MODULE VIEW -->
+        <section class="view-section" id="view-reports">
+          <div class="filter-bar">
+            <h3>Channel & Product Profitability Reports</h3>
+            <button class="btn btn-secondary" onclick="exportERPReportToExcel()">
+              Export Excel P&L Report
+            </button>
+          </div>
+
+          <div class="card-box">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Channel</th>
+                    <th>Total Orders</th>
+                    <th>Total Revenue</th>
+                    <th>Total Costs (Cost+Ship+Fees+Ads)</th>
+                    <th>Net Channel Profit</th>
+                    <th>Net ROI Margin</th>
+                  </tr>
+                </thead>
+                <tbody id="channel-reports-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 9. EXCEL IMPORT & SYNC MODULE VIEW -->
+        <section class="view-section" id="view-import-sync">
+          <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="card-box">
+              <div class="card-box-header">
+                <h3 class="card-box-title">Excel / CSV Import Zone</h3>
+              </div>
+              <div class="dropzone" id="excel-dropzone">
+                <h4>Drag & Drop E-Commerce Excel / CSV file here</h4>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-top:8px;">
+                  Supports <code>.xlsx</code>, <code>.xls</code>, <code>.csv</code> (e.g. E-commerce Data.xlsx)
+                </p>
+                <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="display:none;" />
+                <button class="btn btn-secondary btn-sm" style="margin-top:16px;" onclick="document.getElementById('excel-file-input').click()">Browse File</button>
+              </div>
+            </div>
+
+            <div class="card-box">
+              <div class="card-box-header">
+                <h3 class="card-box-title">Automatic API Sync Simulation</h3>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:16px;">
+                <p style="font-size:0.9rem; color:var(--text-secondary);">
+                  Schedule automated background sync with GetSetMart store, Amazon SP-API, Flipkart Seller Hub, and Meesho Orders API.
+                </p>
+                <button class="btn btn-success" onclick="triggerLiveSyncNow()">
+                  Run Live Sync Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- EXACT MATCH USER SCREENSHOT LOGIN MODAL OVERLAY -->
+  <div class="img-login-overlay" id="login-modal-overlay" style="display:none;">
+    <div class="img-login-card">
+      
+      <div class="img-login-header">
+        <h2 class="img-login-title">WELCOME BACK</h2>
+        <p class="img-login-subtitle">Sign in to access your dashboard</p>
+      </div>
+
+      <form id="login-form" onsubmit="event.preventDefault(); handleAdminLogin();">
+        
+        <div class="img-form-group">
+          <label class="img-form-label">Email</label>
+          <div class="img-input-wrapper">
+            <svg class="img-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <input type="email" class="img-input-field" id="login-email" value="admin@getsetmart.com" placeholder="admin@getsetmart.com" required />
+          </div>
+        </div>
+
+        <div class="img-form-group" style="margin-top: 18px;">
+          <label class="img-form-label">Password</label>
+          <div class="img-input-wrapper">
+            <svg class="img-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <input type="password" class="img-input-field" id="login-password" value="getsetmart2026" placeholder="••••••••" required />
+            <button type="button" id="pwd-toggle-btn" class="img-eye-btn" onclick="togglePasswordVisibility()" style="font-size: 1.15rem; outline:none;">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <a href="#" class="img-forgot-link" onclick="showToast('Default password is set to getsetmart2026', 'info'); return false;">
+          Forgot Password?
+        </a>
+
+        <button type="submit" class="img-signin-btn">
+          <span>SIGN IN</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+
+        <div class="img-footer-text">
+          <span>Don't have an account?</span>
+          <a href="#" onclick="showToast('Contact admin support at support@getsetmart.com', 'info'); return false;" class="img-support-link">Contact Support</a>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- MODAL 1: CREATE NEW ORDER -->
+  <div class="modal-overlay" id="order-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Multi-Channel Order</h3>
+        <button class="modal-close" onclick="closeModal('order-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="order-form" onsubmit="event.preventDefault(); handleSaveOrder();">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Sales Channel</label>
+              <select class="form-control" id="form-order-channel" required>
+                <option value="GetSetMart Store">GetSetMart Store</option>
+                <option value="Amazon">Amazon</option>
+                <option value="Flipkart">Flipkart</option>
+                <option value="Meesho">Meesho</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Customer Name & City</label>
+              <input type="text" class="form-control" id="form-customer-name" placeholder="e.g. Rahul Sharma (Delhi)" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>SKU Item</label>
+              <select class="form-control" id="form-order-sku" required></select>
+            </div>
+            <div class="form-group">
+              <label>Order Status</label>
+              <select class="form-control" id="form-order-status">
+                <option value="PENDING">Pending</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="RETURNED">Returned / RTO</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Selling Price (₹)</label>
+              <input type="number" class="form-control" id="form-selling-price" value="1299" required />
+            </div>
+            <div class="form-group">
+              <label>Product Cost (CP ₹)</label>
+              <input type="number" class="form-control" id="form-product-cost" value="400" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Shipping Cost (₹)</label>
+              <input type="number" class="form-control" id="form-shipping-cost" value="70" required />
+            </div>
+            <div class="form-group">
+              <label>Marketplace / Ad Fee (₹)</label>
+              <input type="number" class="form-control" id="form-other-fee" value="50" required />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('order-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="handleSaveOrder()">Save & Calculate Profit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADD NEW SUPPLIER -->
+  <div class="modal-overlay" id="supplier-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Supplier & Purchase Entry</h3>
+        <button class="modal-close" onclick="closeModal('supplier-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="supplier-form" onsubmit="event.preventDefault(); handleSaveSupplier();">
+          <div class="form-group">
+            <label>Supplier Company Name</label>
+            <input type="text" class="form-control" id="form-sup-name" placeholder="e.g. Ludhiana Hosiery Works" required />
+          </div>
+          <div class="form-group">
+            <label>Contact Person & Phone</label>
+            <input type="text" class="form-control" id="form-sup-contact" placeholder="e.g. Ramesh Kumar (+91 98765 00000)" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Total Invoice Purchased (₹)</label>
+              <input type="number" class="form-control" id="form-sup-total" value="150000" required />
+            </div>
+            <div class="form-group">
+              <label>Amount Paid (Advance ₹)</label>
+              <input type="number" class="form-control" id="form-sup-paid" value="50000" required />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('supplier-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="handleSaveSupplier()">Create Supplier Entry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: ADD NEW SKU INVENTORY ITEM -->
+  <div class="modal-overlay" id="sku-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Product / SKU Item</h3>
+        <button class="modal-close" onclick="closeModal('sku-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="sku-form" onsubmit="event.preventDefault(); handleSaveSKU();">
+          <div class="form-row">
+            <div class="form-group">
+              <label>SKU Code</label>
+              <input type="text" class="form-control" id="form-sku-code" placeholder="e.g. GSM-HD-007" required />
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select class="form-control" id="form-sku-category">
+                <option value="Streetwear">Streetwear</option>
+                <option value="Ethnic Wear">Ethnic Wear</option>
+                <option value="Jewelry">Jewelry</option>
+                <option value="Lifestyle">Lifestyle</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" class="form-control" id="form-sku-name" placeholder="e.g. Oversized Graphic Sweatshirt" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Cost Price (CP ₹)</label>
+              <input type="number" class="form-control" id="form-sku-cost" value="450" required />
+            </div>
+            <div class="form-group">
+              <label>Selling Price (SP ₹)</label>
+              <input type="number" class="form-control" id="form-sku-price" value="1499" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Initial Stock Quantity</label>
+              <input type="number" class="form-control" id="form-sku-stock" value="100" required />
+            </div>
+            <div class="form-group">
+              <label>Low-Stock Alert Level</label>
+              <input type="number" class="form-control" id="form-sku-min" value="20" required />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('sku-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="handleSaveSKU()">Add SKU to Inventory</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: LOG OPERATIONAL EXPENSE -->
+  <div class="modal-overlay" id="expense-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Log Operational Expense</h3>
+        <button class="modal-close" onclick="closeModal('expense-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="expense-form" onsubmit="event.preventDefault(); handleSaveExpense();">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Expense Category</label>
+              <select class="form-control" id="form-exp-cat" required>
+                <option value="Ads & Marketing">Ads & Marketing</option>
+                <option value="Packing Materials">Packing Materials</option>
+                <option value="Shipping & Logistics">Shipping & Logistics</option>
+                <option value="Salaries">Salaries</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amount (₹)</label>
+              <input type="number" class="form-control" id="form-exp-amount" placeholder="e.g. 5000" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description / Vendor</label>
+            <input type="text" class="form-control" id="form-exp-desc" placeholder="e.g. Meta Ads Invoice #991" required />
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select class="form-control" id="form-exp-method">
+              <option value="UPI">UPI / GPay</option>
+              <option value="Bank Transfer">Bank Transfer (NEFT/RTGS)</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('expense-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="handleSaveExpense()">Save Expense</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS CONTAINER -->
+  <div id="toast-container"></div>
+
+  <!-- DEFERRED CDN SCRIPTS & APP LOGIC -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>
