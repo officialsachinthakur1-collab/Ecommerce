@@ -94,8 +94,8 @@
 
       // 4. Update Header Titles
       var titles = {
-        'dashboard': ['Business & Profit Overview', 'Real-time sales, net margin & channel metrics'],
-        'catalog': ['Catalog & Product Upload', 'Manage products, prices, stock & site items'],
+        'dashboard': ['Dashboard Analytics', 'Real-time sales, net margin & channel metrics'],
+        'catalog': ['Site Catalog & Products', 'Manage products, prices, stock & site items'],
         'hisab-kitab': ['Hisab-Kitab & Suppliers', 'Kharcha tracker, supplier purchases & balances'],
         'channel-orders': ['Channel Orders & P&L Engine', 'Track Meesho, Flipkart, Amazon & Store orders']
       };
@@ -141,81 +141,107 @@
 
   <div id="app-container">
 
-    <!-- SIDEBAR NAVIGATION -->
+    <!-- ULTRA-FUTURISTIC HIGH-TECH SIDEBAR -->
     <aside class="sidebar" id="sidebar">
+      
+      <!-- BRAND LOGO HEADER -->
       <div class="brand-header">
-        <img src="/admin/brand-logo-final.png" alt="GetSetMart Logo" class="brand-logo-img" />
-        <div>
-          <div class="brand-title">GET SET MART</div>
-          <div class="brand-subtitle">Business Control Suite</div>
+        <div class="brand-logo-glow-box">
+          <img src="/admin/brand-logo-final.png" alt="GetSetMart Logo" class="brand-logo-img" />
+        </div>
+        <div class="brand-text-wrapper">
+          <div class="brand-title-row">
+            <span class="brand-title">GET SET MART</span>
+            <span class="pro-tag">PRO 2.0</span>
+          </div>
+          <div class="brand-subtitle">E-Commerce ERP Engine</div>
         </div>
       </div>
 
+      <!-- NAVIGATION LINKS -->
       <nav class="sidebar-nav">
-        <div class="nav-section-title">Main Control</div>
+        <div class="nav-section-title">Overview</div>
         <div class="nav-item active" data-view="dashboard" onclick="navigateTo('dashboard')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          <span>1. Dashboard Overview</span>
+          <div class="nav-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+          </div>
+          <span>1. Dashboard</span>
         </div>
 
-        <div class="nav-section-title">Product Catalog</div>
+        <div class="nav-section-title">Catalog & Store</div>
         <div class="nav-item" data-view="catalog" onclick="navigateTo('catalog')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-          <span>2. Catalog & Products</span>
+          <div class="nav-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          </div>
+          <span>2. Catalog Upload</span>
         </div>
 
         <div class="nav-section-title">Accounts & Ledger</div>
         <div class="nav-item" data-view="hisab-kitab" onclick="navigateTo('hisab-kitab')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path></svg>
-          <span>3. Hisab-Kitab & Suppliers</span>
+          <div class="nav-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path><line x1="8" y1="6" x2="16" y2="6"></line><line x1="8" y1="11" x2="16" y2="11"></line><line x1="8" y1="16" x2="12" y2="16"></line></svg>
+          </div>
+          <span>3. Hisab-Kitab</span>
         </div>
 
         <div class="nav-section-title">Multi-Channel Sales</div>
         <div class="nav-item" data-view="channel-orders" onclick="navigateTo('channel-orders')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-          <span>4. Channel Orders & P&L</span>
+          <div class="nav-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          </div>
+          <span>4. Channel Orders</span>
         </div>
       </nav>
 
-      <div class="sidebar-footer" style="display:flex; justify-content:space-between; align-items:center;">
-        <div class="user-profile">
-          <img src="/admin/brand-logo-final.png" alt="GetSetMart Avatar" class="avatar-img" />
-          <div class="user-info">
-            <div class="user-name">Admin Control</div>
-            <div class="user-role">GetSetMart Owner</div>
+      <!-- SIDEBAR FOOTER CARD -->
+      <div class="sidebar-footer">
+        <div class="profile-card">
+          <div class="user-avatar-glow">
+            <img src="/admin/brand-logo-final.png" alt="Admin Avatar" class="avatar-img" />
           </div>
+          <div class="user-details">
+            <div class="user-name">Sachin Thakur</div>
+            <div class="user-role">Owner & Admin</div>
+          </div>
+          <button class="lock-btn" onclick="handleAdminLogout()" title="Lock Admin Portal">
+            🚪
+          </button>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="handleAdminLogout()" title="Logout Admin" style="padding: 4px 8px; font-size: 0.7rem;">
-          🚪 Lock
-        </button>
       </div>
+
     </aside>
 
     <!-- MAIN CONTENT AREA -->
     <main class="main-content">
       
-      <!-- TOP HEADER NAVBAR -->
+      <!-- ULTRA-FUTURISTIC FLOATING HEADER -->
       <header class="top-header">
         <div class="header-left">
-          <img src="/admin/brand-logo-final.png" alt="GetSetMart Logo" class="header-logo-badge" />
+          <div class="pulse-indicator"></div>
           <div class="header-title-area">
-            <h2 id="current-view-title">Business & Profit Overview</h2>
+            <h2 id="current-view-title">Dashboard Analytics</h2>
             <p id="current-view-subtitle">Real-time sales, net margin & channel metrics</p>
           </div>
         </div>
 
         <div class="header-right">
-          <div class="search-box">
-            <input type="text" id="global-search-input" placeholder="Search Order ID, Product, Supplier..." />
+          <!-- SEARCH BAR WITH KEYBOARD SHORTCUT -->
+          <div class="futuristic-search-box">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="global-search-input" placeholder="Search orders, SKU, supplier..." />
+            <kbd class="search-kbd">Ctrl K</kbd>
           </div>
 
-          <div class="sync-badge" title="Auto-Sync Active with Site & Marketplaces">
-            <div class="pulse-dot"></div>
-            <span id="sync-status-text">Live Sync: Active</span>
+          <!-- RADAR LIVE SYNC BADGE -->
+          <div class="radar-sync-pill" title="Live Auto-Sync Active">
+            <div class="radar-circle"></div>
+            <span>Sync: Live</span>
           </div>
 
-          <button class="btn btn-primary btn-sm" onclick="openModal('order-modal')">
-            + New Order
+          <!-- ELECTRIC CRIMSON CTA BUTTON -->
+          <button class="glow-cta-btn" onclick="openModal('order-modal')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>+ New Order</span>
           </button>
         </div>
       </header>
@@ -344,7 +370,7 @@
               <h3>Website Catalog & Inventory</h3>
               <p style="font-size:0.8rem; color:var(--text-muted);">Manage products, prices, cost prices, and stock for getsetmart.com</p>
             </div>
-            <button class="btn btn-primary" onclick="openModal('catalog-modal')">
+            <button class="glow-cta-btn" onclick="openModal('catalog-modal')">
               + Upload New Product
             </button>
           </div>
@@ -382,7 +408,7 @@
               <button class="btn btn-secondary" onclick="openModal('expense-modal')">
                 + Log Expense (Kharcha)
               </button>
-              <button class="btn btn-primary" onclick="openModal('supplier-modal')">
+              <button class="glow-cta-btn" onclick="openModal('supplier-modal')">
                 + Add Supplier Entry
               </button>
             </div>
@@ -471,7 +497,7 @@
               <button class="btn btn-secondary" onclick="exportERPReportToExcel()">
                 Export Excel P&L Report
               </button>
-              <button class="btn btn-primary" onclick="openModal('order-modal')">
+              <button class="glow-cta-btn" onclick="openModal('order-modal')">
                 + Add New Order
               </button>
             </div>
