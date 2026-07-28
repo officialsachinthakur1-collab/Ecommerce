@@ -6,20 +6,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const cropperBtn = document.getElementById('cropper-btn');
   const syncOrdersBtn = document.getElementById('sync-orders-btn');
 
+  let activeUrl = '';
+
   // Detect current active tab
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (!tabs || !tabs[0]) return;
-    const currentUrl = tabs[0].url || '';
+    activeUrl = tabs[0].url || '';
 
-    if (currentUrl.includes('meesho.com')) {
+    if (activeUrl.includes('meesho.com')) {
       siteStatusEl.textContent = 'Meesho Supplier Panel Detected';
       siteBadgeEl.textContent = 'MEESHO LIVE';
       siteBadgeEl.style.color = '#f43397';
-    } else if (currentUrl.includes('flipkart.com')) {
+    } else if (activeUrl.includes('flipkart.com')) {
       siteStatusEl.textContent = 'Flipkart Seller Hub Detected';
       siteBadgeEl.textContent = 'FLIPKART LIVE';
       siteBadgeEl.style.color = '#2874f0';
-    } else if (currentUrl.includes('amazon.in')) {
+    } else if (activeUrl.includes('amazon.in')) {
       siteStatusEl.textContent = 'Amazon Seller Central Detected';
       siteBadgeEl.textContent = 'AMAZON LIVE';
       siteBadgeEl.style.color = '#ff9900';
@@ -39,9 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
           template: selectedTemplate
         }, (response) => {
           if (chrome.runtime.lastError) {
-            alert("Please open Meesho, Flipkart, or Amazon seller panel product listing page first!");
+            alert("⚠️ Please open Meesho (supplier.meesho.com), Flipkart, or Amazon Product Listing page first!");
           } else if (response && response.success) {
-            alert("Success! Form autofilled with GetSetMart template.");
+            alert(`✅ Success! Autofilled ${response.count || 'multiple'} listing fields using GetSetMart template.`);
           }
         });
       }
@@ -61,9 +63,15 @@ document.addEventListener('DOMContentLoaded', () => {
           action: 'SYNC_MARKETPLACE_ORDERS'
         }, (response) => {
           if (chrome.runtime.lastError) {
-            alert("Please open your Marketplace Orders page first to sync!");
+            alert("⚠️ Please open your Meesho Supplier Orders Page (supplier.meesho.com/panel/v2/new/orders) or Flipkart Seller Orders Page first!");
+          } else if (response && response.orders && response.orders.length > 0) {
+            // Save synced orders to storage
+            chrome.storage.local.set({ gsm_synced_orders: response.orders }, () => {
+              alert(`🎉 Success! Synced ${response.orders.length} real orders to GetSetMart Admin Panel! Opening Admin Panel...`);
+              chrome.tabs.create({ url: 'https://getsetmart.com/admin/orders' });
+            });
           } else {
-            alert("Marketplace orders synced cleanly to GetSetMart Admin Panel!");
+            alert("⚠️ Opened page detected, but no visible orders table was found on screen. Please make sure you are on the Orders/Dispatches tab!");
           }
         });
       }

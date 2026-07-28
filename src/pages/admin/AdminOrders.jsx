@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Download, Trash2, ShoppingBag } from 'lucide-react';
+import { Plus, Download, Trash2, ShoppingBag, RefreshCw } from 'lucide-react';
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState(() => {
@@ -25,6 +25,22 @@ export default function AdminOrders() {
   useEffect(() => {
     localStorage.setItem('gsm_orders', JSON.stringify(orders));
   }, [orders]);
+
+  // Sync with Chrome Extension synced storage
+  useEffect(() => {
+    if (window.chrome && window.chrome.storage && window.chrome.storage.local) {
+      window.chrome.storage.local.get(['gsm_synced_orders'], (result) => {
+        if (result && result.gsm_synced_orders && result.gsm_synced_orders.length > 0) {
+          setOrders(prev => {
+            const combined = [...result.gsm_synced_orders, ...prev];
+            const uniqueMap = new Map();
+            combined.forEach(item => uniqueMap.set(item.id, item));
+            return Array.from(uniqueMap.values());
+          });
+        }
+      });
+    }
+  }, []);
 
   const calculatePnL = (ord) => {
     if (ord.status === 'RETURNED') {
@@ -80,6 +96,9 @@ export default function AdminOrders() {
     if (window.confirm("Are you sure you want to clear all order records?")) {
       setOrders([]);
       localStorage.removeItem('gsm_orders');
+      if (window.chrome && window.chrome.storage && window.chrome.storage.local) {
+        window.chrome.storage.local.remove(['gsm_synced_orders']);
+      }
     }
   };
 
@@ -240,7 +259,7 @@ export default function AdminOrders() {
           <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
             <ShoppingBag size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
             <h3 style={{ color: 'white', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No Real Orders Added Yet</h3>
-            <p style={{ fontSize: '0.85rem', marginBottom: '1.5rem' }}>Click "+ Add Real Order" above to record your first sale from Meesho, Flipkart, Amazon or Website.</p>
+            <p style={{ fontSize: '0.85rem', marginBottom: '1.5rem' }}>Click "+ Add Real Order" above, or open your Meesho / Flipkart orders panel and use the GetSetMart Chrome Extension to Sync Orders!</p>
             <button 
               onClick={() => setShowModal(true)}
               style={{ padding: '0.65rem 1.25rem', background: 'var(--primary-red)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
