@@ -1,5 +1,38 @@
 // GetSetMart Password-Manager Style DOM Form Auto-Fill & Auto-Capture Engine for Meesho, Flipkart & Amazon
 
+// Safe Chrome Storage wrappers to prevent content script context errors
+function safeStorageGet(keys, callback) {
+  try {
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.get(keys, (res) => {
+        if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.lastError) {
+          callback({});
+        } else {
+          callback(res || {});
+        }
+      });
+    } else {
+      callback({});
+    }
+  } catch (e) {
+    callback({});
+  }
+}
+
+function safeStorageSet(data, callback) {
+  try {
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set(data, () => {
+        if (callback) callback();
+      });
+    } else if (callback) {
+      callback();
+    }
+  } catch (e) {
+    if (callback) callback();
+  }
+}
+
 // Gold-standard React 16+ / Angular native setter bypass used by Password Managers (Bitwarden / 1Password)
 function fillNativeReactInput(el, val) {
   if (!el || val === undefined || val === null || val === '') return false;
@@ -91,7 +124,7 @@ function injectPasswordManagerStyleWidget() {
     box-shadow: 0 12px 36px rgba(0,0,0,0.85);
     color: #ffffff;
     font-family: system-ui, -apple-system, sans-serif;
-    width: 290px;
+    width: 300px;
     box-sizing: border-box;
   `;
 
@@ -103,16 +136,18 @@ function injectPasswordManagerStyleWidget() {
       <div style="font-size: 10px; background: #064e3b; color: #34d399; padding: 2px 6px; border-radius: 4px; font-weight: 700;">DOM READY</div>
     </div>
 
-    <div style="font-size: 11px; color: #9ca3af; margin-bottom: 12px; line-height: 1.4;">
+    <div style="font-size: 11px; color: #9ca3af; margin-bottom: 10px; line-height: 1.4;">
       Password-manager engine ready. Select template to auto-fill React DOM fields:
     </div>
 
-    <select id="gsm-dom-template-select" style="width: 100%; background: #18181b; color: white; border: 1px solid #3f3f46; padding: 8px 10px; border-radius: 6px; font-size: 12px; margin-bottom: 10px; cursor: pointer; outline: none;">
+    <select id="gsm-dom-template-select" style="width: 100%; background: #18181b; color: white; border: 1px solid #3f3f46; padding: 8px 10px; border-radius: 6px; font-size: 12px; margin-bottom: 8px; cursor: pointer; outline: none;">
       <option value="">-- Loading Saved Templates --</option>
     </select>
 
+    <input type="text" id="gsm-dom-tpl-name" placeholder="Enter Template Name to Save..." style="width: 100%; background: #18181b; color: white; border: 1px solid #3f3f46; padding: 7px 10px; border-radius: 6px; font-size: 11px; margin-bottom: 10px; box-sizing: border-box; outline: none;" />
+
     <div style="display: flex; gap: 8px;">
-      <button id="gsm-dom-autofill-btn" style="flex: 1; background: #dc2626; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">⚡ Auto-Fill Form</button>
+      <button id="gsm-dom-autofill-btn" style="flex: 1; background: #dc2626; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">⚡ Auto-Fill</button>
       <button id="gsm-dom-save-btn" style="flex: 1; background: #2563eb; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">💾 Save Form</button>
     </div>
   `;
@@ -124,7 +159,7 @@ function injectPasswordManagerStyleWidget() {
     const sel = document.getElementById('gsm-dom-template-select');
     if (!sel) return;
 
-    chrome.storage.local.get(['gsm_listing_templates'], (result) => {
+    safeStorageGet(['gsm_listing_templates'], (result) => {
       const templates = result.gsm_listing_templates || {};
       sel.innerHTML = '';
       const keys = Object.keys(templates);
@@ -148,7 +183,7 @@ function injectPasswordManagerStyleWidget() {
 
   refreshDropdown();
 
-  // Save Current DOM Form as Template (Password Manager Prompt Style)
+  // Save Current DOM Form as Template (Inline Safe Input)
   document.getElementById('gsm-dom-save-btn').addEventListener('click', () => {
     const scraped = scrapeDOMFormFields();
     let count = 0;
@@ -159,14 +194,15 @@ function injectPasswordManagerStyleWidget() {
       return;
     }
 
-    const tplName = prompt(`🔐 Captured ${count} DOM fields from screen! Enter Template Name:`, scraped.title ? scraped.title.substring(0, 25) : 'My Meesho Product');
-    if (!tplName) return;
+    const nameInput = document.getElementById('gsm-dom-tpl-name');
+    const customName = nameInput ? nameInput.value.trim() : '';
+    const finalTplName = customName || (scraped.title ? scraped.title.substring(0, 25) : `Meesho Listing ${new Date().toLocaleTimeString()}`);
 
     const tplId = `tpl_${Date.now()}`;
-    const newTpl = {
+    const newTplData = {
       id: tplId,
-      name: tplName,
-      title: scraped.title || tplName,
+      name: finalTplName,
+      title: scraped.title || finalTplName,
       hsn: scraped.hsn || '61091000',
       gst: scraped.gst || '5',
       fabric: scraped.fabric || 'Cotton',
@@ -176,12 +212,13 @@ function injectPasswordManagerStyleWidget() {
       description: scraped.description || ''
     };
 
-    chrome.storage.local.get(['gsm_listing_templates'], (res) => {
+    safeStorageGet(['gsm_listing_templates'], (res) => {
       const current = res.gsm_listing_templates || {};
-      current[tplId] = newTpl;
-      chrome.storage.local.set({ gsm_listing_templates: current, gsm_templates_initialized: true }, () => {
+      current[tplId] = newTplData;
+      safeStorageSet({ gsm_listing_templates: current, gsm_templates_initialized: true }, () => {
         refreshDropdown();
-        alert(`🎉 Success! Saved template "${tplName}". You can now 1-Click Auto-Fill any time!`);
+        if (nameInput) nameInput.value = '';
+        alert(`🎉 Success! Saved template "${finalTplName}" (${count} fields). Next time click ⚡ Auto-Fill!`);
       });
     });
   });
@@ -195,7 +232,7 @@ function injectPasswordManagerStyleWidget() {
       return;
     }
 
-    chrome.storage.local.get(['gsm_listing_templates'], (res) => {
+    safeStorageGet(['gsm_listing_templates'], (res) => {
       const templates = res.gsm_listing_templates || {};
       const tpl = templates[selectedId];
       if (!tpl) return alert("⚠️ Selected template not found!");
