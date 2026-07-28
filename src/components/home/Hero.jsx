@@ -87,12 +87,6 @@ const Hero = () => {
         }
     }, [heroSlides.length, currentIndex]);
 
-    if (loading && heroSlides.length <= 1) {
-        return <div style={{ height: '80vh', background: '#050505' }} />;
-    }
-
-    const activeSlide = heroSlides[currentIndex];
-
     // Preload images to prevent flickering
     useEffect(() => {
         heroSlides.forEach(slide => {
@@ -102,6 +96,12 @@ const Hero = () => {
             }
         });
     }, [heroSlides]);
+
+    if (loading && heroSlides.length <= 1) {
+        return <div style={{ height: '80vh', background: '#050505' }} />;
+    }
+
+    const activeSlide = heroSlides[currentIndex] || heroSlides[0];
 
     return (
         <section className={`hero-section ${activeSlide.isValentine ? 'valentine-theme' : ''}`}>
