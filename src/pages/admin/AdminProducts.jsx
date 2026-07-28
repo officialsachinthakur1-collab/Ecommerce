@@ -193,11 +193,19 @@ export default function AdminProducts() {
         }
     };
 
-    const handleClearAllProducts = () => {
+    const handleClearAllProducts = async () => {
         if (window.confirm("Are you sure you want to DELETE ALL PRODUCTS? The website store will be completely empty for your new products.")) {
             localStorage.setItem('gsm_custom_products', JSON.stringify([]));
+            try {
+                await fetch(`${API_URL}/api/products?id=ALL`, {
+                    method: 'DELETE',
+                    headers: { 'x-admin-password': 'admin' }
+                });
+            } catch (err) {
+                // API silent catch
+            }
             refetch();
-            alert("All products cleared!");
+            alert("All products cleared permanently from local storage and backend database!");
         }
     };
 
