@@ -1,4 +1,4 @@
-// GetSetMart Content Script for Meesho, Flipkart, and Amazon Seller Panel Automation
+// GetSetMart Chrome Extension - 1-Click Listing Autofill Engine for Meesho, Flipkart & Amazon
 
 const templates = {
   hoodie: {
@@ -58,49 +58,6 @@ function fillElement(el, val) {
   return true;
 }
 
-// Function to extract real orders on screen from Meesho, Flipkart, or Amazon
-function extractOrdersFromDOM() {
-  const extracted = [];
-  const currentUrl = window.location.href;
-  const isMeesho = currentUrl.includes('meesho.com');
-  const isFlipkart = currentUrl.includes('flipkart.com');
-  const isAmazon = currentUrl.includes('amazon.in');
-
-  const rows = document.querySelectorAll('tr, .order-card, [class*="orderCard"], [class*="OrderCard"], [class*="tableRow"]');
-
-  rows.forEach((row, i) => {
-    const text = row.innerText || '';
-    if (text.length < 15) return;
-
-    // Search for order IDs, prices, items in text content
-    const orderIdMatch = text.match(/(MSH|OD|GSM|ORD|[0-9]{8,15})[-A-Z0-9]+/i);
-    const priceMatch = text.match(/₹\s*([0-9,]+)/i) || text.match(/INR\s*([0-9,]+)/i) || text.match(/Rs\.?\s*([0-9,]+)/i);
-
-    if (orderIdMatch || priceMatch) {
-      const ordId = orderIdMatch ? orderIdMatch[0] : `ORD-${Date.now()}-${i}`;
-      const priceVal = priceMatch ? Number(priceMatch[1].replace(/,/g, '')) : 1299;
-      const channelName = isMeesho ? 'Meesho' : isFlipkart ? 'Flipkart' : isAmazon ? 'Amazon' : 'GetSetMart Store';
-
-      extracted.push({
-        id: ordId,
-        date: new Date().toISOString().split('T')[0],
-        channel: channelName,
-        customer: 'Verified Customer',
-        items: 'E-Commerce Product',
-        price: priceVal,
-        cost: Math.round(priceVal * 0.35),
-        shipping: 70,
-        fee: Math.round(priceVal * 0.08),
-        ads: 50,
-        rtoCost: 0,
-        status: 'DELIVERED'
-      });
-    }
-  });
-
-  return extracted;
-}
-
 // Listen for messages from extension popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'AUTOFILL_LISTING') {
@@ -134,9 +91,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
 
     sendResponse({ success: true, count });
-  } else if (request.action === 'SYNC_MARKETPLACE_ORDERS') {
-    const ordersFound = extractOrdersFromDOM();
-    sendResponse({ success: true, orders: ordersFound, count: ordersFound.length });
   }
   return true;
 });

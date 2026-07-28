@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>GetSetMart Seller Assistant</title>
+  <title>GetSetMart Listing Assistant</title>
   <style>
     body {
-      width: 340px;
+      width: 320px;
       margin: 0;
       padding: 16px;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -37,9 +37,9 @@
       font-size: 11px;
       color: #10b981;
       background: #064e3b;
-      padding: 4px 8px;
+      padding: 6px 10px;
       border-radius: 6px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -55,10 +55,10 @@
     select, button {
       width: 100%;
       box-sizing: border-box;
-      padding: 10px;
+      padding: 12px;
       border-radius: 8px;
       border: 1px solid #333;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 13px;
       cursor: pointer;
     }
@@ -71,19 +71,13 @@
       color: white;
       border: none;
       font-weight: 700;
+      font-size: 14px;
+      padding: 14px;
       transition: background 0.2s;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     }
     .btn-primary:hover {
       background-color: #dc2626;
-    }
-    .btn-secondary {
-      background-color: #1f2937;
-      color: white;
-      border: 1px solid #374151;
-      font-weight: 600;
-    }
-    .btn-secondary:hover {
-      background-color: #374151;
     }
     .footer {
       text-align: center;
@@ -100,12 +94,12 @@
 </head>
 <body>
   <div class="header">
-    <div class="logo-text">GETSETMART <span class="badge">ASSISTANT</span></div>
+    <div class="logo-text">GETSETMART <span class="badge">LISTING</span></div>
     <div style="font-size: 11px; color: #aaa;">v1.0</div>
   </div>
 
   <div class="active-site">
-    <span id="site-status">Detecting Marketplace...</span>
+    <span id="site-status">Detecting Seller Panel...</span>
     <span id="site-badge" style="font-weight: 800; font-size: 10px;">• READY</span>
   </div>
 
@@ -114,15 +108,12 @@
     <option value="hoodie">Oversized Anime Hoodie (Cotton Blend)</option>
     <option value="anarkali">Royal Anarkali Suit Set (Ethnic)</option>
     <option value="jewelry">Kundan Choker Jewelry Set</option>
-    <option value="denim">Vintage Denim Jacket (Outerwear)</option>
   </select>
 
   <button id="autofill-btn" class="btn-primary">⚡ 1-Click Autofill Listing Form</button>
-  <button id="cropper-btn" class="btn-secondary">✂️ Quick 4x6 Label Cropper</button>
-  <button id="sync-orders-btn" class="btn-secondary">🔄 Sync Orders to Admin Panel</button>
 
   <div class="footer">
-    Powered by <a href="https://getsetmart.com/admin" target="_blank">GetSetMart ERP Admin Panel</a>
+    Powered by <a href="https://getsetmart.com/admin" target="_blank">GetSetMart Admin Suite</a>
   </div>
 
   <script src="popup.js"></script>

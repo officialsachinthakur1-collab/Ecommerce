@@ -1,13 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "GetSetMart E-Commerce Seller Assistant",
+  "name": "GetSetMart Listing Assistant",
   "version": "1.0.0",
-  "description": "Official GetSetMart Chrome Extension for 1-Click Meesho/Flipkart/Amazon Catalog Autofill, Thermal Label Cropper, and Order Sync.",
+  "description": "Official GetSetMart Chrome Extension for 1-Click Meesho, Flipkart, and Amazon Product Catalog Listing Autofill.",
   "permissions": [
     "activeTab",
     "scripting",
-    "storage",
-    "downloads"
+    "storage"
   ],
   "host_permissions": [
     "https://*.meesho.com/*",
@@ -23,7 +22,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "GetSetMart Seller Assistant",
+    "default_title": "GetSetMart Listing Assistant",
     "default_icon": {
       "16": "icon16.png",
       "48": "icon48.png",
