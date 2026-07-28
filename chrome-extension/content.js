@@ -1,11 +1,23 @@
 // GetSetMart Password-Manager Style DOM Form Auto-Fill & Auto-Capture Engine for Meesho, Flipkart & Amazon
 
+// Global error boundary to prevent extension context crashes
+window.addEventListener('error', (e) => {
+  if (e.message && e.message.includes('Extension context invalidated')) {
+    console.warn('[GetSetMart] Extension updated. Please refresh webpage.');
+  }
+});
+
+// Check if extension context is valid
+function isExtensionValid() {
+  return typeof chrome !== 'undefined' && chrome.runtime && !!chrome.runtime.id;
+}
+
 // Safe Chrome Storage wrappers to prevent content script context errors
 function safeStorageGet(keys, callback) {
   try {
-    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    if (isExtensionValid() && chrome.storage && chrome.storage.local) {
       chrome.storage.local.get(keys, (res) => {
-        if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.lastError) {
+        if (isExtensionValid() && chrome.runtime.lastError) {
           callback({});
         } else {
           callback(res || {});
@@ -21,7 +33,7 @@ function safeStorageGet(keys, callback) {
 
 function safeStorageSet(data, callback) {
   try {
-    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    if (isExtensionValid() && chrome.storage && chrome.storage.local) {
       chrome.storage.local.set(data, () => {
         if (callback) callback();
       });
@@ -76,32 +88,36 @@ function scrapeDOMFormFields() {
     description: ''
   };
 
-  const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
+  try {
+    const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
 
-  allInputs.forEach(input => {
-    const val = (input.value || '').trim();
-    if (!val) return;
+    allInputs.forEach(input => {
+      const val = (input.value || '').trim();
+      if (!val) return;
 
-    const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
+      const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
 
-    if (attrStr.includes('hsn') && !scraped.hsn) {
-      scraped.hsn = val;
-    } else if (attrStr.includes('gst') && !scraped.gst) {
-      scraped.gst = val;
-    } else if ((attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) && !scraped.title) {
-      scraped.title = val;
-    } else if ((attrStr.includes('desc') || input.tagName === 'TEXTAREA') && !scraped.description) {
-      scraped.description = val;
-    } else if (attrStr.includes('brand') && !scraped.brand) {
-      scraped.brand = val;
-    } else if (attrStr.includes('sku') && !scraped.sku) {
-      scraped.sku = val;
-    } else if ((attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) && !scraped.price) {
-      scraped.price = val;
-    } else if ((attrStr.includes('fabric') || attrStr.includes('material')) && !scraped.fabric) {
-      scraped.fabric = val;
-    }
-  });
+      if (attrStr.includes('hsn') && !scraped.hsn) {
+        scraped.hsn = val;
+      } else if (attrStr.includes('gst') && !scraped.gst) {
+        scraped.gst = val;
+      } else if ((attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) && !scraped.title) {
+        scraped.title = val;
+      } else if ((attrStr.includes('desc') || input.tagName === 'TEXTAREA') && !scraped.description) {
+        scraped.description = val;
+      } else if (attrStr.includes('brand') && !scraped.brand) {
+        scraped.brand = val;
+      } else if (attrStr.includes('sku') && !scraped.sku) {
+        scraped.sku = val;
+      } else if ((attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) && !scraped.price) {
+        scraped.price = val;
+      } else if ((attrStr.includes('fabric') || attrStr.includes('material')) && !scraped.fabric) {
+        scraped.fabric = val;
+      }
+    });
+  } catch (err) {
+    console.error('[GetSetMart Scraper Error]', err);
+  }
 
   return scraped;
 }
@@ -185,6 +201,11 @@ function injectPasswordManagerStyleWidget() {
 
   // Save Current DOM Form as Template (Inline Safe Input)
   document.getElementById('gsm-dom-save-btn').addEventListener('click', () => {
+    if (!isExtensionValid()) {
+      alert("⚠️ Extension updated. Please refresh (F5) this webpage!");
+      return;
+    }
+
     const scraped = scrapeDOMFormFields();
     let count = 0;
     Object.values(scraped).forEach(v => { if (v) count++; });
@@ -225,6 +246,11 @@ function injectPasswordManagerStyleWidget() {
 
   // Auto-Fill Current Form via Password-Manager Setter Bypass
   document.getElementById('gsm-dom-autofill-btn').addEventListener('click', () => {
+    if (!isExtensionValid()) {
+      alert("⚠️ Extension updated. Please refresh (F5) this webpage!");
+      return;
+    }
+
     const sel = document.getElementById('gsm-dom-template-select');
     const selectedId = sel ? sel.value : '';
     if (!selectedId) {
@@ -276,40 +302,44 @@ if (window.location.href.includes('meesho.com') || window.location.href.includes
 
 // Listen for messages from extension popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'AUTOFILL_LISTING') {
-    const data = request.templateData || {};
-    let count = 0;
+  try {
+    if (request.action === 'AUTOFILL_LISTING') {
+      const data = request.templateData || {};
+      let count = 0;
 
-    const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
+      const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
 
-    allInputs.forEach(input => {
-      const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
+      allInputs.forEach(input => {
+        const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
 
-      if (attrStr.includes('hsn')) {
-        if (fillNativeReactInput(input, data.hsn)) count++;
-      } else if (attrStr.includes('gst')) {
-        if (fillNativeReactInput(input, data.gst)) count++;
-      } else if (attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) {
-        if (fillNativeReactInput(input, data.title)) count++;
-      } else if (attrStr.includes('desc') || input.tagName === 'TEXTAREA') {
-        if (fillNativeReactInput(input, data.description)) count++;
-      } else if (attrStr.includes('brand')) {
-        if (fillNativeReactInput(input, data.brand || 'GetSetMart')) count++;
-      } else if (attrStr.includes('sku')) {
-        if (fillNativeReactInput(input, data.sku || `GSM-SKU-${Date.now()}`)) count++;
-      } else if (attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) {
-        if (fillNativeReactInput(input, data.price)) count++;
-      } else if (attrStr.includes('fabric') || attrStr.includes('material')) {
-        if (fillNativeReactInput(input, data.fabric)) count++;
-      } else if (attrStr.includes('country') || attrStr.includes('origin')) {
-        if (fillNativeReactInput(input, 'India')) count++;
-      }
-    });
+        if (attrStr.includes('hsn')) {
+          if (fillNativeReactInput(input, data.hsn)) count++;
+        } else if (attrStr.includes('gst')) {
+          if (fillNativeReactInput(input, data.gst)) count++;
+        } else if (attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) {
+          if (fillNativeReactInput(input, data.title)) count++;
+        } else if (attrStr.includes('desc') || input.tagName === 'TEXTAREA') {
+          if (fillNativeReactInput(input, data.description)) count++;
+        } else if (attrStr.includes('brand')) {
+          if (fillNativeReactInput(input, data.brand || 'GetSetMart')) count++;
+        } else if (attrStr.includes('sku')) {
+          if (fillNativeReactInput(input, data.sku || `GSM-SKU-${Date.now()}`)) count++;
+        } else if (attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) {
+          if (fillNativeReactInput(input, data.price)) count++;
+        } else if (attrStr.includes('fabric') || attrStr.includes('material')) {
+          if (fillNativeReactInput(input, data.fabric)) count++;
+        } else if (attrStr.includes('country') || attrStr.includes('origin')) {
+          if (fillNativeReactInput(input, 'India')) count++;
+        }
+      });
 
-    sendResponse({ success: true, count });
-  } else if (request.action === 'CAPTURE_FORM_DATA') {
-    const formData = scrapeDOMFormFields();
-    sendResponse({ success: true, formData });
+      sendResponse({ success: true, count });
+    } else if (request.action === 'CAPTURE_FORM_DATA') {
+      const formData = scrapeDOMFormFields();
+      sendResponse({ success: true, formData });
+    }
+  } catch (err) {
+    sendResponse({ success: false, error: err.message });
   }
   return true;
 });
