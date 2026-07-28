@@ -45,16 +45,18 @@ function safeStorageSet(data, callback) {
   }
 }
 
-// Gold-standard React 16+ / Angular native setter bypass used by Password Managers (Bitwarden / 1Password)
+// Gold-standard React 16+ / Angular native setter bypass supporting INPUT, TEXTAREA, and SELECT
 function fillNativeReactInput(el, val) {
   if (!el || val === undefined || val === null || val === '') return false;
 
   try {
     el.focus();
 
-    // Bypass React's overridden setter descriptor to force React state tracker update
-    const isTextArea = el.tagName === 'TEXTAREA';
-    const prototype = isTextArea ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+    const tag = el.tagName ? el.tagName.toUpperCase() : 'INPUT';
+    let prototype = window.HTMLInputElement.prototype;
+    if (tag === 'TEXTAREA') prototype = window.HTMLTextAreaElement.prototype;
+    if (tag === 'SELECT') prototype = window.HTMLSelectElement.prototype;
+
     const nativeSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
 
     if (nativeSetter) {
@@ -69,8 +71,15 @@ function fillNativeReactInput(el, val) {
     el.dispatchEvent(new Event('blur', { bubbles: true }));
     return true;
   } catch (err) {
-    console.error('[GetSetMart DOM Injector Error]', err);
-    return false;
+    // Safe fallback assignment
+    try {
+      el.value = val;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
 
@@ -201,97 +210,109 @@ function injectPasswordManagerStyleWidget() {
 
   // Save Current DOM Form as Template (Inline Safe Input)
   document.getElementById('gsm-dom-save-btn').addEventListener('click', () => {
-    if (!isExtensionValid()) {
-      alert("⚠️ Extension updated. Please refresh (F5) this webpage!");
-      return;
-    }
+    try {
+      if (!isExtensionValid()) {
+        alert("⚠️ Extension updated. Please refresh (F5) this webpage!");
+        return;
+      }
 
-    const scraped = scrapeDOMFormFields();
-    let count = 0;
-    Object.values(scraped).forEach(v => { if (v) count++; });
+      const scraped = scrapeDOMFormFields();
+      let count = 0;
+      Object.values(scraped).forEach(v => { if (v) count++; });
 
-    if (count === 0) {
-      alert("⚠️ No filled input fields found on screen! Please type product details in the form first.");
-      return;
-    }
+      if (count === 0) {
+        alert("⚠️ No filled input fields found on screen! Please type product details in the form first.");
+        return;
+      }
 
-    const nameInput = document.getElementById('gsm-dom-tpl-name');
-    const customName = nameInput ? nameInput.value.trim() : '';
-    const finalTplName = customName || (scraped.title ? scraped.title.substring(0, 25) : `Meesho Listing ${new Date().toLocaleTimeString()}`);
+      const nameInput = document.getElementById('gsm-dom-tpl-name');
+      const customName = nameInput ? nameInput.value.trim() : '';
+      const finalTplName = customName || (scraped.title ? scraped.title.substring(0, 25) : `Meesho Listing ${new Date().toLocaleTimeString()}`);
 
-    const tplId = `tpl_${Date.now()}`;
-    const newTplData = {
-      id: tplId,
-      name: finalTplName,
-      title: scraped.title || finalTplName,
-      hsn: scraped.hsn || '61091000',
-      gst: scraped.gst || '5',
-      fabric: scraped.fabric || 'Cotton',
-      brand: scraped.brand || 'GetSetMart',
-      price: scraped.price || '999',
-      cost: scraped.cost || '300',
-      description: scraped.description || ''
-    };
+      const tplId = `tpl_${Date.now()}`;
+      const newTplData = {
+        id: tplId,
+        name: finalTplName,
+        title: scraped.title || finalTplName,
+        hsn: scraped.hsn || '61091000',
+        gst: scraped.gst || '5',
+        fabric: scraped.fabric || 'Cotton',
+        brand: scraped.brand || 'GetSetMart',
+        price: scraped.price || '999',
+        cost: scraped.cost || '300',
+        description: scraped.description || ''
+      };
 
-    safeStorageGet(['gsm_listing_templates'], (res) => {
-      const current = res.gsm_listing_templates || {};
-      current[tplId] = newTplData;
-      safeStorageSet({ gsm_listing_templates: current, gsm_templates_initialized: true }, () => {
-        refreshDropdown();
-        if (nameInput) nameInput.value = '';
-        alert(`🎉 Success! Saved template "${finalTplName}" (${count} fields). Next time click ⚡ Auto-Fill!`);
+      safeStorageGet(['gsm_listing_templates'], (res) => {
+        const current = res.gsm_listing_templates || {};
+        current[tplId] = newTplData;
+        safeStorageSet({ gsm_listing_templates: current, gsm_templates_initialized: true }, () => {
+          refreshDropdown();
+          if (nameInput) nameInput.value = '';
+          alert(`🎉 Success! Saved template "${finalTplName}" (${count} fields). Next time click ⚡ Auto-Fill!`);
+        });
       });
-    });
+    } catch (e) {
+      alert("⚠️ Error saving template. Please refresh the page and try again.");
+    }
   });
 
   // Auto-Fill Current Form via Password-Manager Setter Bypass
   document.getElementById('gsm-dom-autofill-btn').addEventListener('click', () => {
-    if (!isExtensionValid()) {
-      alert("⚠️ Extension updated. Please refresh (F5) this webpage!");
-      return;
-    }
+    try {
+      if (!isExtensionValid()) {
+        alert("⚠️ Extension updated. Please refresh (F5) this webpage!");
+        return;
+      }
 
-    const sel = document.getElementById('gsm-dom-template-select');
-    const selectedId = sel ? sel.value : '';
-    if (!selectedId) {
-      alert("⚠️ Please select a template to auto-fill!");
-      return;
-    }
+      const sel = document.getElementById('gsm-dom-template-select');
+      const selectedId = sel ? sel.value : '';
+      if (!selectedId) {
+        alert("⚠️ Please select a template to auto-fill!");
+        return;
+      }
 
-    safeStorageGet(['gsm_listing_templates'], (res) => {
-      const templates = res.gsm_listing_templates || {};
-      const tpl = templates[selectedId];
-      if (!tpl) return alert("⚠️ Selected template not found!");
+      safeStorageGet(['gsm_listing_templates'], (res) => {
+        const templates = res.gsm_listing_templates || {};
+        const tpl = templates[selectedId];
+        if (!tpl) return alert("⚠️ Selected template not found!");
 
-      let filledCount = 0;
-      const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
+        let filledCount = 0;
+        const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
 
-      allInputs.forEach(input => {
-        const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
+        allInputs.forEach(input => {
+          try {
+            const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
 
-        if (attrStr.includes('hsn')) {
-          if (fillNativeReactInput(input, tpl.hsn)) filledCount++;
-        } else if (attrStr.includes('gst')) {
-          if (fillNativeReactInput(input, tpl.gst)) filledCount++;
-        } else if (attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) {
-          if (fillNativeReactInput(input, tpl.title)) filledCount++;
-        } else if (attrStr.includes('desc') || input.tagName === 'TEXTAREA') {
-          if (fillNativeReactInput(input, tpl.description)) filledCount++;
-        } else if (attrStr.includes('brand')) {
-          if (fillNativeReactInput(input, tpl.brand || 'GetSetMart')) filledCount++;
-        } else if (attrStr.includes('sku')) {
-          if (fillNativeReactInput(input, tpl.sku || `GSM-SKU-${Date.now()}`)) filledCount++;
-        } else if (attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) {
-          if (fillNativeReactInput(input, tpl.price)) filledCount++;
-        } else if (attrStr.includes('fabric') || attrStr.includes('material')) {
-          if (fillNativeReactInput(input, tpl.fabric)) filledCount++;
-        } else if (attrStr.includes('country') || attrStr.includes('origin')) {
-          if (fillNativeReactInput(input, 'India')) filledCount++;
-        }
+            if (attrStr.includes('hsn')) {
+              if (fillNativeReactInput(input, tpl.hsn)) filledCount++;
+            } else if (attrStr.includes('gst')) {
+              if (fillNativeReactInput(input, tpl.gst)) filledCount++;
+            } else if (attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) {
+              if (fillNativeReactInput(input, tpl.title)) filledCount++;
+            } else if (attrStr.includes('desc') || input.tagName === 'TEXTAREA') {
+              if (fillNativeReactInput(input, tpl.description)) filledCount++;
+            } else if (attrStr.includes('brand')) {
+              if (fillNativeReactInput(input, tpl.brand || 'GetSetMart')) filledCount++;
+            } else if (attrStr.includes('sku')) {
+              if (fillNativeReactInput(input, tpl.sku || `GSM-SKU-${Date.now()}`)) filledCount++;
+            } else if (attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) {
+              if (fillNativeReactInput(input, tpl.price)) filledCount++;
+            } else if (attrStr.includes('fabric') || attrStr.includes('material')) {
+              if (fillNativeReactInput(input, tpl.fabric)) filledCount++;
+            } else if (attrStr.includes('country') || attrStr.includes('origin')) {
+              if (fillNativeReactInput(input, 'India')) filledCount++;
+            }
+          } catch (e) {
+            // Ignore single field errors
+          }
+        });
+
+        alert(`⚡ Success! Auto-filled ${filledCount} fields using "${tpl.name}".`);
       });
-
-      alert(`⚡ Success! Injected and Auto-filled ${filledCount} fields using "${tpl.name}".`);
-    });
+    } catch (e) {
+      alert("⚠️ Error during auto-fill. Please refresh the page and try again.");
+    }
   });
 }
 
@@ -310,26 +331,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
 
       allInputs.forEach(input => {
-        const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
+        try {
+          const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
 
-        if (attrStr.includes('hsn')) {
-          if (fillNativeReactInput(input, data.hsn)) count++;
-        } else if (attrStr.includes('gst')) {
-          if (fillNativeReactInput(input, data.gst)) count++;
-        } else if (attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) {
-          if (fillNativeReactInput(input, data.title)) count++;
-        } else if (attrStr.includes('desc') || input.tagName === 'TEXTAREA') {
-          if (fillNativeReactInput(input, data.description)) count++;
-        } else if (attrStr.includes('brand')) {
-          if (fillNativeReactInput(input, data.brand || 'GetSetMart')) count++;
-        } else if (attrStr.includes('sku')) {
-          if (fillNativeReactInput(input, data.sku || `GSM-SKU-${Date.now()}`)) count++;
-        } else if (attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) {
-          if (fillNativeReactInput(input, data.price)) count++;
-        } else if (attrStr.includes('fabric') || attrStr.includes('material')) {
-          if (fillNativeReactInput(input, data.fabric)) count++;
-        } else if (attrStr.includes('country') || attrStr.includes('origin')) {
-          if (fillNativeReactInput(input, 'India')) count++;
+          if (attrStr.includes('hsn')) {
+            if (fillNativeReactInput(input, data.hsn)) count++;
+          } else if (attrStr.includes('gst')) {
+            if (fillNativeReactInput(input, data.gst)) count++;
+          } else if (attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) {
+            if (fillNativeReactInput(input, data.title)) count++;
+          } else if (attrStr.includes('desc') || input.tagName === 'TEXTAREA') {
+            if (fillNativeReactInput(input, data.description)) count++;
+          } else if (attrStr.includes('brand')) {
+            if (fillNativeReactInput(input, data.brand || 'GetSetMart')) count++;
+          } else if (attrStr.includes('sku')) {
+            if (fillNativeReactInput(input, data.sku || `GSM-SKU-${Date.now()}`)) count++;
+          } else if (attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) {
+            if (fillNativeReactInput(input, data.price)) count++;
+          } else if (attrStr.includes('fabric') || attrStr.includes('material')) {
+            if (fillNativeReactInput(input, data.fabric)) count++;
+          } else if (attrStr.includes('country') || attrStr.includes('origin')) {
+            if (fillNativeReactInput(input, 'India')) count++;
+          }
+        } catch (e) {
+          // Ignore single field errors
         }
       });
 
