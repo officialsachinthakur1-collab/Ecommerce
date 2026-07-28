@@ -5,7 +5,7 @@
   <title>GetSetMart Listing Assistant</title>
   <style>
     body {
-      width: 320px;
+      width: 350px;
       margin: 0;
       padding: 16px;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,7 +18,7 @@
       justify-content: space-between;
       border-bottom: 1px solid #222;
       padding-bottom: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .logo-text {
       font-size: 15px;
@@ -39,7 +39,7 @@
       background: #064e3b;
       padding: 6px 10px;
       border-radius: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -52,32 +52,56 @@
       margin-bottom: 8px;
       font-weight: 700;
     }
-    select, button {
+    select, input, textarea, button {
       width: 100%;
       box-sizing: border-box;
-      padding: 12px;
+      padding: 10px;
       border-radius: 8px;
       border: 1px solid #333;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       font-size: 13px;
-      cursor: pointer;
     }
-    select {
+    select, input, textarea {
       background-color: #1a1a1a;
       color: white;
+    }
+    textarea {
+      resize: vertical;
+      height: 60px;
     }
     .btn-primary {
       background-color: #ef4444;
       color: white;
       border: none;
       font-weight: 700;
-      font-size: 14px;
-      padding: 14px;
-      transition: background 0.2s;
+      font-size: 13px;
+      padding: 12px;
+      cursor: pointer;
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     }
     .btn-primary:hover {
       background-color: #dc2626;
+    }
+    .btn-secondary {
+      background-color: #1f2937;
+      color: white;
+      border: 1px solid #374151;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-secondary:hover {
+      background-color: #374151;
+    }
+    .btn-danger {
+      background-color: #450a0a;
+      color: #ef4444;
+      border: 1px solid #7f1d1d;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
     }
     .footer {
       text-align: center;
@@ -90,12 +114,20 @@
       text-decoration: none;
       font-weight: 600;
     }
+    #template-form-view {
+      display: none;
+      background: #141414;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #222;
+      margin-bottom: 14px;
+    }
   </style>
 </head>
 <body>
   <div class="header">
-    <div class="logo-text">GETSETMART <span class="badge">LISTING</span></div>
-    <div style="font-size: 11px; color: #aaa;">v1.0</div>
+    <div class="logo-text">GETSETMART <span class="badge">LISTING MANAGER</span></div>
+    <div style="font-size: 11px; color: #aaa;">v1.2</div>
   </div>
 
   <div class="active-site">
@@ -103,14 +135,72 @@
     <span id="site-badge" style="font-weight: 800; font-size: 10px;">• READY</span>
   </div>
 
-  <div class="section-title">Select Catalog Template</div>
-  <select id="template-select">
-    <option value="hoodie">Oversized Anime Hoodie (Cotton Blend)</option>
-    <option value="anarkali">Royal Anarkali Suit Set (Ethnic)</option>
-    <option value="jewelry">Kundan Choker Jewelry Set</option>
-  </select>
+  <!-- MAIN LISTING VIEW -->
+  <div id="main-view">
+    <div class="section-title">Select Active Template</div>
+    <div class="row" style="margin-bottom: 8px;">
+      <select id="template-select" style="margin-bottom: 0; flex: 1;">
+        <!-- Dynamic Options -->
+      </select>
+      <button id="delete-template-btn" class="btn-danger" style="width: 44px; margin-bottom: 0; padding: 10px;" title="Delete Selected Template">🗑️</button>
+    </div>
 
-  <button id="autofill-btn" class="btn-primary">⚡ 1-Click Autofill Listing Form</button>
+    <button id="autofill-btn" class="btn-primary">⚡ 1-Click Autofill Listing Form</button>
+
+    <button id="show-add-form-btn" class="btn-secondary">➕ Create & Save New Template</button>
+  </div>
+
+  <!-- NEW TEMPLATE FORM VIEW -->
+  <div id="template-form-view">
+    <div class="section-title" style="color: #ef4444; margin-bottom: 10px;">Create New Listing Template</div>
+    
+    <label style="font-size: 11px; color: #aaa;">Template Name (e.g. Printed T-Shirts)</label>
+    <input type="text" id="tpl-name" placeholder="e.g. Printed T-Shirts" required>
+
+    <label style="font-size: 11px; color: #aaa;">Product Title</label>
+    <input type="text" id="tpl-title" placeholder="e.g. GetSetMart Printed Cotton T-Shirt" required>
+
+    <div class="row">
+      <div style="flex: 1;">
+        <label style="font-size: 11px; color: #aaa;">HSN Code</label>
+        <input type="text" id="tpl-hsn" placeholder="61091000" required>
+      </div>
+      <div style="flex: 1;">
+        <label style="font-size: 11px; color: #aaa;">GST %</label>
+        <input type="text" id="tpl-gst" placeholder="5" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div style="flex: 1;">
+        <label style="font-size: 11px; color: #aaa;">Fabric / Material</label>
+        <input type="text" id="tpl-fabric" placeholder="100% Cotton" required>
+      </div>
+      <div style="flex: 1;">
+        <label style="font-size: 11px; color: #aaa;">Brand Name</label>
+        <input type="text" id="tpl-brand" placeholder="GetSetMart" value="GetSetMart" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div style="flex: 1;">
+        <label style="font-size: 11px; color: #aaa;">Selling Price ₹</label>
+        <input type="number" id="tpl-price" placeholder="499" required>
+      </div>
+      <div style="flex: 1;">
+        <label style="font-size: 11px; color: #aaa;">Cost Price ₹</label>
+        <input type="number" id="tpl-cost" placeholder="180" required>
+      </div>
+    </div>
+
+    <label style="font-size: 11px; color: #aaa;">Product Description</label>
+    <textarea id="tpl-desc" placeholder="Super soft bio-washed cotton t-shirt with durable print..."></textarea>
+
+    <div class="row" style="margin-top: 6px;">
+      <button id="cancel-template-btn" class="btn-secondary" style="flex: 1; margin-bottom: 0;">Cancel</button>
+      <button id="save-template-btn" class="btn-primary" style="flex: 1; margin-bottom: 0;">💾 Save Template</button>
+    </div>
+  </div>
 
   <div class="footer">
     Powered by <a href="https://getsetmart.com/admin" target="_blank">GetSetMart Admin Suite</a>
