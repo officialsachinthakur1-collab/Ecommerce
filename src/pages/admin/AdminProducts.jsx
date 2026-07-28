@@ -178,6 +178,10 @@ export default function AdminProducts() {
 
             // Remove from API
             try {
+                await fetch(`${API_URL}/api/products/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'x-admin-password': 'admin' }
+                });
                 await fetch(`${API_URL}/api/products?id=${id}`, {
                     method: 'DELETE',
                     headers: { 'x-admin-password': 'admin' }
@@ -197,10 +201,19 @@ export default function AdminProducts() {
         if (window.confirm("Are you sure you want to DELETE ALL PRODUCTS? The website store will be completely empty for your new products.")) {
             localStorage.setItem('gsm_custom_products', JSON.stringify([]));
             try {
-                await fetch(`${API_URL}/api/products?id=ALL`, {
-                    method: 'DELETE',
-                    headers: { 'x-admin-password': 'admin' }
-                });
+                const res = await fetch(`${API_URL}/api/products`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data)) {
+                        for (const p of data) {
+                            const pId = p._id || p.id;
+                            await fetch(`${API_URL}/api/products/${pId}`, {
+                                method: 'DELETE',
+                                headers: { 'x-admin-password': 'admin' }
+                            });
+                        }
+                    }
+                }
             } catch (err) {
                 // API silent catch
             }
