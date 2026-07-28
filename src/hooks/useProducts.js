@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import API_URL from '../config';
-import { products as localProductsFallback } from '../data/products.js';
 
 export const useProducts = (includeFallback = false) => {
     const [products, setProducts] = useState([]);
@@ -10,36 +9,34 @@ export const useProducts = (includeFallback = false) => {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/api/products`);
-            if (!response.ok) throw new Error('Failed to fetch products');
+            // Check local storage saved products first
+            const savedLocal = localStorage.getItem('gsm_custom_products');
+            const localList = savedLocal ? JSON.parse(savedLocal) : [];
 
-            const data = await response.json();
-
-            if (Array.isArray(data)) {
-                // Map MongoDB _id to id for frontend compatibility
-                const mappedData = data.map(p => ({
-                    ...p,
-                    id: p.id || p._id || p.id
-                }));
-
-                // HYBRID STRATEGY: Merge API data with local items (only if requested)
-                const mergedProducts = [...mappedData];
-
-                if (includeFallback) {
-                    localProductsFallback.forEach(lp => {
-                        const exists = mergedProducts.some(mp => mp.name === lp.name || mp.id === lp.id);
-                        if (!exists) mergedProducts.unshift(lp);
-                    });
+            let apiList = [];
+            try {
+                const response = await fetch(`${API_URL}/api/products`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (Array.isArray(data)) {
+                        apiList = data.map(p => ({
+                            ...p,
+                            id: p.id || p._id || p.id
+                        }));
+                    }
                 }
-
-                setProducts(mergedProducts);
-            } else {
-                setProducts(includeFallback ? localProductsFallback : []);
+            } catch (err) {
+                // API fetch failed silently, fallback to localList
             }
+
+            // Combine API and local custom products without duplicate IDs
+            const combinedMap = new Map();
+            apiList.forEach(p => combinedMap.set(p.id, p));
+            localList.forEach(p => combinedMap.set(p.id, p));
+
+            setProducts(Array.from(combinedMap.values()));
             setLoading(false);
         } catch (err) {
-            console.warn("API fetch failed, using local fallback:", err);
-            setProducts(includeFallback ? localProductsFallback : []);
             setLoading(false);
         }
     };
