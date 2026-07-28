@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  let allTemplates = { ...defaultTemplates };
+  let allTemplates = {};
 
   // Render Template Options in Dropdown cleanly
   const renderTemplateDropdown = () => {
@@ -87,12 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // Load Templates from Chrome Storage
-  chrome.storage.local.get(['gsm_listing_templates'], (result) => {
-    if (result && result.gsm_listing_templates && Object.keys(result.gsm_listing_templates).length > 0) {
-      allTemplates = result.gsm_listing_templates;
+  // Load Templates from Chrome Storage with explicit initialization check
+  chrome.storage.local.get(['gsm_listing_templates', 'gsm_templates_initialized'], (result) => {
+    if (result && result.gsm_templates_initialized) {
+      allTemplates = result.gsm_listing_templates || {};
     } else {
-      chrome.storage.local.set({ gsm_listing_templates: defaultTemplates });
+      allTemplates = { ...defaultTemplates };
+      chrome.storage.local.set({ 
+        gsm_listing_templates: defaultTemplates,
+        gsm_templates_initialized: true 
+      });
     }
     renderTemplateDropdown();
   });
@@ -151,7 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
           };
 
           allTemplates[tplId] = newTemplate;
-          chrome.storage.local.set({ gsm_listing_templates: allTemplates }, () => {
+          chrome.storage.local.set({ 
+            gsm_listing_templates: allTemplates,
+            gsm_templates_initialized: true 
+          }, () => {
             renderTemplateDropdown();
             templateSelect.value = tplId;
             alert(`🎉 Success! Captured form details and saved template "${templateName}". Next time click 1-Click Autofill to fill instantly!`);
@@ -205,7 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     allTemplates[tplId] = newTemplate;
-    chrome.storage.local.set({ gsm_listing_templates: allTemplates }, () => {
+    chrome.storage.local.set({ 
+      gsm_listing_templates: allTemplates,
+      gsm_templates_initialized: true 
+    }, () => {
       renderTemplateDropdown();
       templateSelect.value = tplId;
       formView.style.display = 'none';
@@ -224,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Delete Selected Template Event (Fixed Continuous Deletion)
+  // Delete Selected Template Event (Permanent Persistence Fix)
   deleteBtn.addEventListener('click', () => {
     const selectedId = templateSelect.value;
     if (!selectedId || !allTemplates[selectedId]) {
@@ -235,7 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const tplObj = allTemplates[selectedId];
     if (confirm(`Are you sure you want to delete template "${tplObj.name}"?`)) {
       delete allTemplates[selectedId];
-      chrome.storage.local.set({ gsm_listing_templates: allTemplates }, () => {
+      chrome.storage.local.set({ 
+        gsm_listing_templates: allTemplates,
+        gsm_templates_initialized: true
+      }, () => {
         renderTemplateDropdown();
         alert(`🗑️ Template "${tplObj.name}" deleted.`);
       });
@@ -245,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1-Click Autofill Listing Form Event
   autofillBtn.addEventListener('click', () => {
     const selectedId = templateSelect.value;
-    const activeTemplate = allTemplates[selectedId] || Object.values(allTemplates)[0];
+    const activeTemplate = allTemplates[selectedId];
 
     if (!activeTemplate) {
       alert("⚠️ No template selected!");
