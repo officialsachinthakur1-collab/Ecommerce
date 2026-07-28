@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, Heart, Menu, X, LogOut } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, X, LogOut, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -21,13 +21,30 @@ const Navbar = () => {
     const wishlistCount = wishlist?.length || 0;
     const navigate = useNavigate();
 
+    const [festivalSettings, setFestivalSettings] = useState(() => {
+        const saved = localStorage.getItem('gsm_festival_settings');
+        return saved ? JSON.parse(saved) : {
+            title: '15th Aug Special 🇮🇳',
+            enabled: true
+        };
+    });
+
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
         };
+        const handleFestivalUpdate = () => {
+            const saved = localStorage.getItem('gsm_festival_settings');
+            if (saved) setFestivalSettings(JSON.parse(saved));
+        };
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener('gsm_festival_updated', handleFestivalUpdate);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('gsm_festival_updated', handleFestivalUpdate);
+        };
     }, []);
+
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -224,26 +241,21 @@ const Navbar = () => {
                         }}>
                             <Link to="/shop" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Shop</Link>
 
-                            {/* Animated V-Day Link */}
-                            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                                <Link to="/valentines-day" style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary-red)', position: 'relative', zIndex: 1 }}>
-                                    V-Day Special
-                                </Link>
-                                <motion.div
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                    style={{ position: 'absolute', inset: -10, pointerEvents: 'none' }}
-                                >
-                                    <Heart size={8} fill="currentColor" style={{ position: 'absolute', top: 0, left: '50%', color: 'var(--primary-red)', transform: 'translateX(-50%)' }} />
-                                </motion.div>
-                                <motion.div
-                                    animate={{ rotate: -360 }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                                    style={{ position: 'absolute', inset: -15, pointerEvents: 'none' }}
-                                >
-                                    <Heart size={6} fill="currentColor" style={{ position: 'absolute', bottom: 0, left: '50%', color: 'var(--primary-red)', transform: 'translateX(-50%)' }} />
-                                </motion.div>
-                            </div>
+                            {/* Dynamic Festival Link */}
+                            {festivalSettings.enabled !== false && (
+                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                    <Link to="/festival-special" style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', color: festivalSettings.color || 'var(--primary-red)', position: 'relative', zIndex: 1 }}>
+                                        {festivalSettings.title || 'Festival Special 🎉'}
+                                    </Link>
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                        style={{ position: 'absolute', inset: -10, pointerEvents: 'none' }}
+                                    >
+                                        <Sparkles size={10} style={{ position: 'absolute', top: 0, left: '50%', color: festivalSettings.color || 'var(--primary-red)', transform: 'translateX(-50%)' }} />
+                                    </motion.div>
+                                </div>
+                            )}
 
                             <Link to="/blog" style={{ fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Insights</Link>
 

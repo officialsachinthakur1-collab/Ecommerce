@@ -33,7 +33,7 @@ import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
 import Shipping from './pages/Shipping';
 import Returns from './pages/Returns';
-import ValentinePreview from './pages/ValentinePreview';
+import FestivalSpecial from './pages/FestivalSpecial';
 import ValentinesDay from './pages/ValentinesDay';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -136,8 +136,8 @@ function App() {
           <Route path="account" element={<Account />} />
           <Route path="shipping" element={<Shipping />} />
           <Route path="returns" element={<Returns />} />
-          <Route path="valentine-preview" element={<ValentinePreview />} />
-          <Route path="valentines-day" element={<ValentinesDay />} />
+          <Route path="festival-special" element={<FestivalSpecial />} />
+          <Route path="valentines-day" element={<FestivalSpecial />} />
         </Route>
 
         {/* Admin Routes */}
