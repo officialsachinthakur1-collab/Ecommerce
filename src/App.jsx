@@ -23,6 +23,7 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminReviews from './pages/admin/AdminReviews';
 import AdminCoupons from './pages/admin/AdminCoupons';
 import AdminSettings from './pages/admin/AdminSettings';
+import HisabKitab from './pages/admin/HisabKitab';
 import Login from './pages/Login';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
@@ -147,6 +148,7 @@ function App() {
           <Route path="reviews" element={<AdminReviews />} />
           <Route path="coupons" element={<AdminCoupons />} />
           <Route path="settings" element={<AdminSettings />} />
+          <Route path="hisab-kitab" element={<HisabKitab />} />
         </Route>
 
         {/* Login & Reset Routes */}

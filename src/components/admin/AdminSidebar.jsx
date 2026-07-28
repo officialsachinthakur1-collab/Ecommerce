@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X, Ticket, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X, Ticket, MessageSquare, Receipt } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import useMobile from '../../hooks/useMobile';
 
@@ -11,7 +11,8 @@ const AdminSidebar = ({ isOpen, onClose }) => {
     const navItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
         { icon: Package, label: 'Products', path: '/admin/products' },
-        { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
+        { icon: ShoppingBag, label: 'Channel Orders', path: '/admin/orders' },
+        { icon: Receipt, label: 'Hisab-Kitab', path: '/admin/hisab-kitab' },
         { icon: MessageSquare, label: 'Reviews', path: '/admin/reviews' },
         { icon: Ticket, label: 'Coupons', path: '/admin/coupons' },
         { icon: Settings, label: 'Settings', path: '/admin/settings' },
@@ -55,7 +56,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                     <NavLink
                         key={item.path}
                         to={item.path}
-                        onClick={onClose} // Close sidebar on mobile nav
+                        onClick={onClose}
                         end={item.path === '/admin'}
                         className={({ isActive }) =>
                             isActive ? "admin-nav-item active" : "admin-nav-item"
@@ -101,4 +102,3 @@ const AdminSidebar = ({ isOpen, onClose }) => {
 };
 
 export default AdminSidebar;
-// Forced reload
