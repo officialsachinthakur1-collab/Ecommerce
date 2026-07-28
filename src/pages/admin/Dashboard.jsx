@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, ShoppingBag, TrendingUp, Wallet } from 'lucide-react';
+import { DollarSign, ShoppingBag, TrendingUp, Wallet, Trash2 } from 'lucide-react';
 import StatCard from '../../components/admin/StatCard';
 import { Link } from 'react-router-dom';
 
@@ -18,6 +18,35 @@ export default function Dashboard() {
         const saved = localStorage.getItem('gsm_suppliers');
         return saved ? JSON.parse(saved) : [];
     });
+
+    // Enforce 100% Zero State Wipe on First Load
+    useEffect(() => {
+        if (!localStorage.getItem('gsm_zero_reset_done')) {
+            localStorage.setItem('gsm_orders', JSON.stringify([]));
+            localStorage.setItem('gsm_suppliers', JSON.stringify([]));
+            localStorage.setItem('gsm_expenses', JSON.stringify([]));
+            localStorage.setItem('gsm_return_claims', JSON.stringify([]));
+            localStorage.setItem('gsm_reconciliation', JSON.stringify([]));
+            localStorage.setItem('gsm_zero_reset_done', 'true');
+            setOrders([]);
+            setExpenses([]);
+            setSuppliers([]);
+        }
+    }, []);
+
+    const handleWipeEverything = () => {
+        if (window.confirm("Confirm: Reset all numbers to absolute 0? All existing test data will be deleted.")) {
+            localStorage.setItem('gsm_orders', JSON.stringify([]));
+            localStorage.setItem('gsm_suppliers', JSON.stringify([]));
+            localStorage.setItem('gsm_expenses', JSON.stringify([]));
+            localStorage.setItem('gsm_return_claims', JSON.stringify([]));
+            localStorage.setItem('gsm_reconciliation', JSON.stringify([]));
+            setOrders([]);
+            setExpenses([]);
+            setSuppliers([]);
+            alert("All numbers reset to 0!");
+        }
+    };
 
     const calculatePnL = (ord) => {
         if (ord.status === 'RETURNED') {
@@ -39,21 +68,39 @@ export default function Dashboard() {
 
     const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
     const finalNetProfit = netOrderProfit - totalExpenses;
-    const marginPct = grossRevenue > 0 ? ((finalNetProfit / grossRevenue) * 100).toFixed(1) : 0;
+    const marginPct = grossRevenue > 0 ? ((finalNetProfit / grossRevenue) * 100).toFixed(1) : '0';
     const totalSupplierDue = suppliers.reduce((acc, curr) => acc + curr.remaining, 0);
 
     const channels = ['Meesho', 'Flipkart', 'Amazon', 'GetSetMart Store'];
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
                     <h1 style={{ fontSize: '2rem', fontWeight: '800' }}>Dashboard Overview</h1>
                     <div style={{ color: 'var(--text-muted)' }}>Real-time Channel Sales & Net Profit Control</div>
                 </div>
+                <button
+                    onClick={handleWipeEverything}
+                    style={{
+                        padding: '0.65rem 1.25rem',
+                        borderRadius: '8px',
+                        border: '1px solid #333',
+                        background: '#1c1917',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        fontWeight: '700',
+                        fontSize: '0.85rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                    }}
+                >
+                    <Trash2 size={16} /> Reset All Numbers to 0
+                </button>
             </div>
 
-            {/* Stats Grid */}
+            {/* Stats Grid - Absolute 0 Default */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
                 <StatCard title="Gross Sales Revenue" value={`₹${grossRevenue.toLocaleString('en-IN')}`} change="All Channels" icon={DollarSign} />
                 <StatCard title="Net Profit (P&L)" value={`₹${finalNetProfit.toLocaleString('en-IN')}`} change={`${marginPct}% Margin`} icon={TrendingUp} color="#10b981" />
@@ -93,7 +140,7 @@ export default function Dashboard() {
                                     if (o.status !== 'CANCELLED' && o.status !== 'RETURNED') rev += o.price;
                                     profit += calculatePnL(o);
                                 });
-                                const roi = rev > 0 ? ((profit / rev) * 100).toFixed(1) : 0;
+                                const roi = rev > 0 ? ((profit / rev) * 100).toFixed(1) : '0';
 
                                 return (
                                     <tr key={ch} style={{ borderBottom: '1px solid #1a1a1a' }}>
@@ -101,10 +148,10 @@ export default function Dashboard() {
                                         <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{chOrders.length} orders</td>
                                         <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>₹{rev.toLocaleString('en-IN')}</td>
                                         <td style={{ padding: '0.75rem', fontWeight: '800', color: profit >= 0 ? '#10b981' : '#ef4444' }}>
-                                            {profit >= 0 ? '+' : ''}₹{profit.toLocaleString('en-IN')}
+                                            ₹{profit.toLocaleString('en-IN')}
                                         </td>
-                                        <td style={{ padding: '0.75rem', color: roi >= 0 ? '#10b981' : '#ef4444', fontWeight: '700' }}>
-                                            {roi}% ROI
+                                        <td style={{ padding: '0.75rem', color: roi > 0 ? '#10b981' : 'var(--text-muted)', fontWeight: '700' }}>
+                                            {roi}%
                                         </td>
                                     </tr>
                                 );
