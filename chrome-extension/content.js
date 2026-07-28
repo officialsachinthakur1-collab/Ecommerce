@@ -1,4 +1,4 @@
-// GetSetMart Chrome Extension - 1-Click Dynamic Listing Autofill Engine for Meesho, Flipkart & Amazon
+// GetSetMart Chrome Extension - Lisstify Style 1-Click Listing Scraper & Autofill Engine
 
 // Helper function to set input value & trigger native React/Angular events
 function fillElement(el, val) {
@@ -9,6 +9,50 @@ function fillElement(el, val) {
   el.dispatchEvent(new Event('change', { bubbles: true }));
   el.dispatchEvent(new Event('blur', { bubbles: true }));
   return true;
+}
+
+// Function to extract currently filled form data from Meesho, Flipkart, or Amazon screen
+function scrapeFilledFormData() {
+  const scraped = {
+    title: '',
+    hsn: '',
+    gst: '',
+    fabric: '',
+    brand: 'GetSetMart',
+    price: '',
+    cost: '',
+    sku: '',
+    description: ''
+  };
+
+  const allInputs = Array.from(document.querySelectorAll('input, textarea, select'));
+
+  allInputs.forEach(input => {
+    const val = (input.value || '').trim();
+    if (!val) return;
+
+    const attrStr = `${input.name} ${input.id} ${input.placeholder} ${input.getAttribute('aria-label') || ''}`.toLowerCase();
+
+    if (attrStr.includes('hsn') && !scraped.hsn) {
+      scraped.hsn = val;
+    } else if (attrStr.includes('gst') && !scraped.gst) {
+      scraped.gst = val;
+    } else if ((attrStr.includes('title') || attrStr.includes('product name') || attrStr.includes('item_name')) && !scraped.title) {
+      scraped.title = val;
+    } else if ((attrStr.includes('desc') || input.tagName === 'TEXTAREA') && !scraped.description) {
+      scraped.description = val;
+    } else if (attrStr.includes('brand') && !scraped.brand) {
+      scraped.brand = val;
+    } else if (attrStr.includes('sku') && !scraped.sku) {
+      scraped.sku = val;
+    } else if ((attrStr.includes('price') || attrStr.includes('mrp') || attrStr.includes('sp')) && !scraped.price) {
+      scraped.price = val;
+    } else if ((attrStr.includes('fabric') || attrStr.includes('material')) && !scraped.fabric) {
+      scraped.fabric = val;
+    }
+  });
+
+  return scraped;
 }
 
 // Listen for messages from extension popup
@@ -44,6 +88,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
 
     sendResponse({ success: true, count });
+  } else if (request.action === 'CAPTURE_FORM_DATA') {
+    const formData = scrapeFilledFormData();
+    sendResponse({ success: true, formData });
   }
   return true;
 });

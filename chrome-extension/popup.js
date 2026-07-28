@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const siteStatusEl = document.getElementById('site-status');
   const siteBadgeEl = document.getElementById('site-badge');
   const templateSelect = document.getElementById('template-select');
+  const captureBtn = document.getElementById('capture-btn');
   const autofillBtn = document.getElementById('autofill-btn');
   const deleteBtn = document.getElementById('delete-template-btn');
   
@@ -63,14 +64,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let allTemplates = { ...defaultTemplates };
 
-  // Render Template Options in Dropdown
+  // Render Template Options in Dropdown cleanly
   const renderTemplateDropdown = () => {
     templateSelect.innerHTML = '';
-    Object.values(allTemplates).forEach(tpl => {
+    const keys = Object.keys(allTemplates);
+    if (keys.length === 0) {
       const opt = document.createElement('option');
-      opt.value = tpl.id;
-      opt.textContent = tpl.name;
+      opt.value = '';
+      opt.textContent = '-- No Saved Templates --';
       templateSelect.appendChild(opt);
+      return;
+    }
+
+    keys.forEach(key => {
+      const tpl = allTemplates[key];
+      if (tpl && tpl.name) {
+        const opt = document.createElement('option');
+        opt.value = tpl.id || key;
+        opt.textContent = tpl.name;
+        templateSelect.appendChild(opt);
+      }
     });
   };
 
@@ -105,6 +118,49 @@ document.addEventListener('DOMContentLoaded', () => {
       siteStatusEl.textContent = 'GetSetMart Assistant Ready';
       siteBadgeEl.textContent = 'STANDBY';
     }
+  });
+
+  // Lisstify-Style 1-Click Form Capture Event
+  captureBtn.addEventListener('click', () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (!tabs[0]) return;
+      chrome.tabs.sendMessage(tabs[0].id, { action: 'CAPTURE_FORM_DATA' }, (response) => {
+        if (chrome.runtime.lastError) {
+          alert("⚠️ Please open Meesho (supplier.meesho.com), Flipkart, or Amazon Product Listing page first!");
+          return;
+        }
+
+        if (response && response.success && response.formData) {
+          const scraped = response.formData;
+          const templateName = prompt("📷 Form Scraped! Enter a name for this Template (e.g. Anime Hoodie XL):", scraped.title ? scraped.title.substring(0, 25) : 'My Product Template');
+
+          if (!templateName) return;
+
+          const tplId = `tpl_${Date.now()}`;
+          const newTemplate = {
+            id: tplId,
+            name: templateName,
+            title: scraped.title || templateName,
+            hsn: scraped.hsn || '61091000',
+            gst: scraped.gst || '5',
+            fabric: scraped.fabric || 'Cotton',
+            brand: scraped.brand || 'GetSetMart',
+            price: scraped.price || '999',
+            cost: scraped.cost || '300',
+            description: scraped.description || ''
+          };
+
+          allTemplates[tplId] = newTemplate;
+          chrome.storage.local.set({ gsm_listing_templates: allTemplates }, () => {
+            renderTemplateDropdown();
+            templateSelect.value = tplId;
+            alert(`🎉 Success! Captured form details and saved template "${templateName}". Next time click 1-Click Autofill to fill instantly!`);
+          });
+        } else {
+          alert("⚠️ Could not find filled form fields on screen to capture. Make sure you are on a filled product listing form!");
+        }
+      });
+    });
   });
 
   // Toggle Form Views
@@ -168,19 +224,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Delete Selected Template Event
+  // Delete Selected Template Event (Fixed Continuous Deletion)
   deleteBtn.addEventListener('click', () => {
     const selectedId = templateSelect.value;
-    if (!selectedId) return;
+    if (!selectedId || !allTemplates[selectedId]) {
+      alert("⚠️ No valid template selected to delete!");
+      return;
+    }
 
     const tplObj = allTemplates[selectedId];
-    if (!tplObj) return;
-
     if (confirm(`Are you sure you want to delete template "${tplObj.name}"?`)) {
       delete allTemplates[selectedId];
       chrome.storage.local.set({ gsm_listing_templates: allTemplates }, () => {
         renderTemplateDropdown();
-        alert(`🗑️ Template deleted.`);
+        alert(`🗑️ Template "${tplObj.name}" deleted.`);
       });
     }
   });

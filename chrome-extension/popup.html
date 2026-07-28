@@ -82,6 +82,19 @@
     .btn-primary:hover {
       background-color: #dc2626;
     }
+    .btn-capture {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .btn-capture:hover {
+      background-color: #1d4ed8;
+    }
     .btn-secondary {
       background-color: #1f2937;
       color: white;
@@ -127,7 +140,7 @@
 <body>
   <div class="header">
     <div class="logo-text">GETSETMART <span class="badge">LISTING MANAGER</span></div>
-    <div style="font-size: 11px; color: #aaa;">v1.2</div>
+    <div style="font-size: 11px; color: #aaa;">v1.3</div>
   </div>
 
   <div class="active-site">
@@ -137,7 +150,7 @@
 
   <!-- MAIN LISTING VIEW -->
   <div id="main-view">
-    <div class="section-title">Select Active Template</div>
+    <div class="section-title">Select Saved Template</div>
     <div class="row" style="margin-bottom: 8px;">
       <select id="template-select" style="margin-bottom: 0; flex: 1;">
         <!-- Dynamic Options -->
@@ -145,14 +158,19 @@
       <button id="delete-template-btn" class="btn-danger" style="width: 44px; margin-bottom: 0; padding: 10px;" title="Delete Selected Template">🗑️</button>
     </div>
 
+    <!-- Lisstify 1-Click Form Scraper Button -->
+    <button id="capture-btn" class="btn-capture">📷 Save Current Screen Form as Template</button>
+
+    <!-- 1-Click Autofill Button -->
     <button id="autofill-btn" class="btn-primary">⚡ 1-Click Autofill Listing Form</button>
 
-    <button id="show-add-form-btn" class="btn-secondary">➕ Create & Save New Template</button>
+    <!-- Manual Template Add Button -->
+    <button id="show-add-form-btn" class="btn-secondary">➕ Manual Create Template</button>
   </div>
 
   <!-- NEW TEMPLATE FORM VIEW -->
   <div id="template-form-view">
-    <div class="section-title" style="color: #ef4444; margin-bottom: 10px;">Create New Listing Template</div>
+    <div class="section-title" style="color: #ef4444; margin-bottom: 10px;">Create / Edit Listing Template</div>
     
     <label style="font-size: 11px; color: #aaa;">Template Name (e.g. Printed T-Shirts)</label>
     <input type="text" id="tpl-name" placeholder="e.g. Printed T-Shirts" required>
