@@ -24,6 +24,10 @@ import AdminReviews from './pages/admin/AdminReviews';
 import AdminCoupons from './pages/admin/AdminCoupons';
 import AdminSettings from './pages/admin/AdminSettings';
 import HisabKitab from './pages/admin/HisabKitab';
+import LabelCropper from './pages/admin/LabelCropper';
+import ReturnClaims from './pages/admin/ReturnClaims';
+import PaymentReconciliation from './pages/admin/PaymentReconciliation';
+import LossAlerts from './pages/admin/LossAlerts';
 import Login from './pages/Login';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
@@ -149,6 +153,10 @@ function App() {
           <Route path="coupons" element={<AdminCoupons />} />
           <Route path="settings" element={<AdminSettings />} />
           <Route path="hisab-kitab" element={<HisabKitab />} />
+          <Route path="label-cropper" element={<LabelCropper />} />
+          <Route path="return-claims" element={<ReturnClaims />} />
+          <Route path="reconciliation" element={<PaymentReconciliation />} />
+          <Route path="loss-alerts" element={<LossAlerts />} />
         </Route>
 
         {/* Login & Reset Routes */}

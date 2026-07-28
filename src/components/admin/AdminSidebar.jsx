@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X, Ticket, MessageSquare, Receipt } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, X, Ticket, MessageSquare, Receipt, Scissors, ShieldAlert, DollarSign, AlertOctagon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import useMobile from '../../hooks/useMobile';
 
@@ -12,7 +12,11 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
         { icon: Package, label: 'Products', path: '/admin/products' },
         { icon: ShoppingBag, label: 'Channel Orders', path: '/admin/orders' },
+        { icon: Scissors, label: 'Label Cropper (4x6)', path: '/admin/label-cropper' },
         { icon: Receipt, label: 'Hisab-Kitab', path: '/admin/hisab-kitab' },
+        { icon: ShieldAlert, label: 'Return Claims (RTO)', path: '/admin/return-claims' },
+        { icon: DollarSign, label: 'Payment Audit', path: '/admin/reconciliation' },
+        { icon: AlertOctagon, label: 'Loss Alerts', path: '/admin/loss-alerts' },
         { icon: MessageSquare, label: 'Reviews', path: '/admin/reviews' },
         { icon: Ticket, label: 'Coupons', path: '/admin/coupons' },
         { icon: Settings, label: 'Settings', path: '/admin/settings' },
@@ -25,9 +29,9 @@ const AdminSidebar = ({ isOpen, onClose }) => {
 
     return (
         <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <div style={{
-                    fontSize: '1.25rem',
+                    fontSize: '1.2rem',
                     fontWeight: '900',
                     letterSpacing: '-0.05em',
                     whiteSpace: 'nowrap'
@@ -51,7 +55,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                 )}
             </div>
 
-            <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
+            <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', flex: 1, overflowY: 'auto' }}>
                 {navItems.map((item) => (
                     <NavLink
                         key={item.path}
@@ -64,17 +68,18 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                         style={({ isActive }) => ({
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '1rem',
-                            padding: '0.75rem 1rem',
+                            gap: '0.85rem',
+                            padding: '0.65rem 0.85rem',
                             borderRadius: '8px',
                             color: isActive ? 'white' : 'var(--text-muted)',
                             background: isActive ? 'var(--primary-red)' : 'transparent',
                             transition: 'all 0.3s',
                             textDecoration: 'none',
+                            fontSize: '0.85rem',
                             fontWeight: isActive ? '600' : '400'
                         })}
                     >
-                        <item.icon size={20} />
+                        <item.icon size={18} />
                         {item.label}
                     </NavLink>
                 ))}
@@ -85,16 +90,17 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                 style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '1rem',
-                    padding: '0.75rem 1rem',
+                    gap: '0.85rem',
+                    padding: '0.65rem 0.85rem',
                     background: 'transparent',
                     border: 'none',
                     color: 'var(--text-muted)',
                     cursor: 'pointer',
-                    marginTop: 'auto'
+                    marginTop: 'auto',
+                    fontSize: '0.85rem'
                 }}
             >
-                <LogOut size={20} />
+                <LogOut size={18} />
                 Logout
             </button>
         </aside>
