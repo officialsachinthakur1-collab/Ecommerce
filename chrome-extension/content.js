@@ -1,4 +1,4 @@
-// GetSetMart Password-Manager Style DOM Form Auto-Fill & Auto-Capture Engine for Meesho, Flipkart & Amazon
+// GetSetMart Password-Manager Style Isolated Shadow DOM Auto-Fill Engine for Meesho, Flipkart & Amazon
 
 // Global error boundary to prevent extension context crashes
 window.addEventListener('error', (e) => {
@@ -71,7 +71,6 @@ function fillNativeReactInput(el, val) {
     el.dispatchEvent(new Event('blur', { bubbles: true }));
     return true;
   } catch (err) {
-    // Safe fallback assignment
     try {
       el.value = val;
       el.dispatchEvent(new Event('input', { bubbles: true }));
@@ -83,7 +82,7 @@ function fillNativeReactInput(el, val) {
   }
 }
 
-// Scrape currently filled input fields from the active HTML DOM
+// Scrape currently filled input fields from active HTML DOM
 function scrapeDOMFormFields() {
   const scraped = {
     title: '',
@@ -131,59 +130,128 @@ function scrapeDOMFormFields() {
   return scraped;
 }
 
-// Inject Password-Manager Style In-Page Floating Auto-Fill Widget
-function injectPasswordManagerStyleWidget() {
-  if (document.getElementById('gsm-autofill-bar')) return;
+// Inject Isolated Shadow DOM Password Manager Widget
+function injectIsolatedShadowWidget() {
+  if (document.getElementById('gsm-autofill-host')) return;
 
-  const bar = document.createElement('div');
-  bar.id = 'gsm-autofill-bar';
-  bar.style.cssText = `
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 9999999;
-    background: #09090b;
-    border: 1px solid #dc2626;
-    border-radius: 12px;
-    padding: 14px 18px;
-    box-shadow: 0 12px 36px rgba(0,0,0,0.85);
-    color: #ffffff;
-    font-family: system-ui, -apple-system, sans-serif;
-    width: 300px;
-    box-sizing: border-box;
-  `;
+  const host = document.createElement('div');
+  host.id = 'gsm-autofill-host';
+  host.style.cssText = 'position: fixed; bottom: 24px; right: 24px; z-index: 999999999;';
 
-  bar.innerHTML = `
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-      <div style="font-weight: 800; font-size: 13px; color: #ef4444; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-        <span>🔐</span> GETSETMART AUTO-FILL
+  const shadow = host.attachShadow({ mode: 'open' });
+
+  const container = document.createElement('div');
+  container.id = 'gsm-autofill-bar';
+  container.innerHTML = `
+    <style>
+      .bar {
+        background: #09090b;
+        border: 1px solid #dc2626;
+        border-radius: 12px;
+        padding: 14px 18px;
+        box-shadow: 0 12px 36px rgba(0,0,0,0.85);
+        color: #ffffff;
+        font-family: system-ui, -apple-system, sans-serif;
+        width: 300px;
+        box-sizing: border-box;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .title {
+        font-weight: 800;
+        font-size: 13px;
+        color: #ef4444;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .badge {
+        font-size: 10px;
+        background: #064e3b;
+        color: #34d399;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 700;
+      }
+      .desc {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-bottom: 10px;
+        line-height: 1.4;
+      }
+      select, input {
+        width: 100%;
+        background: #18181b;
+        color: white;
+        border: 1px solid #3f3f46;
+        padding: 8px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-bottom: 8px;
+        box-sizing: border-box;
+        outline: none;
+      }
+      .btn-group {
+        display: flex;
+        gap: 8px;
+      }
+      button {
+        flex: 1;
+        border: none;
+        padding: 10px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .btn-fill {
+        background: #dc2626;
+        color: white;
+      }
+      .btn-fill:hover {
+        background: #b91c1c;
+      }
+      .btn-save {
+        background: #2563eb;
+        color: white;
+      }
+      .btn-save:hover {
+        background: #1d4ed8;
+      }
+    </style>
+    <div class="bar">
+      <div class="header">
+        <div class="title">🔐 GETSETMART AUTO-FILL</div>
+        <div class="badge">SHADOW DOM</div>
       </div>
-      <div style="font-size: 10px; background: #064e3b; color: #34d399; padding: 2px 6px; border-radius: 4px; font-weight: 700;">DOM READY</div>
-    </div>
-
-    <div style="font-size: 11px; color: #9ca3af; margin-bottom: 10px; line-height: 1.4;">
-      Password-manager engine ready. Select template to auto-fill React DOM fields:
-    </div>
-
-    <select id="gsm-dom-template-select" style="width: 100%; background: #18181b; color: white; border: 1px solid #3f3f46; padding: 8px 10px; border-radius: 6px; font-size: 12px; margin-bottom: 8px; cursor: pointer; outline: none;">
-      <option value="">-- Loading Saved Templates --</option>
-    </select>
-
-    <input type="text" id="gsm-dom-tpl-name" placeholder="Enter Template Name to Save..." style="width: 100%; background: #18181b; color: white; border: 1px solid #3f3f46; padding: 7px 10px; border-radius: 6px; font-size: 11px; margin-bottom: 10px; box-sizing: border-box; outline: none;" />
-
-    <div style="display: flex; gap: 8px;">
-      <button id="gsm-dom-autofill-btn" style="flex: 1; background: #dc2626; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">⚡ Auto-Fill</button>
-      <button id="gsm-dom-save-btn" style="flex: 1; background: #2563eb; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">💾 Save Form</button>
+      <div class="desc">Password-manager engine ready. Select template to auto-fill React DOM fields:</div>
+      <select id="gsm-dom-template-select">
+        <option value="">-- Loading Saved Templates --</option>
+      </select>
+      <input type="text" id="gsm-dom-tpl-name" placeholder="Enter Template Name to Save..." />
+      <div class="btn-group">
+        <button id="gsm-dom-autofill-btn" class="btn-fill">⚡ Auto-Fill</button>
+        <button id="gsm-dom-save-btn" class="btn-save">💾 Save Form</button>
+      </div>
     </div>
   `;
 
-  document.body.appendChild(bar);
+  shadow.appendChild(container);
+  document.body.appendChild(host);
 
-  // Load Saved Templates into Select
+  const sel = shadow.getElementById('gsm-dom-template-select');
+  const nameInput = shadow.getElementById('gsm-dom-tpl-name');
+  const autofillBtn = shadow.getElementById('gsm-dom-autofill-btn');
+  const saveBtn = shadow.getElementById('gsm-dom-save-btn');
+
+  // Refresh Dropdown in Shadow DOM
   const refreshDropdown = () => {
-    const sel = document.getElementById('gsm-dom-template-select');
     if (!sel) return;
-
     safeStorageGet(['gsm_listing_templates'], (result) => {
       const templates = result.gsm_listing_templates || {};
       sel.innerHTML = '';
@@ -208,8 +276,8 @@ function injectPasswordManagerStyleWidget() {
 
   refreshDropdown();
 
-  // Save Current DOM Form as Template (Inline Safe Input)
-  document.getElementById('gsm-dom-save-btn').addEventListener('click', () => {
+  // Save Form Handler
+  saveBtn.addEventListener('click', () => {
     try {
       if (!isExtensionValid()) {
         alert("⚠️ Extension updated. Please refresh (F5) this webpage!");
@@ -225,7 +293,6 @@ function injectPasswordManagerStyleWidget() {
         return;
       }
 
-      const nameInput = document.getElementById('gsm-dom-tpl-name');
       const customName = nameInput ? nameInput.value.trim() : '';
       const finalTplName = customName || (scraped.title ? scraped.title.substring(0, 25) : `Meesho Listing ${new Date().toLocaleTimeString()}`);
 
@@ -257,15 +324,14 @@ function injectPasswordManagerStyleWidget() {
     }
   });
 
-  // Auto-Fill Current Form via Password-Manager Setter Bypass
-  document.getElementById('gsm-dom-autofill-btn').addEventListener('click', () => {
+  // Auto-Fill Handler
+  autofillBtn.addEventListener('click', () => {
     try {
       if (!isExtensionValid()) {
         alert("⚠️ Extension updated. Please refresh (F5) this webpage!");
         return;
       }
 
-      const sel = document.getElementById('gsm-dom-template-select');
       const selectedId = sel ? sel.value : '';
       if (!selectedId) {
         alert("⚠️ Please select a template to auto-fill!");
@@ -318,7 +384,7 @@ function injectPasswordManagerStyleWidget() {
 
 // Auto-inject Password Manager Widget on Meesho, Flipkart & Amazon Listing pages
 if (window.location.href.includes('meesho.com') || window.location.href.includes('flipkart.com') || window.location.href.includes('amazon.in')) {
-  setTimeout(injectPasswordManagerStyleWidget, 1500);
+  setTimeout(injectIsolatedShadowWidget, 1500);
 }
 
 // Listen for messages from extension popup
