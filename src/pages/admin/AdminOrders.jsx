@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Download, Trash2, ShoppingBag, RefreshCw } from 'lucide-react';
+import { Plus, Download, Trash2, ShoppingBag, Edit3 } from 'lucide-react';
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState(() => {
@@ -10,7 +10,10 @@ export default function AdminOrders() {
   const [activeChannel, setActiveChannel] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Modals
   const [showModal, setShowModal] = useState(false);
+  const [editingOrder, setEditingOrder] = useState(null);
 
   // Form State
   const [ordChannel, setOrdChannel] = useState('Meesho');
@@ -21,26 +24,11 @@ export default function AdminOrders() {
   const [ordShipping, setOrdShipping] = useState(70);
   const [ordFee, setOrdFee] = useState(50);
   const [ordStatus, setOrdStatus] = useState('DELIVERED');
+  const [customOrderId, setCustomOrderId] = useState('');
 
   useEffect(() => {
     localStorage.setItem('gsm_orders', JSON.stringify(orders));
   }, [orders]);
-
-  // Sync with Chrome Extension synced storage
-  useEffect(() => {
-    if (window.chrome && window.chrome.storage && window.chrome.storage.local) {
-      window.chrome.storage.local.get(['gsm_synced_orders'], (result) => {
-        if (result && result.gsm_synced_orders && result.gsm_synced_orders.length > 0) {
-          setOrders(prev => {
-            const combined = [...result.gsm_synced_orders, ...prev];
-            const uniqueMap = new Map();
-            combined.forEach(item => uniqueMap.set(item.id, item));
-            return Array.from(uniqueMap.values());
-          });
-        }
-      });
-    }
-  }, []);
 
   const calculatePnL = (ord) => {
     if (ord.status === 'RETURNED') {
@@ -50,27 +38,79 @@ export default function AdminOrders() {
     return ord.price - (ord.cost + ord.shipping + ord.fee + (ord.ads || 0));
   };
 
+  const handleOpenAddModal = () => {
+    setEditingOrder(null);
+    setOrdChannel('Meesho');
+    setOrdCustomer('');
+    setOrdItem('');
+    setOrdPrice(999);
+    setOrdCost(300);
+    setOrdShipping(70);
+    setOrdFee(50);
+    setOrdStatus('DELIVERED');
+    setCustomOrderId(`GSM-ORD-${1000 + orders.length + 1}`);
+    setShowModal(true);
+  };
+
+  const handleOpenEditModal = (ord) => {
+    setEditingOrder(ord);
+    setCustomOrderId(ord.id);
+    setOrdChannel(ord.channel || 'Meesho');
+    setOrdCustomer(ord.customer || '');
+    setOrdItem(ord.items || '');
+    setOrdPrice(ord.price || 0);
+    setOrdCost(ord.cost || 0);
+    setOrdShipping(ord.shipping || 0);
+    setOrdFee(ord.fee || 0);
+    setOrdStatus(ord.status || 'DELIVERED');
+    setShowModal(true);
+  };
+
   const handleSaveOrder = (e) => {
     e.preventDefault();
     if (!ordCustomer || !ordItem) return;
-    const newOrd = {
-      id: `GSM-ORD-${1000 + orders.length + 1}`,
-      date: new Date().toISOString().split('T')[0],
-      channel: ordChannel,
-      customer: ordCustomer,
-      items: ordItem,
-      price: Number(ordPrice),
-      cost: Number(ordCost),
-      shipping: Number(ordShipping),
-      fee: Number(ordFee),
-      ads: 0,
-      rtoCost: ordStatus === 'RETURNED' ? 150 : 0,
-      status: ordStatus
-    };
-    setOrders([newOrd, ...orders]);
+
+    if (editingOrder) {
+      // Edit existing order
+      setOrders(orders.map(o => {
+        if (o.id === editingOrder.id) {
+          return {
+            ...o,
+            id: customOrderId || o.id,
+            channel: ordChannel,
+            customer: ordCustomer,
+            items: ordItem,
+            price: Number(ordPrice),
+            cost: Number(ordCost),
+            shipping: Number(ordShipping),
+            fee: Number(ordFee),
+            status: ordStatus,
+            rtoCost: ordStatus === 'RETURNED' ? 150 : 0
+          };
+        }
+        return o;
+      }));
+    } else {
+      // Create new order
+      const newOrd = {
+        id: customOrderId || `GSM-ORD-${1000 + orders.length + 1}`,
+        date: new Date().toISOString().split('T')[0],
+        channel: ordChannel,
+        customer: ordCustomer,
+        items: ordItem,
+        price: Number(ordPrice),
+        cost: Number(ordCost),
+        shipping: Number(ordShipping),
+        fee: Number(ordFee),
+        ads: 0,
+        rtoCost: ordStatus === 'RETURNED' ? 150 : 0,
+        status: ordStatus
+      };
+      setOrders([newOrd, ...orders]);
+    }
+
     setShowModal(false);
-    setOrdCustomer('');
-    setOrdItem('');
+    setEditingOrder(null);
   };
 
   const handleStatusChange = (id, newStatus) => {
@@ -96,9 +136,6 @@ export default function AdminOrders() {
     if (window.confirm("Are you sure you want to clear all order records?")) {
       setOrders([]);
       localStorage.removeItem('gsm_orders');
-      if (window.chrome && window.chrome.storage && window.chrome.storage.local) {
-        window.chrome.storage.local.remove(['gsm_synced_orders']);
-      }
     }
   };
 
@@ -109,8 +146,8 @@ export default function AdminOrders() {
       o.id,
       o.date,
       o.channel,
-      `"${o.customer.replace(/"/g, '""')}"`,
-      `"${o.items.replace(/"/g, '""')}"`,
+      `"${(o.customer || '').replace(/"/g, '""')}"`,
+      `"${(o.items || '').replace(/"/g, '""')}"`,
       o.price,
       o.cost,
       o.shipping,
@@ -131,9 +168,9 @@ export default function AdminOrders() {
   const filteredOrders = orders.filter(o => {
     const matchChannel = activeChannel === 'ALL' || o.channel === activeChannel;
     const matchStatus = statusFilter === 'ALL' || o.status === statusFilter;
-    const matchSearch = o.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        o.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        o.items.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchSearch = (o.id || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        (o.customer || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        (o.items || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchChannel && matchStatus && matchSearch;
   });
 
@@ -185,10 +222,10 @@ export default function AdminOrders() {
               fontWeight: '600'
             }}
           >
-            <Download size={18} /> Export Excel / CSV P&L
+            <Download size={18} /> Export Excel / CSV
           </button>
           <button 
-            onClick={() => setShowModal(true)}
+            onClick={handleOpenAddModal}
             style={{
               padding: '0.65rem 1.25rem',
               borderRadius: '8px',
@@ -259,9 +296,9 @@ export default function AdminOrders() {
           <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
             <ShoppingBag size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
             <h3 style={{ color: 'white', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No Real Orders Added Yet</h3>
-            <p style={{ fontSize: '0.85rem', marginBottom: '1.5rem' }}>Click "+ Add Real Order" above, or open your Meesho / Flipkart orders panel and use the GetSetMart Chrome Extension to Sync Orders!</p>
+            <p style={{ fontSize: '0.85rem', marginBottom: '1.5rem' }}>Click "+ Add Real Order" above to record your sales with full P&L!</p>
             <button 
-              onClick={() => setShowModal(true)}
+              onClick={handleOpenAddModal}
               style={{ padding: '0.65rem 1.25rem', background: 'var(--primary-red)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
             >
               + Add Real Order Now
@@ -274,19 +311,19 @@ export default function AdminOrders() {
                 <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
                   <th style={{ padding: '0.75rem' }}>Order ID</th>
                   <th style={{ padding: '0.75rem' }}>Channel</th>
-                  <th style={{ padding: '0.75rem' }}>Customer</th>
-                  <th style={{ padding: '0.75rem' }}>Product</th>
-                  <th style={{ padding: '0.75rem' }}>Price</th>
+                  <th style={{ padding: '0.75rem' }}>Customer Name / City</th>
+                  <th style={{ padding: '0.75rem' }}>Product Item</th>
+                  <th style={{ padding: '0.75rem' }}>Selling Price</th>
                   <th style={{ padding: '0.75rem' }}>Cost Breakdown</th>
                   <th style={{ padding: '0.75rem' }}>Net Profit / Loss</th>
                   <th style={{ padding: '0.75rem' }}>Status</th>
-                  <th style={{ padding: '0.75rem' }}>Action</th>
+                  <th style={{ padding: '0.75rem', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.map(o => {
                   const pnl = calculatePnL(o);
-                  const badge = getChannelBadge(o.channel);
+                  const badge = getChannelBadge(o.channel || 'Meesho');
                   return (
                     <tr key={o.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
                       <td style={{ padding: '0.75rem', fontWeight: '700', color: 'white' }}><code>{o.id}</code></td>
@@ -295,7 +332,7 @@ export default function AdminOrders() {
                           {badge.label}
                         </span>
                       </td>
-                      <td style={{ padding: '0.75rem', color: '#cbd5e1', fontWeight: '600' }}>{o.customer}</td>
+                      <td style={{ padding: '0.75rem', color: '#cbd5e1', fontWeight: '600' }}>{o.customer || 'N/A'}</td>
                       <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{o.items}</td>
                       <td style={{ padding: '0.75rem', color: 'white', fontWeight: '700' }}>₹{o.price}</td>
                       <td style={{ padding: '0.75rem', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
@@ -317,13 +354,23 @@ export default function AdminOrders() {
                           <option value="RETURNED">Returned / RTO</option>
                         </select>
                       </td>
-                      <td style={{ padding: '0.75rem' }}>
-                        <button 
-                          onClick={() => handleDeleteOrder(o.id)}
-                          style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer' }}
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                      <td style={{ padding: '0.75rem', textAlign: 'right' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                          <button 
+                            onClick={() => handleOpenEditModal(o)}
+                            title="Edit Order"
+                            style={{ background: '#222', border: '1px solid #333', color: '#38bdf8', cursor: 'pointer', padding: '0.35rem 0.5rem', borderRadius: '6px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                          >
+                            <Edit3 size={14} /> Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteOrder(o.id)}
+                            title="Delete Order"
+                            style={{ background: '#222', border: '1px solid #333', color: '#ef4444', cursor: 'pointer', padding: '0.35rem 0.5rem', borderRadius: '6px' }}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -334,13 +381,19 @@ export default function AdminOrders() {
         )}
       </div>
 
-      {/* New Order Modal */}
+      {/* Add / Edit Order Modal */}
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
           <div style={{ background: '#141414', border: '1px solid #222', borderRadius: '14px', width: '100%', maxWidth: '540px', padding: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', color: 'white' }}>Record Real Order</h3>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', color: 'white' }}>
+              {editingOrder ? '✏️ Edit Order Details' : '➕ Add Real Order'}
+            </h3>
             <form onSubmit={handleSaveOrder} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Order ID</label>
+                  <input type="text" value={customOrderId} onChange={e => setCustomOrderId(e.target.value)} placeholder="e.g. MSH-991820" required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
+                </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Sales Channel</label>
                   <select value={ordChannel} onChange={e => setOrdChannel(e.target.value)} style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }}>
@@ -350,26 +403,16 @@ export default function AdminOrders() {
                     <option value="GetSetMart Store">GetSetMart Store</option>
                   </select>
                 </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Customer Name & City</label>
-                  <input type="text" value={ordCustomer} onChange={e => setOrdCustomer(e.target.value)} placeholder="e.g. Rahul Sharma (Delhi)" required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
-                </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Product Name</label>
-                  <input type="text" value={ordItem} onChange={e => setOrdItem(e.target.value)} placeholder="e.g. Oversized Hoodie XL" required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Customer Name / City</label>
+                  <input type="text" value={ordCustomer} onChange={e => setOrdCustomer(e.target.value)} placeholder="e.g. Rahul Sharma (Delhi)" required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Order Status</label>
-                  <select value={ordStatus} onChange={e => setOrdStatus(e.target.value)} style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }}>
-                    <option value="DELIVERED">Delivered</option>
-                    <option value="SHIPPED">Shipped</option>
-                    <option value="PENDING">Pending</option>
-                    <option value="CANCELLED">Cancelled</option>
-                    <option value="RETURNED">Returned / RTO</option>
-                  </select>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Product Name</label>
+                  <input type="text" value={ordItem} onChange={e => setOrdItem(e.target.value)} placeholder="e.g. Oversized Hoodie XL" required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
                 </div>
               </div>
 
@@ -384,20 +427,32 @@ export default function AdminOrders() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Shipping Fee (₹)</label>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Shipping (₹)</label>
                   <input type="number" value={ordShipping} onChange={e => setOrdShipping(e.target.value)} required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Marketplace Fee (₹)</label>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Fee (₹)</label>
                   <input type="number" value={ordFee} onChange={e => setOrdFee(e.target.value)} required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Status</label>
+                  <select value={ordStatus} onChange={e => setOrdStatus(e.target.value)} style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }}>
+                    <option value="DELIVERED">Delivered</option>
+                    <option value="SHIPPED">Shipped</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="CANCELLED">Cancelled</option>
+                    <option value="RETURNED">Returned / RTO</option>
+                  </select>
                 </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
                 <button type="button" onClick={() => setShowModal(false)} style={{ padding: '0.65rem 1.25rem', background: 'transparent', border: '1px solid #333', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
-                <button type="submit" style={{ padding: '0.65rem 1.25rem', background: 'var(--primary-red)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>Save Real Order & P&L</button>
+                <button type="submit" style={{ padding: '0.65rem 1.25rem', background: 'var(--primary-red)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>
+                  {editingOrder ? 'Update Order Details' : 'Save Real Order & P&L'}
+                </button>
               </div>
             </form>
           </div>
