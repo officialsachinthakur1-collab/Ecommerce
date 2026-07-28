@@ -6,32 +6,17 @@ import { Link } from 'react-router-dom';
 export default function Dashboard() {
     const [orders, setOrders] = useState(() => {
         const saved = localStorage.getItem('gsm_orders');
-        return saved ? JSON.parse(saved) : [
-            { id: 'GSM-ORD-1001', channel: 'Meesho', items: 'Oversized Hoodie', price: 1499, cost: 420, shipping: 80, fee: 75, ads: 100, status: 'DELIVERED' },
-            { id: 'GSM-ORD-1002', channel: 'Flipkart', items: 'Denim Jacket', price: 2499, cost: 750, shipping: 90, fee: 300, ads: 150, status: 'SHIPPED' },
-            { id: 'GSM-ORD-1003', channel: 'Amazon', items: 'Anarkali Set', price: 1999, cost: 580, shipping: 80, fee: 300, ads: 120, status: 'DELIVERED' },
-            { id: 'GSM-ORD-1004', channel: 'Meesho', items: 'Kundan Set', price: 799, cost: 140, shipping: 50, fee: 40, ads: 50, rtoCost: 150, status: 'RETURNED' },
-            { id: 'GSM-ORD-1005', channel: 'GetSetMart Store', items: 'Graphic Hoodie', price: 1599, cost: 460, shipping: 70, fee: 32, ads: 110, status: 'CANCELLED' }
-        ];
+        return saved ? JSON.parse(saved) : [];
     });
 
     const [expenses, setExpenses] = useState(() => {
         const saved = localStorage.getItem('gsm_expenses');
-        return saved ? JSON.parse(saved) : [
-            { id: 1, category: 'Ads & Marketing', amount: 15000 },
-            { id: 2, category: 'Packing Materials', amount: 4500 },
-            { id: 3, category: 'Shipping & Freight', amount: 18200 },
-            { id: 4, category: 'Salaries', amount: 35000 }
-        ];
+        return saved ? JSON.parse(saved) : [];
     });
 
     const [suppliers, setSuppliers] = useState(() => {
         const saved = localStorage.getItem('gsm_suppliers');
-        return saved ? JSON.parse(saved) : [
-            { id: 'SUP-01', remaining: 70000 },
-            { id: 'SUP-02', remaining: 0 },
-            { id: 'SUP-03', remaining: 30000 }
-        ];
+        return saved ? JSON.parse(saved) : [];
     });
 
     const calculatePnL = (ord) => {
@@ -85,7 +70,7 @@ export default function Dashboard() {
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Breakdown of sales, profit and ROI by marketplace</p>
                         </div>
                         <Link to="/admin/orders" style={{ color: 'var(--primary-red)', textDecoration: 'none', fontWeight: '600', fontSize: '0.85rem' }}>
-                            View All Orders →
+                            View Orders →
                         </Link>
                     </div>
 

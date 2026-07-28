@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Plus, ShieldAlert, CheckCircle, Clock, FileCheck } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 export default function ReturnClaims() {
   const [claims, setClaims] = useState(() => {
     const saved = localStorage.getItem('gsm_return_claims');
-    return saved ? JSON.parse(saved) : [
-      { id: 'CLM-901', date: '2026-07-25', channel: 'Meesho', waybill: 'DEL-88192019', issueType: 'Parcel Untraced / Lost in Transit', item: 'Anarkali Suit Set', sp: 1999, refundClaim: 1420, status: 'APPROVED', creditDate: '2026-07-27' },
-      { id: 'CLM-902', date: '2026-07-26', channel: 'Flipkart', waybill: 'FKT-44102931', issueType: 'Wrong Product Received (Switch Return)', item: 'Oversized Hoodie', sp: 1499, refundClaim: 1050, status: 'SUBMITTED', creditDate: 'Pending' },
-      { id: 'CLM-903', date: '2026-07-27', channel: 'Meesho', waybill: 'SFX-11029384', issueType: 'Empty Box Delivered', item: 'Kundan Earring Set', sp: 799, refundClaim: 550, status: 'ELIGIBLE', creditDate: 'Unfiled' }
-    ];
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [filterStatus, setFilterStatus] = useState('ALL');
@@ -142,54 +138,60 @@ export default function ReturnClaims() {
 
       {/* Claims Table */}
       <div style={{ background: '#111', border: '1px solid #222', borderRadius: '12px', padding: '1.5rem' }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
-                <th style={{ padding: '0.75rem' }}>Claim ID</th>
-                <th style={{ padding: '0.75rem' }}>Channel</th>
-                <th style={{ padding: '0.75rem' }}>Waybill / AWB No</th>
-                <th style={{ padding: '0.75rem' }}>Issue Type</th>
-                <th style={{ padding: '0.75rem' }}>Product</th>
-                <th style={{ padding: '0.75rem' }}>Refund Claimed</th>
-                <th style={{ padding: '0.75rem' }}>Claim Status</th>
-                <th style={{ padding: '0.75rem' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredClaims.map(c => {
-                const badge = getStatusBadge(c.status);
-                return (
-                  <tr key={c.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
-                    <td style={{ padding: '0.75rem', fontWeight: '700', color: 'white' }}><code>{c.id}</code></td>
-                    <td style={{ padding: '0.75rem', fontWeight: '600', color: '#cbd5e1' }}>{c.channel}</td>
-                    <td style={{ padding: '0.75rem', color: '#94a3b8' }}><code>{c.waybill}</code></td>
-                    <td style={{ padding: '0.75rem', color: '#f59e0b', fontWeight: '600' }}>{c.issueType}</td>
-                    <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{c.item}</td>
-                    <td style={{ padding: '0.75rem', color: '#10b981', fontWeight: '800' }}>₹{c.refundClaim.toLocaleString('en-IN')}</td>
-                    <td style={{ padding: '0.75rem' }}>
-                      <span style={{ background: badge.bg, color: 'white', padding: '0.25rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '700' }}>
-                        {badge.label}
-                      </span>
-                    </td>
-                    <td style={{ padding: '0.75rem' }}>
-                      <select 
-                        value={c.status}
-                        onChange={e => handleStatusUpdate(c.id, e.target.value)}
-                        style={{ padding: '0.35rem 0.6rem', background: '#080808', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '0.78rem' }}
-                      >
-                        <option value="ELIGIBLE">Eligible</option>
-                        <option value="SUBMITTED">Submitted</option>
-                        <option value="APPROVED">Approved & Credited</option>
-                        <option value="REJECTED">Rejected</option>
-                      </select>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        {filteredClaims.length === 0 ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+            No return loss claims filed yet. Click "+ File New Loss Claim" to log untraced parcels or damaged returns.
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
+                  <th style={{ padding: '0.75rem' }}>Claim ID</th>
+                  <th style={{ padding: '0.75rem' }}>Channel</th>
+                  <th style={{ padding: '0.75rem' }}>Waybill / AWB No</th>
+                  <th style={{ padding: '0.75rem' }}>Issue Type</th>
+                  <th style={{ padding: '0.75rem' }}>Product</th>
+                  <th style={{ padding: '0.75rem' }}>Refund Claimed</th>
+                  <th style={{ padding: '0.75rem' }}>Claim Status</th>
+                  <th style={{ padding: '0.75rem' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredClaims.map(c => {
+                  const badge = getStatusBadge(c.status);
+                  return (
+                    <tr key={c.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '700', color: 'white' }}><code>{c.id}</code></td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600', color: '#cbd5e1' }}>{c.channel}</td>
+                      <td style={{ padding: '0.75rem', color: '#94a3b8' }}><code>{c.waybill}</code></td>
+                      <td style={{ padding: '0.75rem', color: '#f59e0b', fontWeight: '600' }}>{c.issueType}</td>
+                      <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{c.item}</td>
+                      <td style={{ padding: '0.75rem', color: '#10b981', fontWeight: '800' }}>₹{c.refundClaim.toLocaleString('en-IN')}</td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <span style={{ background: badge.bg, color: 'white', padding: '0.25rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '700' }}>
+                          {badge.label}
+                        </span>
+                      </td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <select 
+                          value={c.status}
+                          onChange={e => handleStatusUpdate(c.id, e.target.value)}
+                          style={{ padding: '0.35rem 0.6rem', background: '#080808', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '0.78rem' }}
+                        >
+                          <option value="ELIGIBLE">Eligible</option>
+                          <option value="SUBMITTED">Submitted</option>
+                          <option value="APPROVED">Approved & Credited</option>
+                          <option value="REJECTED">Rejected</option>
+                        </select>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* File Claim Modal */}

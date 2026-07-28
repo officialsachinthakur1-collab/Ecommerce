@@ -4,21 +4,12 @@ import { Plus } from 'lucide-react';
 export default function HisabKitab() {
   const [suppliers, setSuppliers] = useState(() => {
     const saved = localStorage.getItem('gsm_suppliers');
-    return saved ? JSON.parse(saved) : [
-      { id: 'SUP-01', name: 'Vardhman Textiles Ltd', qty: 500, totalPurchased: 450000, paid: 380000, remaining: 70000 },
-      { id: 'SUP-02', name: 'Jaipur Crafts & Ethnic Apparels', qty: 350, totalPurchased: 280000, paid: 280000, remaining: 0 },
-      { id: 'SUP-03', name: 'Aura Accessories & Jewelry', qty: 200, totalPurchased: 120000, paid: 90000, remaining: 30000 }
-    ];
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [expenses, setExpenses] = useState(() => {
     const saved = localStorage.getItem('gsm_expenses');
-    return saved ? JSON.parse(saved) : [
-      { id: 1, date: '2026-07-27', category: 'Ads & Marketing', desc: 'Meta & Instagram Ads Campaign', amount: 15000, method: 'Credit Card' },
-      { id: 2, date: '2026-07-26', category: 'Packing Materials', desc: 'Custom Branded Polybags & Boxes', amount: 4500, method: 'UPI' },
-      { id: 3, date: '2026-07-20', category: 'Shipping & Freight', desc: 'Delhivery Freight Invoice', amount: 18200, method: 'Bank Transfer' },
-      { id: 4, date: '2026-07-01', category: 'Salaries', desc: 'Warehouse & Dispatch Staff Salaries', amount: 35000, method: 'Bank Transfer' }
-    ];
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [showSupplierModal, setShowSupplierModal] = useState(false);
@@ -26,9 +17,9 @@ export default function HisabKitab() {
 
   // Supplier Form State
   const [supName, setSupName] = useState('');
-  const [supQty, setSupQty] = useState(250);
-  const [supTotal, setSupTotal] = useState(150000);
-  const [supPaid, setSupPaid] = useState(50000);
+  const [supQty, setSupQty] = useState(100);
+  const [supTotal, setSupTotal] = useState(50000);
+  const [supPaid, setSupPaid] = useState(20000);
 
   // Expense Form State
   const [expCategory, setExpCategory] = useState('Ads & Marketing');
@@ -169,72 +160,84 @@ export default function HisabKitab() {
         {/* Supplier Purchase Ledger */}
         <div style={{ background: '#111', border: '1px solid #222', padding: '1.5rem', borderRadius: '12px' }}>
           <h2 style={{ fontSize: '1.15rem', fontWeight: '700', marginBottom: '1rem', color: 'white' }}>Supplier Purchase Ledger</h2>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
-                  <th style={{ padding: '0.75rem' }}>Supplier</th>
-                  <th style={{ padding: '0.75rem' }}>Qty</th>
-                  <th style={{ padding: '0.75rem' }}>Total Invoice</th>
-                  <th style={{ padding: '0.75rem' }}>Paid</th>
-                  <th style={{ padding: '0.75rem' }}>Remaining</th>
-                  <th style={{ padding: '0.75rem' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {suppliers.map(s => (
-                  <tr key={s.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
-                    <td style={{ padding: '0.75rem', fontWeight: '600', color: 'white' }}>{s.name}</td>
-                    <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{s.qty} units</td>
-                    <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>₹{s.totalPurchased.toLocaleString('en-IN')}</td>
-                    <td style={{ padding: '0.75rem', color: '#10b981' }}>₹{s.paid.toLocaleString('en-IN')}</td>
-                    <td style={{ padding: '0.75rem', color: '#ef4444', fontWeight: '700' }}>₹{s.remaining.toLocaleString('en-IN')}</td>
-                    <td style={{ padding: '0.75rem' }}>
-                      {s.remaining > 0 ? (
-                        <button 
-                          onClick={() => handlePaySupplier(s.id)}
-                          style={{ background: '#222', border: '1px solid #333', color: 'white', padding: '0.35rem 0.65rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem' }}
-                        >
-                          Pay Balance
-                        </button>
-                      ) : (
-                        <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: '600' }}>Paid</span>
-                      )}
-                    </td>
+          {suppliers.length === 0 ? (
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              No supplier purchases logged. Click "+ Add Supplier Purchase" to record inventory invoices.
+            </div>
+          ) : (
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
+                    <th style={{ padding: '0.75rem' }}>Supplier</th>
+                    <th style={{ padding: '0.75rem' }}>Qty</th>
+                    <th style={{ padding: '0.75rem' }}>Total Invoice</th>
+                    <th style={{ padding: '0.75rem' }}>Paid</th>
+                    <th style={{ padding: '0.75rem' }}>Remaining</th>
+                    <th style={{ padding: '0.75rem' }}>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {suppliers.map(s => (
+                    <tr key={s.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '600', color: 'white' }}>{s.name}</td>
+                      <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{s.qty} units</td>
+                      <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>₹{s.totalPurchased.toLocaleString('en-IN')}</td>
+                      <td style={{ padding: '0.75rem', color: '#10b981' }}>₹{s.paid.toLocaleString('en-IN')}</td>
+                      <td style={{ padding: '0.75rem', color: '#ef4444', fontWeight: '700' }}>₹{s.remaining.toLocaleString('en-IN')}</td>
+                      <td style={{ padding: '0.75rem' }}>
+                        {s.remaining > 0 ? (
+                          <button 
+                            onClick={() => handlePaySupplier(s.id)}
+                            style={{ background: '#222', border: '1px solid #333', color: 'white', padding: '0.35rem 0.65rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem' }}
+                          >
+                            Pay Balance
+                          </button>
+                        ) : (
+                          <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: '600' }}>Paid</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Operating Kharcha Tracker */}
         <div style={{ background: '#111', border: '1px solid #222', padding: '1.5rem', borderRadius: '12px' }}>
           <h2 style={{ fontSize: '1.15rem', fontWeight: '700', marginBottom: '1rem', color: 'white' }}>Operating Kharcha Tracker</h2>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
-                  <th style={{ padding: '0.75rem' }}>Date</th>
-                  <th style={{ padding: '0.75rem' }}>Category</th>
-                  <th style={{ padding: '0.75rem' }}>Description</th>
-                  <th style={{ padding: '0.75rem' }}>Amount</th>
-                  <th style={{ padding: '0.75rem' }}>Method</th>
-                </tr>
-              </thead>
-              <tbody>
-                {expenses.map(e => (
-                  <tr key={e.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
-                    <td style={{ padding: '0.75rem', color: 'var(--text-muted)', fontSize: '0.78rem' }}>{e.date}</td>
-                    <td style={{ padding: '0.75rem', fontWeight: '600', color: 'white' }}>{e.category}</td>
-                    <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{e.desc}</td>
-                    <td style={{ padding: '0.75rem', color: '#ef4444', fontWeight: '700' }}>₹{e.amount.toLocaleString('en-IN')}</td>
-                    <td style={{ padding: '0.75rem', color: '#94a3b8' }}>{e.method}</td>
+          {expenses.length === 0 ? (
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              No expenses logged yet. Click "+ Log Kharcha (Expense)" to record marketing, polybags, or freight costs.
+            </div>
+          ) : (
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
+                    <th style={{ padding: '0.75rem' }}>Date</th>
+                    <th style={{ padding: '0.75rem' }}>Category</th>
+                    <th style={{ padding: '0.75rem' }}>Description</th>
+                    <th style={{ padding: '0.75rem' }}>Amount</th>
+                    <th style={{ padding: '0.75rem' }}>Method</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {expenses.map(e => (
+                    <tr key={e.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
+                      <td style={{ padding: '0.75rem', color: 'var(--text-muted)', fontSize: '0.78rem' }}>{e.date}</td>
+                      <td style={{ padding: '0.75rem', fontWeight: '600', color: 'white' }}>{e.category}</td>
+                      <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{e.desc}</td>
+                      <td style={{ padding: '0.75rem', color: '#ef4444', fontWeight: '700' }}>₹{e.amount.toLocaleString('en-IN')}</td>
+                      <td style={{ padding: '0.75rem', color: '#94a3b8' }}>{e.method}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
       </div>

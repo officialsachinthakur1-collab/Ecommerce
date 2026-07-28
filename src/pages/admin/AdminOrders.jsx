@@ -1,16 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Plus, Download, Trash2 } from 'lucide-react';
+import { Plus, Download, Trash2, ShoppingBag } from 'lucide-react';
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState(() => {
     const saved = localStorage.getItem('gsm_orders');
-    return saved ? JSON.parse(saved) : [
-      { id: 'GSM-ORD-1001', date: '2026-07-28', channel: 'Meesho', customer: 'Rohan Verma (Delhi)', items: 'Oversized Hoodie', price: 1499, cost: 420, shipping: 80, fee: 75, ads: 100, rtoCost: 0, status: 'DELIVERED' },
-      { id: 'GSM-ORD-1002', date: '2026-07-28', channel: 'Flipkart', customer: 'Priya Singh (Mumbai)', items: 'Denim Jacket', price: 2499, cost: 750, shipping: 90, fee: 300, ads: 150, rtoCost: 0, status: 'SHIPPED' },
-      { id: 'GSM-ORD-1003', date: '2026-07-27', channel: 'Amazon', customer: 'Anish Kumar (Bangalore)', items: 'Anarkali Set', price: 1999, cost: 580, shipping: 80, fee: 300, ads: 120, rtoCost: 0, status: 'DELIVERED' },
-      { id: 'GSM-ORD-1004', date: '2026-07-27', channel: 'Meesho', customer: 'Kavita Das (Kolkata)', items: 'Kundan Set', price: 799, cost: 140, shipping: 50, fee: 40, ads: 50, rtoCost: 150, status: 'RETURNED' },
-      { id: 'GSM-ORD-1005', date: '2026-07-26', channel: 'GetSetMart Store', customer: 'Vikram Gupta (Chandigarh)', items: 'Graphic Hoodie', price: 1599, cost: 460, shipping: 70, fee: 32, ads: 110, rtoCost: 0, status: 'CANCELLED' }
-    ];
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [activeChannel, setActiveChannel] = useState('ALL');
@@ -21,11 +15,11 @@ export default function AdminOrders() {
   // Form State
   const [ordChannel, setOrdChannel] = useState('Meesho');
   const [ordCustomer, setOrdCustomer] = useState('');
-  const [ordItem, setOrdItem] = useState('Oversized Hoodie');
-  const [ordPrice, setOrdPrice] = useState(1499);
-  const [ordCost, setOrdCost] = useState(420);
-  const [ordShipping, setOrdShipping] = useState(80);
-  const [ordFee, setOrdFee] = useState(75);
+  const [ordItem, setOrdItem] = useState('');
+  const [ordPrice, setOrdPrice] = useState(999);
+  const [ordCost, setOrdCost] = useState(300);
+  const [ordShipping, setOrdShipping] = useState(70);
+  const [ordFee, setOrdFee] = useState(50);
   const [ordStatus, setOrdStatus] = useState('DELIVERED');
 
   useEffect(() => {
@@ -42,7 +36,7 @@ export default function AdminOrders() {
 
   const handleSaveOrder = (e) => {
     e.preventDefault();
-    if (!ordCustomer) return;
+    if (!ordCustomer || !ordItem) return;
     const newOrd = {
       id: `GSM-ORD-${1000 + orders.length + 1}`,
       date: new Date().toISOString().split('T')[0],
@@ -53,13 +47,14 @@ export default function AdminOrders() {
       cost: Number(ordCost),
       shipping: Number(ordShipping),
       fee: Number(ordFee),
-      ads: 100,
+      ads: 0,
       rtoCost: ordStatus === 'RETURNED' ? 150 : 0,
       status: ordStatus
     };
     setOrders([newOrd, ...orders]);
     setShowModal(false);
     setOrdCustomer('');
+    setOrdItem('');
   };
 
   const handleStatusChange = (id, newStatus) => {
@@ -81,7 +76,15 @@ export default function AdminOrders() {
     }
   };
 
+  const handleClearAll = () => {
+    if (window.confirm("Are you sure you want to clear all order records?")) {
+      setOrders([]);
+      localStorage.removeItem('gsm_orders');
+    }
+  };
+
   const exportExcel = () => {
+    if (orders.length === 0) return alert("No orders available to export!");
     const headers = ['Order ID', 'Date', 'Channel', 'Customer', 'Item', 'Selling Price', 'Cost Price', 'Shipping', 'Fee/Ads', 'Net Profit', 'Status'];
     const rows = orders.map(o => [
       o.id,
@@ -125,12 +128,29 @@ export default function AdminOrders() {
   return (
     <div style={{ paddingBottom: '3rem' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: '800' }}>Multi-Channel Orders & P&L</h1>
           <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Track orders from Meesho, Flipkart, Amazon & Store with real-time profit & loss</div>
         </div>
         <div style={{ display: 'flex', gap: '1rem' }}>
+          {orders.length > 0 && (
+            <button 
+              onClick={handleClearAll}
+              style={{
+                padding: '0.65rem 1.25rem',
+                borderRadius: '8px',
+                border: '1px solid #333',
+                background: '#1c1917',
+                color: '#ef4444',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '0.85rem'
+              }}
+            >
+              Clear All Orders
+            </button>
+          )}
           <button 
             onClick={exportExcel}
             style={{
@@ -163,7 +183,7 @@ export default function AdminOrders() {
               fontWeight: '600'
             }}
           >
-            <Plus size={18} /> Add New Order
+            <Plus size={18} /> Add Real Order
           </button>
         </div>
       </div>
@@ -216,76 +236,90 @@ export default function AdminOrders() {
 
       {/* Orders Table */}
       <div style={{ background: '#111', border: '1px solid #222', borderRadius: '12px', padding: '1.5rem' }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
-                <th style={{ padding: '0.75rem' }}>Order ID</th>
-                <th style={{ padding: '0.75rem' }}>Channel</th>
-                <th style={{ padding: '0.75rem' }}>Customer</th>
-                <th style={{ padding: '0.75rem' }}>Product</th>
-                <th style={{ padding: '0.75rem' }}>Price</th>
-                <th style={{ padding: '0.75rem' }}>Cost Breakdown</th>
-                <th style={{ padding: '0.75rem' }}>Net Profit / Loss</th>
-                <th style={{ padding: '0.75rem' }}>Status</th>
-                <th style={{ padding: '0.75rem' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.map(o => {
-                const pnl = calculatePnL(o);
-                const badge = getChannelBadge(o.channel);
-                return (
-                  <tr key={o.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
-                    <td style={{ padding: '0.75rem', fontWeight: '700', color: 'white' }}><code>{o.id}</code></td>
-                    <td style={{ padding: '0.75rem' }}>
-                      <span style={{ background: badge.bg, color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', fontWeight: '700' }}>
-                        {badge.label}
-                      </span>
-                    </td>
-                    <td style={{ padding: '0.75rem', color: '#cbd5e1', fontWeight: '600' }}>{o.customer}</td>
-                    <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{o.items}</td>
-                    <td style={{ padding: '0.75rem', color: 'white', fontWeight: '700' }}>₹{o.price}</td>
-                    <td style={{ padding: '0.75rem', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
-                      CP: ₹{o.cost} | Ship: ₹{o.shipping} | Fee: ₹{o.fee + (o.ads || 0)}
-                    </td>
-                    <td style={{ padding: '0.75rem', fontWeight: '800', color: pnl >= 0 ? '#10b981' : '#ef4444' }}>
-                      {pnl >= 0 ? '+' : ''}₹{pnl}
-                    </td>
-                    <td style={{ padding: '0.75rem' }}>
-                      <select 
-                        value={o.status}
-                        onChange={e => handleStatusChange(o.id, e.target.value)}
-                        style={{ padding: '0.35rem 0.6rem', background: '#080808', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '0.78rem' }}
-                      >
-                        <option value="DELIVERED">Delivered</option>
-                        <option value="SHIPPED">Shipped</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="CANCELLED">Cancelled</option>
-                        <option value="RETURNED">Returned / RTO</option>
-                      </select>
-                    </td>
-                    <td style={{ padding: '0.75rem' }}>
-                      <button 
-                        onClick={() => handleDeleteOrder(o.id)}
-                        style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer' }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        {filteredOrders.length === 0 ? (
+          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <ShoppingBag size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
+            <h3 style={{ color: 'white', fontSize: '1.1rem', marginBottom: '0.5rem' }}>No Real Orders Added Yet</h3>
+            <p style={{ fontSize: '0.85rem', marginBottom: '1.5rem' }}>Click "+ Add Real Order" above to record your first sale from Meesho, Flipkart, Amazon or Website.</p>
+            <button 
+              onClick={() => setShowModal(true)}
+              style={{ padding: '0.65rem 1.25rem', background: 'var(--primary-red)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+            >
+              + Add Real Order Now
+            </button>
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid #222', color: 'var(--text-muted)', textAlign: 'left' }}>
+                  <th style={{ padding: '0.75rem' }}>Order ID</th>
+                  <th style={{ padding: '0.75rem' }}>Channel</th>
+                  <th style={{ padding: '0.75rem' }}>Customer</th>
+                  <th style={{ padding: '0.75rem' }}>Product</th>
+                  <th style={{ padding: '0.75rem' }}>Price</th>
+                  <th style={{ padding: '0.75rem' }}>Cost Breakdown</th>
+                  <th style={{ padding: '0.75rem' }}>Net Profit / Loss</th>
+                  <th style={{ padding: '0.75rem' }}>Status</th>
+                  <th style={{ padding: '0.75rem' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredOrders.map(o => {
+                  const pnl = calculatePnL(o);
+                  const badge = getChannelBadge(o.channel);
+                  return (
+                    <tr key={o.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
+                      <td style={{ padding: '0.75rem', fontWeight: '700', color: 'white' }}><code>{o.id}</code></td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <span style={{ background: badge.bg, color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', fontWeight: '700' }}>
+                          {badge.label}
+                        </span>
+                      </td>
+                      <td style={{ padding: '0.75rem', color: '#cbd5e1', fontWeight: '600' }}>{o.customer}</td>
+                      <td style={{ padding: '0.75rem', color: '#cbd5e1' }}>{o.items}</td>
+                      <td style={{ padding: '0.75rem', color: 'white', fontWeight: '700' }}>₹{o.price}</td>
+                      <td style={{ padding: '0.75rem', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+                        CP: ₹{o.cost} | Ship: ₹{o.shipping} | Fee: ₹{o.fee + (o.ads || 0)}
+                      </td>
+                      <td style={{ padding: '0.75rem', fontWeight: '800', color: pnl >= 0 ? '#10b981' : '#ef4444' }}>
+                        {pnl >= 0 ? '+' : ''}₹{pnl}
+                      </td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <select 
+                          value={o.status}
+                          onChange={e => handleStatusChange(o.id, e.target.value)}
+                          style={{ padding: '0.35rem 0.6rem', background: '#080808', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '0.78rem' }}
+                        >
+                          <option value="DELIVERED">Delivered</option>
+                          <option value="SHIPPED">Shipped</option>
+                          <option value="PENDING">Pending</option>
+                          <option value="CANCELLED">Cancelled</option>
+                          <option value="RETURNED">Returned / RTO</option>
+                        </select>
+                      </td>
+                      <td style={{ padding: '0.75rem' }}>
+                        <button 
+                          onClick={() => handleDeleteOrder(o.id)}
+                          style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer' }}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* New Order Modal */}
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
           <div style={{ background: '#141414', border: '1px solid #222', borderRadius: '14px', width: '100%', maxWidth: '540px', padding: '1.75rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', color: 'white' }}>Record New Order</h3>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.25rem', color: 'white' }}>Record Real Order</h3>
             <form onSubmit={handleSaveOrder} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
@@ -306,7 +340,7 @@ export default function AdminOrders() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Product Name</label>
-                  <input type="text" value={ordItem} onChange={e => setOrdItem(e.target.value)} required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
+                  <input type="text" value={ordItem} onChange={e => setOrdItem(e.target.value)} placeholder="e.g. Oversized Hoodie XL" required style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }} />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem' }}>Order Status</label>
@@ -344,7 +378,7 @@ export default function AdminOrders() {
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
                 <button type="button" onClick={() => setShowModal(false)} style={{ padding: '0.65rem 1.25rem', background: 'transparent', border: '1px solid #333', color: 'white', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
-                <button type="submit" style={{ padding: '0.65rem 1.25rem', background: 'var(--primary-red)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>Save Order & P&L</button>
+                <button type="submit" style={{ padding: '0.65rem 1.25rem', background: 'var(--primary-red)', border: 'none', color: 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}>Save Real Order & P&L</button>
               </div>
             </form>
           </div>
