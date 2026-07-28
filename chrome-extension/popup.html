@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GetSetMart Seller Assistant</title>
+  <style>
+    body {
+      width: 340px;
+      margin: 0;
+      padding: 16px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0d0d0d;
+      color: #ffffff;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #222;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .logo-text {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .badge {
+      background-color: #ef4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .active-site {
+      font-size: 11px;
+      color: #10b981;
+      background: #064e3b;
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #888;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    select, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      margin-bottom: 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    select {
+      background-color: #1a1a1a;
+      color: white;
+    }
+    .btn-primary {
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      font-weight: 700;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover {
+      background-color: #dc2626;
+    }
+    .btn-secondary {
+      background-color: #1f2937;
+      color: white;
+      border: 1px solid #374151;
+      font-weight: 600;
+    }
+    .btn-secondary:hover {
+      background-color: #374151;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 11px;
+      color: #666;
+    }
+    .footer a {
+      color: #ef4444;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo-text">GETSETMART <span class="badge">ASSISTANT</span></div>
+    <div style="font-size: 11px; color: #aaa;">v1.0</div>
+  </div>
+
+  <div class="active-site">
+    <span id="site-status">Detecting Marketplace...</span>
+    <span id="site-badge" style="font-weight: 800; font-size: 10px;">• READY</span>
+  </div>
+
+  <div class="section-title">Select Catalog Template</div>
+  <select id="template-select">
+    <option value="hoodie">Oversized Anime Hoodie (Cotton Blend)</option>
+    <option value="anarkali">Royal Anarkali Suit Set (Ethnic)</option>
+    <option value="jewelry">Kundan Choker Jewelry Set</option>
+    <option value="denim">Vintage Denim Jacket (Outerwear)</option>
+  </select>
+
+  <button id="autofill-btn" class="btn-primary">⚡ 1-Click Autofill Listing Form</button>
+  <button id="cropper-btn" class="btn-secondary">✂️ Quick 4x6 Label Cropper</button>
+  <button id="sync-orders-btn" class="btn-secondary">🔄 Sync Orders to Admin Panel</button>
+
+  <div class="footer">
+    Powered by <a href="https://getsetmart.com/admin" target="_blank">GetSetMart ERP Admin Panel</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
