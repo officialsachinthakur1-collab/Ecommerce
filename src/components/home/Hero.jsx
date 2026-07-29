@@ -327,88 +327,197 @@ export default function Hero() {
                 </div>
             </div>
 
-            {/* Amazon Signature Overlay Quick Category Cards Grid (4 Cards) */}
-            <div style={{ width: '100%', maxWidth: '1280px', margin: isMobile ? '1rem auto 0' : '-40px auto 0', padding: '0 1.25rem', position: 'relative', zIndex: 30 }}>
+            {/* Premium Modern Quick Category Cards Grid (4 Cards) */}
+            <div style={{ width: '100%', maxWidth: '1280px', margin: isMobile ? '1.5rem auto 0' : '-55px auto 0', padding: '0 1.25rem', position: 'relative', zIndex: 30 }}>
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
                     gap: '1.25rem'
                 }}>
                     
-                    {/* Card 1: Fashion & Apparel Mini-Grid */}
-                    <div style={{ background: '#121214', border: '1px solid #222', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)' }}>
-                        <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'white', marginBottom: '0.85rem' }}>
-                            👔 Trendy Fashion & Apparel
-                        </h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginBottom: '0.85rem' }}>
-                            {(menProducts.length > 0 ? menProducts : hotDeals.slice(0, 2)).map((p, i) => (
-                                <Link key={i} to={`/product/${p.id || p._id}`} style={{ textDecoration: 'none', background: '#1a1a1e', padding: '0.5rem', borderRadius: '8px', textAlign: 'center' }}>
-                                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '70px', objectFit: 'cover', borderRadius: '6px' }} />
-                                    <div style={{ fontSize: '0.7rem', color: '#ccc', fontWeight: '600', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
-                                </Link>
-                            ))}
+                    {/* Card 1: Men's & Trending Apparel */}
+                    <div style={{
+                        background: 'rgba(15, 15, 18, 0.88)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderTop: '3px solid var(--primary-red)',
+                        borderRadius: '20px',
+                        padding: '1.35rem',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                    }}>
+                        <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', letterSpacing: '-0.2px' }}>
+                                    👔 Men's & Streetwear
+                                </h3>
+                                <span style={{ fontSize: '0.7rem', color: '#888', background: '#1c1c22', padding: '2px 8px', borderRadius: '100px' }}>Curated</span>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+                                {(menProducts.length > 0 ? menProducts : hotDeals.slice(0, 2)).map((p, i) => (
+                                    <Link key={i} to={`/product/${p.id || p._id}`} style={{ textDecoration: 'none' }}>
+                                        <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', background: '#fff', border: '1px solid #2a2a30', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <img src={p.image} alt={p.name} style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
+                                            <div style={{ position: 'absolute', bottom: '4px', left: '4px', background: 'rgba(0,0,0,0.85)', color: '#10b981', padding: '1px 6px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: '800' }}>
+                                                {p.price}
+                                            </div>
+                                        </div>
+                                        <div style={{ fontSize: '0.75rem', color: '#d4d4d8', fontWeight: '600', marginTop: '5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            {p.name}
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
-                        <Link to="/shop?category=Men" style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            See all fashion offers <ArrowRight size={14} />
+
+                        <Link to="/shop?category=Men" style={{ fontSize: '0.82rem', fontWeight: '800', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '0.5rem' }}>
+                            Explore Men's Collection <ArrowRight size={15} />
                         </Link>
                     </div>
 
-                    {/* Card 2: Today's Mega Deals & Festival Specials */}
-                    <div style={{ background: '#121214', border: '1px solid #222', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-                            <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'white' }}>
-                                🏷️ Today's Mega Deals
-                            </h3>
-                            <span style={{ background: '#ef4444', color: 'white', fontSize: '0.65rem', fontWeight: '900', padding: '2px 6px', borderRadius: '4px' }}>
-                                LIVE
-                            </span>
+                    {/* Card 2: Today's Mega Deals & Festival Spotlight */}
+                    <div style={{
+                        background: 'rgba(15, 15, 18, 0.88)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderTop: '3px solid #10b981',
+                        borderRadius: '20px',
+                        padding: '1.35rem',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                    }}>
+                        <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', letterSpacing: '-0.2px' }}>
+                                    🏷️ Today's Mega Deals
+                                </h3>
+                                <span style={{ background: '#ef4444', color: 'white', fontSize: '0.65rem', fontWeight: '900', padding: '2px 7px', borderRadius: '100px', letterSpacing: '0.5px' }}>
+                                    LIVE
+                                </span>
+                            </div>
+
+                            <div style={{
+                                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.25) 100%)',
+                                border: '1px solid rgba(16, 185, 129, 0.3)',
+                                borderRadius: '14px',
+                                padding: '1rem',
+                                marginBottom: '1rem'
+                            }}>
+                                <div style={{ fontSize: '0.75rem', color: '#a1a1aa', fontWeight: '600', textTransform: 'uppercase' }}>
+                                    {festivalConfig.festivalName || 'Special Event'}
+                                </div>
+                                <div style={{ fontSize: '1.35rem', fontWeight: '900', color: '#10b981', marginTop: '2px' }}>
+                                    {festivalConfig.discountTag || 'UP TO 70% OFF'}
+                                </div>
+                                <div style={{ fontSize: '0.72rem', color: '#888', marginTop: '4px' }}>
+                                    ⚡ Limited time store discounts applied
+                                </div>
+                            </div>
                         </div>
-                        <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px', padding: '0.75rem', marginBottom: '0.85rem' }}>
-                            <div style={{ fontSize: '0.75rem', color: '#aaa', marginBottom: '2px' }}>{festivalConfig.festivalName || 'Special Deal'}</div>
-                            <div style={{ fontSize: '1.2rem', fontWeight: '900', color: '#10b981' }}>{festivalConfig.discountTag || 'UP TO 70% OFF'}</div>
-                            <div style={{ fontSize: '0.7rem', color: '#888', marginTop: '4px' }}>Offer valid on selected bestseller items</div>
-                        </div>
-                        <Link to="/shop?tag=Hot Deal" style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            Explore all deals <ArrowRight size={14} />
+
+                        <Link to="/shop?tag=Hot Deal" style={{ fontSize: '0.82rem', fontWeight: '800', color: '#10b981', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                            View Today's Hot Deals <ArrowRight size={15} />
                         </Link>
                     </div>
 
-                    {/* Card 3: Women & Accessories Collection */}
-                    <div style={{ background: '#121214', border: '1px solid #222', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)' }}>
-                        <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'white', marginBottom: '0.85rem' }}>
-                            ✨ Women's & Accessories
-                        </h3>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginBottom: '0.85rem' }}>
-                            {(womenProducts.length > 0 ? womenProducts : hotDeals.slice(2, 4)).map((p, i) => (
-                                <Link key={i} to={`/product/${p.id || p._id}`} style={{ textDecoration: 'none', background: '#1a1a1e', padding: '0.5rem', borderRadius: '8px', textAlign: 'center' }}>
-                                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '70px', objectFit: 'cover', borderRadius: '6px' }} />
-                                    <div style={{ fontSize: '0.7rem', color: '#ccc', fontWeight: '600', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
-                                </Link>
-                            ))}
+                    {/* Card 3: Women's & Accessories Collection */}
+                    <div style={{
+                        background: 'rgba(15, 15, 18, 0.88)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderTop: '3px solid #f59e0b',
+                        borderRadius: '20px',
+                        padding: '1.35rem',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                    }}>
+                        <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', letterSpacing: '-0.2px' }}>
+                                    ✨ Women & Essentials
+                                </h3>
+                                <span style={{ fontSize: '0.7rem', color: '#888', background: '#1c1c22', padding: '2px 8px', borderRadius: '100px' }}>Top Rated</span>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+                                {(womenProducts.length > 0 ? womenProducts : hotDeals.slice(2, 4)).map((p, i) => (
+                                    <Link key={i} to={`/product/${p.id || p._id}`} style={{ textDecoration: 'none' }}>
+                                        <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', background: '#fff', border: '1px solid #2a2a30', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <img src={p.image} alt={p.name} style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
+                                            <div style={{ position: 'absolute', bottom: '4px', left: '4px', background: 'rgba(0,0,0,0.85)', color: '#f59e0b', padding: '1px 6px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: '800' }}>
+                                                {p.price}
+                                            </div>
+                                        </div>
+                                        <div style={{ fontSize: '0.75rem', color: '#d4d4d8', fontWeight: '600', marginTop: '5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            {p.name}
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
                         </div>
-                        <Link to="/shop?category=Women" style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            Explore Women's Store <ArrowRight size={14} />
+
+                        <Link to="/shop?category=Women" style={{ fontSize: '0.82rem', fontWeight: '800', color: '#f59e0b', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                            Explore Women's Store <ArrowRight size={15} />
                         </Link>
                     </div>
 
-                    {/* Card 4: Store Assurance & Fast Shipping */}
-                    <div style={{ background: '#121214', border: '1px solid #222', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)' }}>
-                        <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'white', marginBottom: '0.85rem' }}>
-                            🛡️ Store Trust Guarantee
-                        </h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '0.85rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: '#ccc' }}>
-                                <Truck size={16} color="#38bdf8" /> <span>Express 2-3 Day Shipping</span>
+                    {/* Card 4: Store Quality & Trust Guarantee */}
+                    <div style={{
+                        background: 'rgba(15, 15, 18, 0.88)',
+                        backdropFilter: 'blur(20px)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderTop: '3px solid #38bdf8',
+                        borderRadius: '20px',
+                        padding: '1.35rem',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                    }}>
+                        <div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', letterSpacing: '-0.2px' }}>
+                                    🛡️ Store Trust Guarantee
+                                </h3>
+                                <span style={{ fontSize: '0.7rem', color: '#38bdf8', background: 'rgba(56, 189, 248, 0.15)', padding: '2px 8px', borderRadius: '100px', fontWeight: '700' }}>Verified</span>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: '#ccc' }}>
-                                <ShieldCheck size={16} color="#10b981" /> <span>100% Verified Quality</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: '#ccc' }}>
-                                <RefreshCw size={16} color="#f59e0b" /> <span>Easy 30 Days Replacement</span>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: '#18181c', padding: '0.55rem 0.75rem', borderRadius: '10px' }}>
+                                    <Truck size={18} color="#38bdf8" />
+                                    <div>
+                                        <div style={{ fontSize: '0.78rem', fontWeight: '700', color: 'white' }}>Express Delivery</div>
+                                        <div style={{ fontSize: '0.68rem', color: '#888' }}>2-3 Days Fast Shipping</div>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: '#18181c', padding: '0.55rem 0.75rem', borderRadius: '10px' }}>
+                                    <ShieldCheck size={18} color="#10b981" />
+                                    <div>
+                                        <div style={{ fontSize: '0.78rem', fontWeight: '700', color: 'white' }}>100% Quality Inspected</div>
+                                        <div style={{ fontSize: '0.68rem', color: '#888' }}>Verified Premium Goods</div>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: '#18181c', padding: '0.55rem 0.75rem', borderRadius: '10px' }}>
+                                    <RefreshCw size={18} color="#f59e0b" />
+                                    <div>
+                                        <div style={{ fontSize: '0.78rem', fontWeight: '700', color: 'white' }}>Easy 30 Days Return</div>
+                                        <div style={{ fontSize: '0.68rem', color: '#888' }}>Hassle-free Replacements</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <Link to="/shop" style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            Start Shopping Now <ArrowRight size={14} />
+
+                        <Link to="/shop" style={{ fontSize: '0.82rem', fontWeight: '800', color: '#38bdf8', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                            Start Shopping Now <ArrowRight size={15} />
                         </Link>
                     </div>
 
