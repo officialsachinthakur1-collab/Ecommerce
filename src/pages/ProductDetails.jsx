@@ -175,8 +175,8 @@ export default function ProductDetails() {
                                                 height: '64px',
                                                 borderRadius: '12px',
                                                 overflow: 'hidden',
-                                                border: activeImage === img ? '2px solid var(--primary-red)' : '1px solid #27272a',
-                                                background: '#18181b',
+                                                border: activeImage === img ? '2px solid var(--primary-red)' : '1px solid #333',
+                                                background: '#f8fafc',
                                                 cursor: 'pointer',
                                                 padding: '4px',
                                                 flexShrink: 0,
@@ -193,14 +193,14 @@ export default function ProductDetails() {
                             {/* Main High-Res Image Viewport */}
                             <div style={{
                                 flex: 1,
-                                background: 'linear-gradient(145deg, #1f1f24 0%, #121215 100%)',
+                                background: 'linear-gradient(145deg, #ffffff 0%, #f1f3f5 100%)',
                                 borderRadius: '20px',
                                 overflow: 'hidden',
                                 aspectRatio: '1',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                border: '1px solid #27272a',
+                                border: '1px solid #333',
                                 position: 'relative',
                                 boxShadow: '0 20px 50px rgba(0,0,0,0.8)'
                             }}>
