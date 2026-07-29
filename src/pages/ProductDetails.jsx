@@ -112,7 +112,7 @@ export default function ProductDetails() {
     };
 
     return (
-        <div className="product-page-wrapper" style={{ background: '#09090b', color: 'white', minHeight: '100vh', paddingBottom: '4rem' }}>
+        <div className="product-page-wrapper" style={{ background: '#09090b', color: 'white', minHeight: '100vh', paddingTop: 0, marginTop: 0, paddingBottom: '4rem' }}>
             
             {/* Amazon & Flipkart Style Full-Width Left-Aligned Sub-Header Breadcrumbs Bar */}
             <div style={{
@@ -120,6 +120,7 @@ export default function ProductDetails() {
                 background: '#121215',
                 borderBottom: '1px solid #222',
                 padding: '0.65rem 1.5rem',
+                marginTop: 0,
                 marginBottom: '2rem'
             }}>
                 <div style={{ width: '100%', maxWidth: '1280px', margin: '0 auto' }}>
