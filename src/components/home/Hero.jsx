@@ -65,27 +65,30 @@ export default function Hero() {
             }
         };
 
+        const handleHeroSlidesUpdate = () => {
+            const saved = localStorage.getItem('gsm_custom_hero_slides');
+            if (saved) {
+                try {
+                    setCustomHeroSlides(JSON.parse(saved));
+                } catch (e) {}
+            }
+        };
+
         window.addEventListener('gsm_festival_updated', handleFestivalUpdate);
         window.addEventListener('gsm_categories_updated', handleCategoryUpdate);
+        window.addEventListener('gsm_hero_slides_updated', handleHeroSlidesUpdate);
         return () => {
             window.removeEventListener('gsm_festival_updated', handleFestivalUpdate);
             window.removeEventListener('gsm_categories_updated', handleCategoryUpdate);
+            window.removeEventListener('gsm_hero_slides_updated', handleHeroSlidesUpdate);
         };
     }, []);
 
-    // Category Teaser Photos
-    const getCategoryTeaserImage = (catName) => {
-        const images = {
-            'Jewelry': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80',
-            'Electronics': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80',
-            'Home': 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
-            'Gifts': 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80',
-            'Footwear': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80',
-            'Women': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80',
-            'Men': 'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=800&q=80'
-        };
-        return images[catName] || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80';
-    };
+    // Custom Hero Slides state from Admin Settings
+    const [customHeroSlides, setCustomHeroSlides] = useState(() => {
+        const saved = localStorage.getItem('gsm_custom_hero_slides');
+        return saved ? JSON.parse(saved) : [];
+    });
 
     // Construct Amazon Hero Slides
     const heroSlides = useMemo(() => {
@@ -102,7 +105,7 @@ export default function Hero() {
             }
         ];
 
-        // Add user hero products if available
+        // Custom Hero Products tagged by Admin
         const customHeroProducts = products.filter(p => p.isHero).map(p => ({
             id: p.id || p._id,
             tag: p.tag || '✨ FEATURED PRODUCT',
@@ -114,23 +117,12 @@ export default function Hero() {
             bgGradient: '#18181b'
         }));
 
-        // Dynamic "Coming Soon" Hero Slides for categories marked COMING_SOON
-        const comingSoonSlides = Object.keys(categoryStatusMap)
-            .filter(catName => catName !== 'All' && categoryStatusMap[catName] === 'COMING_SOON')
-            .map(catName => ({
-                id: `coming-soon-${catName}`,
-                tag: '🚀 COMING SOON LAUNCH',
-                title: `${catName.toUpperCase()} COLLECTION LAUNCHING SOON`,
-                description: `WE ARE HAND-PICKING PREMIUM HIGH-QUALITY ITEMS FOR OUR ${catName.toUpperCase()} STORE. GET READY FOR EXCLUSIVE EARLY ACCESS DISCOUNTS!`,
-                image: getCategoryTeaserImage(catName),
-                btnText: 'GET VIP EARLY ACCESS ➔',
-                btnLink: `/shop?category=${catName}`,
-                bgGradient: '#311b92'
-            }));
+        // Admin Manually Configured Custom Hero Slides (Coming Soon, Promos, Sales)
+        const adminConfiguredSlides = (customHeroSlides || []).filter(s => s.enabled !== false);
 
-        const combined = [...customHeroProducts, ...comingSoonSlides];
+        const combined = [...customHeroProducts, ...adminConfiguredSlides];
         return combined.length > 0 ? combined : baseSlides;
-    }, [festivalConfig, products, categoryStatusMap]);
+    }, [festivalConfig, products, customHeroSlides]);
 
     // Auto Slide Timer
     useEffect(() => {
