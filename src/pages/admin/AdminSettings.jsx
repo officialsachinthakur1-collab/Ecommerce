@@ -150,12 +150,20 @@ export default function AdminSettings() {
         });
     };
 
-    const handleFestivalSubmit = (e) => {
-        e.preventDefault();
+    const handleSaveFestivalSettings = (e) => {
+        if (e) e.preventDefault();
         localStorage.setItem('gsm_festival_settings', JSON.stringify(festivalData));
         window.dispatchEvent(new CustomEvent('gsm_festival_updated', { detail: festivalData }));
         alert('✅ Festival Banner settings saved! Hero section updated live.');
     };
+    const handleFestivalSubmit = handleSaveFestivalSettings;
+
+    const handleSaveGeneral = (e) => {
+        if (e) e.preventDefault();
+        localStorage.setItem('gsm_general_settings', JSON.stringify(formData));
+        alert('✅ General Store Settings saved successfully!');
+    };
+    const handleGeneralSubmit = handleSaveGeneral;
 
     // Category Status & Coming Soon Settings State
     const [categoriesStatus, setCategoriesStatus] = useState(() => {
@@ -238,10 +246,7 @@ export default function AdminSettings() {
         alert('✅ Category Availability & Coming Soon settings saved! Website updated live.');
     };
 
-    const handleGeneralSubmit = (e) => {
-        e.preventDefault();
-        alert('Settings updated successfully!');
-    };
+
 
     return (
         <div>
@@ -797,113 +802,7 @@ export default function AdminSettings() {
                         </div>
                     )}
 
-                    {/* FESTIVAL BANNER TAB */}
-                    {activeTab === 'festival' && (
-                        <form onSubmit={handleSaveFestivalSettings}>
-                            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#f59e0b' }}>
-                                <Sparkles /> Active Festival Banner Settings
-                            </h2>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '2rem' }}>
-                                Change website festival banner for 15th August, Raksha Bandhan, Diwali, Holi, or V-Day in 1-click!
-                            </p>
 
-                            {/* 1-Click Festival Presets */}
-                            <div style={{ marginBottom: '2rem' }}>
-                                <label style={{ display: 'block', fontSize: '0.85rem', color: '#aaa', fontWeight: '700', marginBottom: '0.75rem' }}>
-                                    ⚡ 1-Click Festival Presets
-                                </label>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
-                                    {festivalPresets.map(preset => (
-                                        <button
-                                            key={preset.name}
-                                            type="button"
-                                            onClick={() => applyPreset(preset)}
-                                            style={{
-                                                padding: '0.75rem 1rem',
-                                                background: '#080808',
-                                                border: festivalData.title === preset.title ? '1px solid #f59e0b' : '1px solid #222',
-                                                borderRadius: '8px',
-                                                color: 'white',
-                                                textAlign: 'left',
-                                                cursor: 'pointer',
-                                                fontSize: '0.8rem',
-                                                fontWeight: '600'
-                                            }}
-                                        >
-                                            {preset.name}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Festival Details Form */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.85rem' }}>Festival Header Title (Shown on Navbar & Banner)</label>
-                                    <input
-                                        type="text"
-                                        value={festivalData.title}
-                                        onChange={(e) => setFestivalData({ ...festivalData, title: e.target.value })}
-                                        placeholder="e.g. 15th August Freedom Sale 🇮🇳"
-                                        required
-                                        style={{ width: '100%', padding: '0.85rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.85rem' }}>Festival Subtitle & Offer Description</label>
-                                    <input
-                                        type="text"
-                                        value={festivalData.subtitle}
-                                        onChange={(e) => setFestivalData({ ...festivalData, subtitle: e.target.value })}
-                                        placeholder="e.g. Freedom Offers & Patriotic Deals!"
-                                        required
-                                        style={{ width: '100%', padding: '0.85rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
-                                    />
-                                </div>
-
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                                    <div>
-                                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.85rem' }}>Offer Badge Tag</label>
-                                        <input
-                                            type="text"
-                                            value={festivalData.badge}
-                                            onChange={(e) => setFestivalData({ ...festivalData, badge: e.target.value })}
-                                            placeholder="e.g. FLAT 50% OFF"
-                                            required
-                                            style={{ width: '100%', padding: '0.85rem', background: '#050505', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888', fontSize: '0.85rem' }}>Theme Highlight Color</label>
-                                        <input
-                                            type="color"
-                                            value={festivalData.color || '#f97316'}
-                                            onChange={(e) => setFestivalData({ ...festivalData, color: e.target.value })}
-                                            style={{ width: '100%', height: '42px', padding: '4px', background: '#050505', border: '1px solid #333', borderRadius: '8px', cursor: 'pointer' }}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem', padding: '1rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={festivalData.enabled}
-                                        onChange={(e) => setFestivalData({ ...festivalData, enabled: e.target.checked })}
-                                        style={{ width: '20px', height: '20px', accentColor: 'var(--primary-red)' }}
-                                    />
-                                    <div>
-                                        <div style={{ fontWeight: 'bold', color: 'white' }}>Enable Festival Link on Website Header</div>
-                                        <div style={{ fontSize: '0.8rem', color: '#666' }}>Show or hide the festival offer link in top navbar</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button className="btn-primary" style={{ marginTop: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                <Check size={18} /> Update Website Festival Banner
-                            </button>
-                        </form>
-                    )}
 
                     {activeTab === 'general' && (
                         <form onSubmit={handleSaveGeneral}>
