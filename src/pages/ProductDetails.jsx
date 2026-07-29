@@ -177,8 +177,48 @@ export default function ProductDetails() {
                                 </div>
                                 <span style={{ color: '#666', fontSize: '0.875rem' }}>{Array.isArray(product.reviews) ? product.reviews.length : product.reviews || 0} reviews</span>
                             </div>
-                            <h1 style={{ fontSize: isMobile ? '2rem' : '3rem', fontWeight: '900', lineHeight: '1', marginBottom: '0.5rem' }}>{product.name}</h1>
-                            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--primary-red)' }}>{product.price}</div>
+                            <h1 style={{ fontSize: isMobile ? '2rem' : '3rem', fontWeight: '900', lineHeight: '1.1', marginBottom: '0.5rem' }}>{product.name}</h1>
+                            
+                            {/* Amazon & Flipkart Style Professional Price Box */}
+                            {(() => {
+                                const spNum = parseFloat((product.price || '').replace(/[^0-9.]/g, '') || 0);
+                                const mrpNum = product.mrp ? parseFloat(product.mrp.replace(/[^0-9.]/g, '') || 0) : (spNum > 0 ? Math.round(spNum * 1.8) : 0);
+                                const discountPercent = mrpNum > spNum && spNum > 0 ? Math.round(((mrpNum - spNum) / mrpNum) * 100) : 0;
+                                const savingsAmount = mrpNum > spNum ? mrpNum - spNum : 0;
+                                const formattedSp = product.price?.startsWith('₹') ? product.price : `₹${product.price}`;
+
+                                return (
+                                    <div style={{ background: '#111', padding: '1.25rem', borderRadius: '16px', border: '1px solid #222', marginTop: '1rem', marginBottom: '0.5rem' }}>
+                                        {discountPercent > 0 && (
+                                            <span style={{ background: '#ef4444', color: 'white', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.72rem', fontWeight: '800', textTransform: 'uppercase', display: 'inline-block', marginBottom: '0.65rem', letterSpacing: '0.5px' }}>
+                                                🏷️ Limited Time Deal
+                                            </span>
+                                        )}
+
+                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                            {discountPercent > 0 && (
+                                                <span style={{ fontSize: '1.75rem', fontWeight: '900', color: '#10b981' }}>
+                                                    -{discountPercent}%
+                                                </span>
+                                            )}
+                                            <span style={{ fontSize: isMobile ? '2rem' : '2.4rem', fontWeight: '900', color: '#ffffff' }}>
+                                                {formattedSp}
+                                            </span>
+                                        </div>
+
+                                        {mrpNum > spNum && (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.35rem', fontSize: '0.85rem' }}>
+                                                <span style={{ color: '#888' }}>M.R.P.: <span style={{ textDecoration: 'line-through' }}>₹{mrpNum.toLocaleString('en-IN')}</span></span>
+                                                <span style={{ color: '#10b981', fontWeight: '700' }}>Save ₹{savingsAmount.toLocaleString('en-IN')} ({discountPercent}%)</span>
+                                            </div>
+                                        )}
+
+                                        <div style={{ fontSize: '0.75rem', color: '#666', marginTop: '0.4rem' }}>
+                                            Inclusive of all taxes • Free Shipping & COD Available
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                         </div>
 
                         {/* Stock Info - Simplified */}
