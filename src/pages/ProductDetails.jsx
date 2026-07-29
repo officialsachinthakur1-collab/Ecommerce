@@ -31,7 +31,7 @@ export default function ProductDetails() {
 
     const { addToCart } = useCart();
     const { toggleWishlist, isInWishlist } = useWishlist();
-    const { products, loading } = useProducts();
+    const { products, loading, refetch } = useProducts();
     const { user } = useAuth();
     const product = products.find(p => String(p.id) === String(id) || String(p._id) === String(id));
 
