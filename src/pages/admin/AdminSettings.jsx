@@ -188,11 +188,27 @@ export default function AdminSettings() {
         window.dispatchEvent(new Event('gsm_categories_updated'));
     };
 
-    const toggleCategoryHeroStatus = (catId) => {
+    const handleCategoryFileUpload = (catId, file) => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const updated = categoriesStatus.map(cat => {
+                if (cat.id === catId || cat.name === catId) {
+                    return { ...cat, customImage: reader.result };
+                }
+                return cat;
+            });
+            setCategoriesStatus(updated);
+            localStorage.setItem('gsm_category_status', JSON.stringify(updated));
+            window.dispatchEvent(new Event('gsm_categories_updated'));
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleCategoryImageUrlChange = (catId, url) => {
         const updated = categoriesStatus.map(cat => {
             if (cat.id === catId || cat.name === catId) {
-                const nextHero = !cat.inHero;
-                return { ...cat, inHero: nextHero };
+                return { ...cat, customImage: url };
             }
             return cat;
         });
@@ -629,84 +645,122 @@ export default function AdminSettings() {
                             </div>
 
                             {/* Category Status List */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
                                 {categoriesStatus.map(cat => (
                                     <div
                                         key={cat.id}
                                         style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
                                             background: '#09090b',
-                                            padding: '1rem 1.25rem',
-                                            borderRadius: '12px',
-                                            border: '1px solid #27272a'
+                                            padding: '1.25rem',
+                                            borderRadius: '14px',
+                                            border: '1px solid #27272a',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '1rem'
                                         }}
                                     >
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                            <span style={{ fontSize: '1.5rem' }}>{cat.icon}</span>
-                                            <div>
-                                                <div style={{ fontWeight: '800', fontSize: '1rem', color: 'white' }}>{cat.name}</div>
-                                                <div style={{ fontSize: '0.75rem', color: '#888' }}>ID: {cat.id}</div>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                                {cat.customImage ? (
+                                                    <img src={cat.customImage} alt={cat.name} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #333' }} />
+                                                ) : (
+                                                    <span style={{ fontSize: '1.8rem' }}>{cat.icon}</span>
+                                                )}
+                                                <div>
+                                                    <div style={{ fontWeight: '800', fontSize: '1rem', color: 'white' }}>{cat.name}</div>
+                                                    <div style={{ fontSize: '0.75rem', color: '#888' }}>ID: {cat.id}</div>
+                                                </div>
+                                            </div>
+
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                                {/* Status Badge */}
+                                                <span style={{
+                                                    padding: '0.35rem 0.85rem',
+                                                    borderRadius: '100px',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: '800',
+                                                    textTransform: 'uppercase',
+                                                    background: cat.status === 'LIVE' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                                                    color: cat.status === 'LIVE' ? '#10b981' : '#f59e0b',
+                                                    border: `1px solid ${cat.status === 'LIVE' ? '#10b981' : '#f59e0b'}`
+                                                }}>
+                                                    {cat.status === 'LIVE' ? '🟢 LIVE (Available)' : '⏳ COMING SOON'}
+                                                </span>
+
+                                                {/* Toggle Status Button */}
+                                                <button
+                                                    onClick={() => toggleCategoryStatus(cat.id)}
+                                                    style={{
+                                                        padding: '0.5rem 0.85rem',
+                                                        background: '#18181b',
+                                                        border: '1px solid #3f3f46',
+                                                        color: 'white',
+                                                        borderRadius: '8px',
+                                                        fontWeight: '700',
+                                                        fontSize: '0.8rem',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.4rem'
+                                                    }}
+                                                >
+                                                    {cat.status === 'LIVE' ? <ToggleRight size={18} color="#10b981" /> : <ToggleLeft size={18} color="#f59e0b" />} Switch Status
+                                                </button>
+
+                                                {/* Add / Remove from Hero Section Button */}
+                                                <button
+                                                    onClick={() => toggleCategoryHeroStatus(cat.id)}
+                                                    title="Toggle banner slide in Homepage Hero Section"
+                                                    style={{
+                                                        padding: '0.5rem 0.85rem',
+                                                        background: cat.inHero ? 'rgba(245, 158, 11, 0.2)' : '#18181b',
+                                                        border: cat.inHero ? '1px solid #f59e0b' : '1px solid #3f3f46',
+                                                        color: cat.inHero ? '#f59e0b' : '#a1a1aa',
+                                                        borderRadius: '8px',
+                                                        fontWeight: '700',
+                                                        fontSize: '0.8rem',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.4rem'
+                                                    }}
+                                                >
+                                                    <Star size={16} fill={cat.inHero ? '#f59e0b' : 'none'} color={cat.inHero ? '#f59e0b' : '#a1a1aa'} />
+                                                    {cat.inHero ? 'In Hero Banner ✓' : '+ Add to Hero'}
+                                                </button>
                                             </div>
                                         </div>
 
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                            {/* Status Badge */}
-                                            <span style={{
-                                                padding: '0.35rem 0.85rem',
-                                                borderRadius: '100px',
-                                                fontSize: '0.75rem',
-                                                fontWeight: '800',
-                                                textTransform: 'uppercase',
-                                                background: cat.status === 'LIVE' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                                                color: cat.status === 'LIVE' ? '#10b981' : '#f59e0b',
-                                                border: `1px solid ${cat.status === 'LIVE' ? '#10b981' : '#f59e0b'}`
-                                            }}>
-                                                {cat.status === 'LIVE' ? '🟢 LIVE (Available)' : '⏳ COMING SOON'}
+                                        {/* Custom Photo Upload Row */}
+                                        <div style={{ background: '#121215', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #222', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                                            <span style={{ fontSize: '0.78rem', fontWeight: '700', color: '#aaa', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                                <Image size={15} color="#38bdf8" /> Hero Banner Custom Photo:
                                             </span>
 
-                                            {/* Toggle Status Button */}
-                                            <button
-                                                onClick={() => toggleCategoryStatus(cat.id)}
-                                                style={{
-                                                    padding: '0.5rem 1rem',
-                                                    background: '#18181b',
-                                                    border: '1px solid #3f3f46',
-                                                    color: 'white',
-                                                    borderRadius: '8px',
-                                                    fontWeight: '700',
-                                                    fontSize: '0.8rem',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '0.4rem'
-                                                }}
-                                            >
-                                                {cat.status === 'LIVE' ? <ToggleRight size={18} color="#10b981" /> : <ToggleLeft size={18} color="#f59e0b" />} Switch Status
-                                            </button>
+                                            <label style={{ padding: '0.4rem 0.8rem', background: '#1f1f23', border: '1px solid #38bdf8', color: '#38bdf8', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                                <Upload size={14} /> Upload Device Photo
+                                                <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleCategoryFileUpload(cat.id, e.target.files[0])} />
+                                            </label>
 
-                                            {/* Add / Remove from Hero Section Button */}
-                                            <button
-                                                onClick={() => toggleCategoryHeroStatus(cat.id)}
-                                                title="Toggle banner slide in Homepage Hero Section"
-                                                style={{
-                                                    padding: '0.5rem 1rem',
-                                                    background: cat.inHero ? 'rgba(245, 158, 11, 0.2)' : '#18181b',
-                                                    border: cat.inHero ? '1px solid #f59e0b' : '1px solid #3f3f46',
-                                                    color: cat.inHero ? '#f59e0b' : '#a1a1aa',
-                                                    borderRadius: '8px',
-                                                    fontWeight: '700',
-                                                    fontSize: '0.8rem',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '0.4rem'
-                                                }}
-                                            >
-                                                <Star size={16} fill={cat.inHero ? '#f59e0b' : 'none'} color={cat.inHero ? '#f59e0b' : '#a1a1aa'} />
-                                                {cat.inHero ? 'In Hero Banner ✓' : '+ Add to Hero'}
-                                            </button>
+                                            <span style={{ fontSize: '0.75rem', color: '#555' }}>OR</span>
+
+                                            <input
+                                                type="text"
+                                                value={cat.customImage || ''}
+                                                onChange={(e) => handleCategoryImageUrlChange(cat.id, e.target.value)}
+                                                placeholder="Paste Image URL (https://...)"
+                                                style={{ flex: 1, minWidth: '200px', padding: '0.4rem 0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '6px', color: 'white', fontSize: '0.78rem' }}
+                                            />
+
+                                            {cat.customImage && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleCategoryImageUrlChange(cat.id, '')}
+                                                    style={{ padding: '0.35rem 0.6rem', background: '#222', border: '1px solid #444', color: '#ef4444', borderRadius: '6px', fontSize: '0.72rem', cursor: 'pointer' }}
+                                                >
+                                                    Remove Custom Photo
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 ))}

@@ -339,22 +339,22 @@ export default function Hero() {
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <div style={{
                                     position: 'relative',
-                                    width: '360px',
-                                    height: '360px',
+                                    width: '380px',
+                                    height: '380px',
                                     borderRadius: '24px',
                                     overflow: 'hidden',
-                                    border: '2px solid rgba(255,255,255,0.15)',
-                                    boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
-                                    background: 'linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%)',
+                                    border: '2px solid rgba(255,255,255,0.2)',
+                                    boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 0 40px rgba(255,255,255,0.05)',
+                                    background: 'rgba(255,255,255,0.05)',
+                                    backdropFilter: 'blur(12px)',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center',
-                                    padding: '16px'
+                                    justifyContent: 'center'
                                 }}>
                                     <img
                                         src={activeSlide.image}
                                         alt={activeSlide.title}
-                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
                                     />
                                     <div style={{
                                         position: 'absolute',
