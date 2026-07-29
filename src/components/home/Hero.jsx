@@ -227,7 +227,8 @@ export default function Hero() {
                                 fontSize: '0.78rem',
                                 fontWeight: '800',
                                 marginBottom: '1rem',
-                                letterSpacing: '0.5px'
+                                letterSpacing: '1px',
+                                textTransform: 'uppercase'
                             }}>
                                 <Sparkles size={14} color="#f59e0b" /> {activeSlide.tag}
                             </span>
@@ -238,6 +239,8 @@ export default function Hero() {
                                 color: 'white',
                                 lineHeight: '1.1',
                                 marginBottom: '1rem',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
                                 textShadow: '0 4px 20px rgba(0,0,0,0.5)'
                             }}>
                                 {activeSlide.title}
@@ -248,7 +251,9 @@ export default function Hero() {
                                 color: 'rgba(255,255,255,0.85)',
                                 marginBottom: '1.75rem',
                                 maxWidth: '560px',
-                                lineHeight: '1.5'
+                                lineHeight: '1.5',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px'
                             }}>
                                 {activeSlide.description}
                             </p>
@@ -267,6 +272,8 @@ export default function Hero() {
                                         display: 'inline-flex',
                                         alignItems: 'center',
                                         gap: '0.5rem',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.5px',
                                         boxShadow: '0 8px 25px rgba(239, 68, 68, 0.4)'
                                     }}
                                 >
@@ -283,39 +290,46 @@ export default function Hero() {
                                         fontWeight: '700',
                                         fontSize: '0.95rem',
                                         textDecoration: 'none',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.5px',
                                         backdropFilter: 'blur(6px)'
                                     }}
                                 >
-                                    Explore Store Catalogue ➔
+                                    EXPLORE STORE CATALOGUE ➔
                                 </Link>
                             </div>
                         </div>
 
-                        {/* Right Banner Image */}
+                        {/* Right Banner Image (Padded Contain View to Show Full Image) */}
                         {!isMobile && (
                             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <div style={{
                                     position: 'relative',
-                                    width: '340px',
-                                    height: '340px',
+                                    width: '360px',
+                                    height: '360px',
                                     borderRadius: '24px',
                                     overflow: 'hidden',
                                     border: '2px solid rgba(255,255,255,0.15)',
-                                    boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+                                    boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+                                    background: 'linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '16px'
                                 }}>
                                     <img
                                         src={activeSlide.image}
                                         alt={activeSlide.title}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                                     />
                                     <div style={{
                                         position: 'absolute',
-                                        bottom: '1rem',
-                                        left: '1rem',
-                                        right: '1rem',
-                                        background: 'rgba(0,0,0,0.75)',
+                                        bottom: '0.75rem',
+                                        left: '0.75rem',
+                                        right: '0.75rem',
+                                        background: 'rgba(0,0,0,0.85)',
                                         backdropFilter: 'blur(8px)',
-                                        padding: '0.75rem',
+                                        padding: '0.65rem 0.85rem',
                                         borderRadius: '12px',
                                         border: '1px solid rgba(255,255,255,0.1)',
                                         display: 'flex',
@@ -323,8 +337,8 @@ export default function Hero() {
                                         justifyContent: 'space-between'
                                     }}>
                                         <div>
-                                            <div style={{ fontSize: '0.7rem', color: '#aaa', textTransform: 'uppercase' }}>Festival Special</div>
-                                            <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#10b981' }}>{festivalConfig.discountTag || 'UP TO 70% OFF'}</div>
+                                            <div style={{ fontSize: '0.65rem', color: '#aaa', textTransform: 'uppercase', letterSpacing: '0.5px' }}>FESTIVAL SPECIAL</div>
+                                            <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#10b981', textTransform: 'uppercase' }}>{festivalConfig.discountTag || 'UP TO 70% OFF'}</div>
                                         </div>
                                         <Tag size={18} color="#f59e0b" />
                                     </div>
