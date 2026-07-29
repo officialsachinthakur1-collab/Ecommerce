@@ -399,36 +399,11 @@ export default function ProductDetails() {
                             </div>
                         </div>
 
-                        {/* Dual Action Buttons (Amazon & Flipkart Style Professional Instant Buy & Cart) */}
+                        {/* Dual Action Buttons (Exact Flipkart & Amazon Trademark Yellow/Orange Styling) */}
                         <div>
-                            <div style={{ display: 'flex', gap: '1rem', flexDirection: isMobile ? 'column' : 'row' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '1fr 1fr', gap: '1rem' }}>
                                 
-                                {/* Professional Instant Checkout Buy Now Button */}
-                                <button
-                                    onClick={handleInstantBuy}
-                                    style={{
-                                        flex: 1.2,
-                                        padding: '1.25rem 1.5rem',
-                                        borderRadius: '14px',
-                                        background: 'linear-gradient(135deg, #ff9900 0%, #e65100 100%)',
-                                        border: '1px solid #ffaa00',
-                                        color: '#ffffff',
-                                        fontWeight: '900',
-                                        fontSize: '1.05rem',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '0.6rem',
-                                        boxShadow: '0 10px 25px rgba(255, 153, 0, 0.45)',
-                                        letterSpacing: '0.3px',
-                                        transition: 'transform 0.2s ease'
-                                    }}
-                                >
-                                    <Zap size={22} fill="#ffffff" /> ⚡ BUY NOW — Instant Payment
-                                </button>
-
-                                {/* Solid "Add to Cart" Button */}
+                                {/* Flipkart / Amazon Style Yellow "ADD TO CART" Button */}
                                 <button
                                     onClick={() => {
                                         const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
@@ -439,31 +414,57 @@ export default function ProductDetails() {
                                         addToCart(product, selectedSize || "One Size");
                                     }}
                                     style={{
-                                        flex: 0.8,
-                                        padding: '1.25rem 1.5rem',
-                                        borderRadius: '14px',
-                                        background: 'var(--primary-red)',
+                                        padding: '1.15rem 1rem',
+                                        borderRadius: '10px',
+                                        background: '#ff9f00',
                                         border: 'none',
-                                        color: 'white',
+                                        color: '#000000',
                                         fontWeight: '900',
-                                        fontSize: '1rem',
+                                        fontSize: isMobile ? '0.9rem' : '1.05rem',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         gap: '0.5rem',
-                                        boxShadow: '0 10px 25px rgba(239, 68, 68, 0.4)'
+                                        boxShadow: '0 6px 20px rgba(255, 159, 0, 0.4)',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.5px'
                                     }}
                                 >
-                                    <ShoppingBag size={20} /> Add to Cart
+                                    <ShoppingBag size={20} color="#000000" /> ADD TO CART
                                 </button>
+
+                                {/* Flipkart / Amazon Style Vibrant Orange "BUY NOW" Button */}
+                                <button
+                                    onClick={handleInstantBuy}
+                                    style={{
+                                        padding: '1.15rem 1rem',
+                                        borderRadius: '10px',
+                                        background: '#fb641b',
+                                        border: 'none',
+                                        color: '#ffffff',
+                                        fontWeight: '900',
+                                        fontSize: isMobile ? '0.9rem' : '1.05rem',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
+                                        boxShadow: '0 6px 20px rgba(251, 100, 27, 0.4)',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.5px'
+                                    }}
+                                >
+                                    <Zap size={20} fill="#ffffff" /> BUY NOW
+                                </button>
+
                             </div>
 
-                            {/* Payment Gateway Trust Badges Line */}
-                            <div style={{ marginTop: '0.75rem', textAlign: 'center', fontSize: '0.75rem', color: '#a1a1aa', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                <span>🔒 256-Bit SSL Secured</span>
+                            {/* Flipkart / Amazon Payment Gateway Trust Line */}
+                            <div style={{ marginTop: '0.85rem', textAlign: 'center', fontSize: '0.78rem', color: '#a1a1aa', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                                <span>🔒 256-Bit SSL Encrypted Checkout</span>
                                 <span>•</span>
-                                <span>💳 Razorpay Payment Gateway (UPI, Cards, NetBanking & COD)</span>
+                                <span>💳 Razorpay Gateway (UPI, Cards, NetBanking & COD)</span>
                             </div>
                         </div>
 
