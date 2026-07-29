@@ -73,6 +73,20 @@ export default function Hero() {
         };
     }, []);
 
+    // Category Teaser Photos
+    const getCategoryTeaserImage = (catName) => {
+        const images = {
+            'Jewelry': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80',
+            'Electronics': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80',
+            'Home': 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
+            'Gifts': 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80',
+            'Footwear': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80',
+            'Women': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80',
+            'Men': 'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?auto=format&fit=crop&w=800&q=80'
+        };
+        return images[catName] || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80';
+    };
+
     // Construct Amazon Hero Slides
     const heroSlides = useMemo(() => {
         const baseSlides = [
@@ -82,29 +96,9 @@ export default function Hero() {
                 title: festivalConfig.bannerTitle || 'BIG FASHION FESTIVAL',
                 description: festivalConfig.subTitle || 'Discover premium apparel, footwear & accessories at unmatched prices.',
                 image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80',
-                btnText: `Shop ${festivalConfig.festivalName || 'Sale'} — ${festivalConfig.discountTag || 'Up to 70% OFF'}`,
+                btnText: `SHOP ${festivalConfig.festivalName || 'SALE'} — ${festivalConfig.discountTag || 'UP TO 70% OFF'}`,
                 btnLink: '/shop',
                 bgGradient: festivalConfig.bgColor || '#7f1d1d'
-            },
-            {
-                id: 'trending-slide',
-                tag: '⚡ TRENDING NOW',
-                title: 'PREMIUM OVERSIZED COLLECTION',
-                description: 'Upgrade your daily street style with heavyweight 100% organic cotton hoodies & tees.',
-                image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80',
-                btnText: 'Explore Streetwear ➔',
-                btnLink: '/shop?category=Men',
-                bgGradient: '#1e1b4b'
-            },
-            {
-                id: 'bestseller-slide',
-                tag: '👑 BESTSELLERS SPOTLIGHT',
-                title: 'CURATED LUXURY & DAILY WEAR',
-                description: 'Over 10,000+ happy customers love our top-rated collections. Free Shipping across India!',
-                image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80',
-                btnText: 'View Bestsellers ➔',
-                btnLink: '/shop?tag=Bestseller',
-                bgGradient: '#064e3b'
             }
         ];
 
@@ -115,13 +109,28 @@ export default function Hero() {
             title: p.heroTitle || p.name,
             description: p.description || 'Exclusive premium quality item ready for express dispatch.',
             image: p.image,
-            btnText: `Shop Now — ${p.price}`,
+            btnText: `SHOP NOW — ${p.price}`,
             btnLink: `/product/${p.id || p._id}`,
             bgGradient: '#18181b'
         }));
 
-        return customHeroProducts.length > 0 ? [baseSlides[0], ...customHeroProducts] : baseSlides;
-    }, [festivalConfig, products]);
+        // Dynamic "Coming Soon" Hero Slides for categories marked COMING_SOON
+        const comingSoonSlides = Object.keys(categoryStatusMap)
+            .filter(catName => catName !== 'All' && categoryStatusMap[catName] === 'COMING_SOON')
+            .map(catName => ({
+                id: `coming-soon-${catName}`,
+                tag: '🚀 COMING SOON LAUNCH',
+                title: `${catName.toUpperCase()} COLLECTION LAUNCHING SOON`,
+                description: `WE ARE HAND-PICKING PREMIUM HIGH-QUALITY ITEMS FOR OUR ${catName.toUpperCase()} STORE. GET READY FOR EXCLUSIVE EARLY ACCESS DISCOUNTS!`,
+                image: getCategoryTeaserImage(catName),
+                btnText: 'GET VIP EARLY ACCESS ➔',
+                btnLink: `/shop?category=${catName}`,
+                bgGradient: '#311b92'
+            }));
+
+        const combined = [...customHeroProducts, ...comingSoonSlides];
+        return combined.length > 0 ? combined : baseSlides;
+    }, [festivalConfig, products, categoryStatusMap]);
 
     // Auto Slide Timer
     useEffect(() => {
