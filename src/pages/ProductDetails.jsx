@@ -114,16 +114,22 @@ export default function ProductDetails() {
     return (
         <div className="product-page-wrapper" style={{ background: '#09090b', color: 'white', minHeight: '100vh', paddingTop: '1.5rem', paddingBottom: '4rem' }}>
             
-            {/* Breadcrumbs */}
-            <div className="container" style={{ marginBottom: '1.5rem' }}>
-                <nav style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#888', flexWrap: 'wrap' }}>
-                    <Link to="/" style={{ color: '#888', textDecoration: 'none' }}>Home</Link>
-                    <ChevronRight size={12} />
-                    <Link to="/shop" style={{ color: '#888', textDecoration: 'none' }}>Shop</Link>
-                    <ChevronRight size={12} />
-                    <Link to={`/shop?category=${product.category || 'All'}`} style={{ color: '#888', textDecoration: 'none' }}>{product.category || 'Apparel'}</Link>
-                    <ChevronRight size={12} />
-                    <span style={{ color: 'white', fontWeight: '600' }}>{product.name}</span>
+            {/* Breadcrumbs Navigation Bar (Amazon & Flipkart Style Flush Left) */}
+            <div className="container" style={{ marginBottom: '1.25rem' }}>
+                <nav style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#a1a1aa', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                    <Link to="/" style={{ color: '#a1a1aa', textDecoration: 'none' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>Home</Link>
+                    <span style={{ color: '#555' }}>›</span>
+                    <Link to="/shop" style={{ color: '#a1a1aa', textDecoration: 'none' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>Shop Store</Link>
+                    <span style={{ color: '#555' }}>›</span>
+                    <Link to={`/shop?category=${product.category || 'All'}`} style={{ color: '#a1a1aa', textDecoration: 'none' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>{product.category || 'Apparel'}</Link>
+                    {product.subCategory && (
+                        <>
+                            <span style={{ color: '#555' }}>›</span>
+                            <span style={{ color: '#a1a1aa' }}>{product.subCategory}</span>
+                        </>
+                    )}
+                    <span style={{ color: '#555' }}>›</span>
+                    <span style={{ color: '#ffffff', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '280px' }}>{product.name}</span>
                 </nav>
             </div>
 
