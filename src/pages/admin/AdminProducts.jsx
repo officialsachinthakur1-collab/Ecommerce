@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Edit2, Trash2, X, Image as ImageIcon, Upload, Sparkles, Check, Package, RefreshCw } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Image as ImageIcon, Upload, Sparkles, Check, Package, RefreshCw, Star } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import API_URL from '../../config';
 
