@@ -145,7 +145,7 @@ export default function Hero() {
                 title: `${cat.name.toUpperCase()} ${cat.status === 'COMING_SOON' ? 'LAUNCHING SOON' : 'TRENDING COLLECTION'}`,
                 description: `EXPLORE PREMIUM SELECTION OF ${cat.name.toUpperCase()}. GET READY FOR EXCLUSIVE DISCOUNTS & DISPATCH!`,
                 image: getCategoryTeaserImage(cat.name || cat.id),
-                btnText: cat.status === 'COMING_SOON' ? 'GET VIP EARLY ACCESS ➔' : 'EXPLORE COLLECTION ➔',
+                btnText: cat.status === 'COMING_SOON' ? 'NOTIFY ME AT LAUNCH 🔔' : 'EXPLORE COLLECTION ➔',
                 btnLink: `/shop?category=${cat.id || cat.name}`,
                 bgGradient: cat.status === 'COMING_SOON' ? '#311b92' : '#064e3b'
             }));
@@ -295,6 +295,12 @@ export default function Hero() {
                             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                                 <Link
                                     to={activeSlide.btnLink}
+                                    onClick={(e) => {
+                                        if ((activeSlide.btnText || '').includes('NOTIFY') || (activeSlide.tag || '').includes('COMING SOON')) {
+                                            e.preventDefault();
+                                            alert(`🔔 Launch Alert Activated! You will get an instant notification & exclusive launch offer as soon as "${activeSlide.title}" goes live!`);
+                                        }
+                                    }}
                                     style={{
                                         padding: '0.9rem 2rem',
                                         background: 'var(--primary-red)',

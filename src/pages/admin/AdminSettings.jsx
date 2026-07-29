@@ -28,7 +28,7 @@ export default function AdminSettings() {
                 title: 'ELECTRONICS & JEWELRY LAUNCHING SOON',
                 description: 'WE ARE HAND-PICKING PREMIUM HIGH-QUALITY ITEMS. GET READY FOR EXCLUSIVE EARLY ACCESS DISCOUNTS!',
                 image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80',
-                btnText: 'GET VIP EARLY ACCESS ➔',
+                btnText: 'NOTIFY ME AT LAUNCH 🔔',
                 btnLink: '/shop?category=Electronics',
                 bgGradient: '#311b92',
                 enabled: true
