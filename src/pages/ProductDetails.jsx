@@ -108,7 +108,7 @@ export default function ProductDetails() {
             return;
         }
         addToCart(product, selectedSize || "One Size");
-        navigate('/cart');
+        navigate('/checkout');
     };
 
     return (
@@ -399,61 +399,72 @@ export default function ProductDetails() {
                             </div>
                         </div>
 
-                        {/* Dual Action Buttons (Amazon Style: Buy Now & Add to Cart) */}
-                        <div style={{ display: 'flex', gap: '1rem', flexDirection: isMobile ? 'column' : 'row', marginTop: '0.5rem' }}>
-                            
-                            {/* Amazon Iconic Gold "Buy Now" Button */}
-                            <button
-                                onClick={handleInstantBuy}
-                                style={{
-                                    flex: 1,
-                                    padding: '1.1rem 1.5rem',
-                                    borderRadius: '12px',
-                                    background: 'linear-gradient(180deg, #ffa41c 0%, #f08804 100%)',
-                                    border: '1px solid #a88734',
-                                    color: '#111111',
-                                    fontWeight: '900',
-                                    fontSize: '1rem',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem',
-                                    boxShadow: '0 8px 20px rgba(240, 136, 4, 0.4)'
-                                }}
-                            >
-                                <Zap size={20} fill="#111" /> ⚡ Buy Now (Instant Checkout)
-                            </button>
+                        {/* Dual Action Buttons (Amazon & Flipkart Style Professional Instant Buy & Cart) */}
+                        <div>
+                            <div style={{ display: 'flex', gap: '1rem', flexDirection: isMobile ? 'column' : 'row' }}>
+                                
+                                {/* Professional Instant Checkout Buy Now Button */}
+                                <button
+                                    onClick={handleInstantBuy}
+                                    style={{
+                                        flex: 1.2,
+                                        padding: '1.25rem 1.5rem',
+                                        borderRadius: '14px',
+                                        background: 'linear-gradient(135deg, #ff9900 0%, #e65100 100%)',
+                                        border: '1px solid #ffaa00',
+                                        color: '#ffffff',
+                                        fontWeight: '900',
+                                        fontSize: '1.05rem',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.6rem',
+                                        boxShadow: '0 10px 25px rgba(255, 153, 0, 0.45)',
+                                        letterSpacing: '0.3px',
+                                        transition: 'transform 0.2s ease'
+                                    }}
+                                >
+                                    <Zap size={22} fill="#ffffff" /> ⚡ BUY NOW — Instant Payment
+                                </button>
 
-                            {/* Solid "Add to Cart" Button */}
-                            <button
-                                onClick={() => {
-                                    const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
-                                    if (hasSizing && !selectedSize) {
-                                        alert('Please select a size');
-                                        return;
-                                    }
-                                    addToCart(product, selectedSize || "One Size");
-                                }}
-                                style={{
-                                    flex: 1,
-                                    padding: '1.1rem 1.5rem',
-                                    borderRadius: '12px',
-                                    background: 'var(--primary-red)',
-                                    border: 'none',
-                                    color: 'white',
-                                    fontWeight: '900',
-                                    fontSize: '1rem',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '0.5rem',
-                                    boxShadow: '0 8px 20px rgba(239, 68, 68, 0.4)'
-                                }}
-                            >
-                                <ShoppingBag size={20} /> Add to Cart
-                            </button>
+                                {/* Solid "Add to Cart" Button */}
+                                <button
+                                    onClick={() => {
+                                        const hasSizing = product.sizes && product.sizes.length > 0 && !(product.sizes.length === 1 && product.sizes[0] === "One Size");
+                                        if (hasSizing && !selectedSize) {
+                                            alert('Please select a size first!');
+                                            return;
+                                        }
+                                        addToCart(product, selectedSize || "One Size");
+                                    }}
+                                    style={{
+                                        flex: 0.8,
+                                        padding: '1.25rem 1.5rem',
+                                        borderRadius: '14px',
+                                        background: 'var(--primary-red)',
+                                        border: 'none',
+                                        color: 'white',
+                                        fontWeight: '900',
+                                        fontSize: '1rem',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '0.5rem',
+                                        boxShadow: '0 10px 25px rgba(239, 68, 68, 0.4)'
+                                    }}
+                                >
+                                    <ShoppingBag size={20} /> Add to Cart
+                                </button>
+                            </div>
+
+                            {/* Payment Gateway Trust Badges Line */}
+                            <div style={{ marginTop: '0.75rem', textAlign: 'center', fontSize: '0.75rem', color: '#a1a1aa', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                <span>🔒 256-Bit SSL Secured</span>
+                                <span>•</span>
+                                <span>💳 Razorpay Payment Gateway (UPI, Cards, NetBanking & COD)</span>
+                            </div>
                         </div>
 
                         {/* Amazon Key Highlights Bullet Points */}
