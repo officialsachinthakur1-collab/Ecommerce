@@ -176,7 +176,7 @@ export default function ProductDetails() {
                                                 borderRadius: '12px',
                                                 overflow: 'hidden',
                                                 border: activeImage === img ? '2px solid var(--primary-red)' : '1px solid #27272a',
-                                                background: '#ffffff',
+                                                background: '#18181b',
                                                 cursor: 'pointer',
                                                 padding: '4px',
                                                 flexShrink: 0,
@@ -193,7 +193,7 @@ export default function ProductDetails() {
                             {/* Main High-Res Image Viewport */}
                             <div style={{
                                 flex: 1,
-                                background: '#ffffff',
+                                background: 'linear-gradient(145deg, #1f1f24 0%, #121215 100%)',
                                 borderRadius: '20px',
                                 overflow: 'hidden',
                                 aspectRatio: '1',
