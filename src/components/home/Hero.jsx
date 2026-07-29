@@ -40,6 +40,12 @@ export default function Hero() {
         }
     });
 
+    const [categoryStatusList, setCategoryStatusList] = useState(() => {
+        const saved = localStorage.getItem('gsm_category_status');
+        if (!saved) return [];
+        try { return JSON.parse(saved); } catch (e) { return []; }
+    });
+
     useEffect(() => {
         const handleFestivalUpdate = (e) => {
             if (e.detail) {
@@ -55,6 +61,7 @@ export default function Hero() {
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
+                    setCategoryStatusList(parsed);
                     const map = {};
                     parsed.forEach(item => {
                         map[item.id] = item.status;
@@ -90,6 +97,18 @@ export default function Hero() {
         return saved ? JSON.parse(saved) : [];
     });
 
+    const getCategoryTeaserImage = (catName) => {
+        const lower = (catName || '').toLowerCase();
+        if (lower.includes('electr')) return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80';
+        if (lower.includes('jewel') || lower.includes('watch')) return 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
+        if (lower.includes('foot') || lower.includes('shoe')) return 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80';
+        if (lower.includes('women')) return 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80';
+        if (lower.includes('men')) return 'https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&w=800&q=80';
+        if (lower.includes('home') || lower.includes('kitchen')) return 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=800&q=80';
+        if (lower.includes('gift')) return 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=800&q=80';
+        return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80';
+    };
+
     // Construct Amazon Hero Slides
     const heroSlides = useMemo(() => {
         const baseSlides = [
@@ -117,12 +136,26 @@ export default function Hero() {
             bgGradient: '#18181b'
         }));
 
+        // Category Teasers explicitly toggled via "+ Add to Hero" in Category Manager
+        const categoryHeroSlides = (categoryStatusList || [])
+            .filter(cat => cat.inHero === true)
+            .map(cat => ({
+                id: `hero-cat-${cat.id || cat.name}`,
+                tag: cat.status === 'COMING_SOON' ? '🚀 COMING SOON LAUNCH' : `✨ ${cat.name.toUpperCase()} COLLECTION`,
+                title: `${cat.name.toUpperCase()} ${cat.status === 'COMING_SOON' ? 'LAUNCHING SOON' : 'TRENDING COLLECTION'}`,
+                description: `EXPLORE PREMIUM SELECTION OF ${cat.name.toUpperCase()}. GET READY FOR EXCLUSIVE DISCOUNTS & DISPATCH!`,
+                image: getCategoryTeaserImage(cat.name || cat.id),
+                btnText: cat.status === 'COMING_SOON' ? 'GET VIP EARLY ACCESS ➔' : 'EXPLORE COLLECTION ➔',
+                btnLink: `/shop?category=${cat.id || cat.name}`,
+                bgGradient: cat.status === 'COMING_SOON' ? '#311b92' : '#064e3b'
+            }));
+
         // Admin Manually Configured Custom Hero Slides (Coming Soon, Promos, Sales)
         const adminConfiguredSlides = (customHeroSlides || []).filter(s => s.enabled !== false);
 
-        const combined = [...customHeroProducts, ...adminConfiguredSlides];
+        const combined = [...customHeroProducts, ...categoryHeroSlides, ...adminConfiguredSlides];
         return combined.length > 0 ? combined : baseSlides;
-    }, [festivalConfig, products, customHeroSlides]);
+    }, [festivalConfig, products, customHeroSlides, categoryStatusList]);
 
     // Auto Slide Timer
     useEffect(() => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, User, Lock, Globe, Bell, Sparkles, Check, Tag, Plus, ToggleLeft, ToggleRight, Image, Upload, Trash2 } from 'lucide-react';
+import { Save, User, Lock, Globe, Bell, Sparkles, Check, Tag, Plus, ToggleLeft, ToggleRight, Image, Upload, Trash2, Star } from 'lucide-react';
 import API_URL from '../../config';
 
 export default function AdminSettings() {
@@ -184,6 +184,21 @@ export default function AdminSettings() {
             return cat;
         });
         setCategoriesStatus(updated);
+        localStorage.setItem('gsm_category_status', JSON.stringify(updated));
+        window.dispatchEvent(new Event('gsm_categories_updated'));
+    };
+
+    const toggleCategoryHeroStatus = (catId) => {
+        const updated = categoriesStatus.map(cat => {
+            if (cat.id === catId || cat.name === catId) {
+                const nextHero = !cat.inHero;
+                return { ...cat, inHero: nextHero };
+            }
+            return cat;
+        });
+        setCategoriesStatus(updated);
+        localStorage.setItem('gsm_category_status', JSON.stringify(updated));
+        window.dispatchEvent(new Event('gsm_categories_updated'));
     };
 
     const handleAddCategory = (e) => {
@@ -651,7 +666,7 @@ export default function AdminSettings() {
                                                 {cat.status === 'LIVE' ? '🟢 LIVE (Available)' : '⏳ COMING SOON'}
                                             </span>
 
-                                            {/* Toggle Button */}
+                                            {/* Toggle Status Button */}
                                             <button
                                                 onClick={() => toggleCategoryStatus(cat.id)}
                                                 style={{
@@ -669,6 +684,28 @@ export default function AdminSettings() {
                                                 }}
                                             >
                                                 {cat.status === 'LIVE' ? <ToggleRight size={18} color="#10b981" /> : <ToggleLeft size={18} color="#f59e0b" />} Switch Status
+                                            </button>
+
+                                            {/* Add / Remove from Hero Section Button */}
+                                            <button
+                                                onClick={() => toggleCategoryHeroStatus(cat.id)}
+                                                title="Toggle banner slide in Homepage Hero Section"
+                                                style={{
+                                                    padding: '0.5rem 1rem',
+                                                    background: cat.inHero ? 'rgba(245, 158, 11, 0.2)' : '#18181b',
+                                                    border: cat.inHero ? '1px solid #f59e0b' : '1px solid #3f3f46',
+                                                    color: cat.inHero ? '#f59e0b' : '#a1a1aa',
+                                                    borderRadius: '8px',
+                                                    fontWeight: '700',
+                                                    fontSize: '0.8rem',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.4rem'
+                                                }}
+                                            >
+                                                <Star size={16} fill={cat.inHero ? '#f59e0b' : 'none'} color={cat.inHero ? '#f59e0b' : '#a1a1aa'} />
+                                                {cat.inHero ? 'In Hero Banner ✓' : '+ Add to Hero'}
                                             </button>
                                         </div>
                                     </div>
