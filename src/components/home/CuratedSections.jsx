@@ -17,16 +17,11 @@ const CuratedSections = ({ title, tag, category, limit = 8 }) => {
         </section>
     );
 
-    let filtered = allProducts.filter(p => {
+    const filtered = allProducts.filter(p => {
         if (category && p.category !== category) return false;
         if (tag && p.tag !== tag) return false;
         return true;
     });
-
-    // Fallback if tag/category filter produces 0 items: show general products list
-    if (filtered.length === 0) {
-        filtered = allProducts;
-    }
 
     const products = filtered.slice(0, limit);
 
