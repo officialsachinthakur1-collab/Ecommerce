@@ -1,227 +1,420 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { products as fallbackProducts } from '../../data/products';
+import { useState, useEffect, useMemo } from 'react';
+import { ChevronLeft, ChevronRight, Sparkles, Tag, ArrowRight, ShieldCheck, Truck, RefreshCw, Award } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import useMobile from '../../hooks/useMobile';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, MeshDistortMaterial, PerspectiveCamera } from '@react-three/drei';
-import * as THREE from 'three';
 
-const Heart = ({ position, rotation, scale, color, speed = 1 }) => {
-    const mesh = useRef();
-    const heartShape = useMemo(() => {
-        const shape = new THREE.Shape();
-        shape.moveTo(0, 0);
-        shape.bezierCurveTo(0, -0.5, -1.1, -1, -1.1, -2);
-        shape.bezierCurveTo(-1.1, -3, 0.5, -4.5, 1.5, -5.5);
-        shape.bezierCurveTo(2.5, -4.5, 4.1, -3, 4.1, -2);
-        shape.bezierCurveTo(4.1, -1, 3, -0.5, 3, 0);
-        shape.bezierCurveTo(3, 0.5, 3, 1, 1.5, 1);
-        shape.bezierCurveTo(0, 1, 0, 0.5, 0, 0);
-        return shape;
-    }, []);
-
-    const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
-
-    useFrame((state) => {
-        const t = state.clock.getElapsedTime();
-        if (mesh.current) {
-            mesh.current.rotation.y = Math.sin(t * speed) * 0.2;
-            mesh.current.position.y += Math.sin(t * speed) * 0.005;
-        }
-    });
-
-    return (
-        <Float speed={speed * 2} rotationIntensity={1.5} floatIntensity={2}>
-            <mesh ref={mesh} position={position} rotation={rotation} scale={scale}>
-                <extrudeGeometry args={[heartShape, extrudeSettings]} />
-                <MeshDistortMaterial
-                    color={color}
-                    speed={2}
-                    distort={0.3}
-                    radius={1}
-                    metalness={0.8}
-                    roughness={0.2}
-                />
-            </mesh>
-        </Float>
-    );
-};
-
-const Hero = () => {
+export default function Hero() {
     const isMobile = useMobile();
-    const { products, loading } = useProducts(true);
+    const { products } = useProducts(true);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Valentine Slide Data
-    const valentineSlide = {
-        isValentine: true,
-        tag: "PREMIUM GIFTING",
-        title: "HAPPY VALENTINE'S DAY",
-        description: "Make this February unforgettable with our curated collection of love-inspired essentials.",
-        image: "/assets/vday/teddy.png",
-        btnText: "EXPLORE THE GUIDE",
-        btnLink: "/valentines-day"
-    };
+    // Dynamic Festival Settings from Admin
+    const [festivalConfig, setFestivalConfig] = useState(() => {
+        const saved = localStorage.getItem('gsm_festival_settings');
+        return saved ? JSON.parse(saved) : {
+            festivalName: 'Fashion Dhamaka',
+            bannerTitle: 'BIG FASHION FESTIVAL SALE',
+            subTitle: 'Get Up To 70% OFF On Trendsetting Apparel & Essentials',
+            badgeText: '🔥 LIMITED TIME DEAL',
+            discountTag: 'UP TO 70% OFF',
+            bgColor: '#800020'
+        };
+    });
 
+    useEffect(() => {
+        const handleFestivalUpdate = (e) => {
+            if (e.detail) {
+                setFestivalConfig(e.detail);
+            } else {
+                const saved = localStorage.getItem('gsm_festival_settings');
+                if (saved) setFestivalConfig(JSON.parse(saved));
+            }
+        };
+
+        window.addEventListener('gsm_festival_updated', handleFestivalUpdate);
+        return () => window.removeEventListener('gsm_festival_updated', handleFestivalUpdate);
+    }, []);
+
+    // Construct Amazon Hero Slides
     const heroSlides = useMemo(() => {
-        const dbHeroProducts = products.filter(p => p.isHero).map(p => ({ ...p, isValentine: false }));
-        let slides = dbHeroProducts.length > 0 ? dbHeroProducts : fallbackProducts.slice(0, 3).map(p => ({ ...p, isValentine: false }));
+        const baseSlides = [
+            {
+                id: 'festive-slide',
+                tag: festivalConfig.badgeText || '🔥 SPECIAL OFFER',
+                title: festivalConfig.bannerTitle || 'BIG FASHION FESTIVAL',
+                description: festivalConfig.subTitle || 'Discover premium apparel, footwear & accessories at unmatched prices.',
+                image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80',
+                btnText: `Shop ${festivalConfig.festivalName || 'Sale'} — ${festivalConfig.discountTag || 'Up to 70% OFF'}`,
+                btnLink: '/shop',
+                bgGradient: festivalConfig.bgColor || '#7f1d1d'
+            },
+            {
+                id: 'trending-slide',
+                tag: '⚡ TRENDING NOW',
+                title: 'PREMIUM OVERSIZED COLLECTION',
+                description: 'Upgrade your daily street style with heavyweight 100% organic cotton hoodies & tees.',
+                image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1200&q=80',
+                btnText: 'Explore Streetwear ➔',
+                btnLink: '/shop?category=Men',
+                bgGradient: '#1e1b4b'
+            },
+            {
+                id: 'bestseller-slide',
+                tag: '👑 BESTSELLERS SPOTLIGHT',
+                title: 'CURATED LUXURY & DAILY WEAR',
+                description: 'Over 10,000+ happy customers love our top-rated collections. Free Shipping across India!',
+                image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80',
+                btnText: 'View Bestsellers ➔',
+                btnLink: '/shop?tag=Bestseller',
+                bgGradient: '#064e3b'
+            }
+        ];
 
-        // Always add Valentine slide at the beginning
-        return [valentineSlide, ...slides];
-    }, [products]);
+        // Add user hero products if available
+        const customHeroProducts = products.filter(p => p.isHero).map(p => ({
+            id: p.id || p._id,
+            tag: p.tag || '✨ FEATURED PRODUCT',
+            title: p.heroTitle || p.name,
+            description: p.description || 'Exclusive premium quality item ready for express dispatch.',
+            image: p.image,
+            btnText: `Shop Now — ${p.price}`,
+            btnLink: `/product/${p.id || p._id}`,
+            bgGradient: '#18181b'
+        }));
 
+        return customHeroProducts.length > 0 ? [baseSlides[0], ...customHeroProducts] : baseSlides;
+    }, [festivalConfig, products]);
+
+    // Auto Slide Timer
     useEffect(() => {
         if (heroSlides.length <= 1) return;
         const timer = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % heroSlides.length);
-        }, 6000); // 6 seconds for better viewing
+        }, 5000);
         return () => clearInterval(timer);
     }, [heroSlides.length]);
 
-    useEffect(() => {
-        if (currentIndex >= heroSlides.length) {
-            setCurrentIndex(0);
-        }
-    }, [heroSlides.length, currentIndex]);
-
-    // Preload images to prevent flickering
-    useEffect(() => {
-        heroSlides.forEach(slide => {
-            if (slide.image) {
-                const img = new Image();
-                img.src = slide.image;
-            }
-        });
-    }, [heroSlides]);
-
-    if (loading && heroSlides.length <= 1) {
-        return <div style={{ height: '80vh', background: '#050505' }} />;
-    }
-
     const activeSlide = heroSlides[currentIndex] || heroSlides[0];
 
+    const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % heroSlides.length);
+    const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+
+    // Pick top 4 products for Amazon Category Cards Grid
+    const menProducts = products.filter(p => p.category === 'Men').slice(0, 2);
+    const womenProducts = products.filter(p => p.category === 'Women').slice(0, 2);
+    const hotDeals = products.slice(0, 4);
+
     return (
-        <section className={`hero-section ${activeSlide.isValentine ? 'valentine-theme' : ''}`}>
-            {activeSlide.isValentine ? (
-                <div style={{ position: 'absolute', inset: 0, opacity: 0.8, pointerEvents: 'none', zIndex: 1 }}>
-                    <Canvas>
-                        <PerspectiveCamera makeDefault position={[0, 0, 10]} />
-                        <ambientLight intensity={0.7} />
-                        <pointLight position={[10, 10, 10]} intensity={1.5} />
-                        <Heart position={[-6, 2, 0]} rotation={[0, 0, Math.PI]} scale={0.15} color="#ff4d4d" speed={0.5} />
-                        <Heart position={[5, -1, 2]} rotation={[0, 0.5, Math.PI]} scale={0.1} color="#ff8080" speed={0.8} />
-                        <Heart position={[-2, -3, 1]} rotation={[0.2, -0.2, Math.PI]} scale={0.12} color="#cc0000" speed={0.6} />
+        <section style={{ position: 'relative', width: '100%', background: '#0a0a0c', overflow: 'hidden', paddingBottom: '2rem' }}>
+            
+            {/* Amazon Main Banner Slider */}
+            <div style={{
+                position: 'relative',
+                minHeight: isMobile ? '380px' : '480px',
+                display: 'flex',
+                alignItems: 'center',
+                background: `linear-gradient(135deg, ${activeSlide.bgGradient || '#7f1d1d'} 0%, #0a0a0c 100%)`,
+                transition: 'background 0.8s ease'
+            }}>
+                
+                {/* Full-Bleed Background Overlay Pattern */}
+                <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)',
+                    backgroundSize: '24px 24px',
+                    opacity: 0.6
+                }} />
+
+                {/* Left & Right Amazon Nav Arrows */}
+                <button
+                    onClick={prevSlide}
+                    style={{
+                        position: 'absolute',
+                        left: '1rem',
+                        zIndex: 20,
+                        background: 'rgba(0,0,0,0.5)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        color: 'white',
+                        width: '44px',
+                        height: '44px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        backdropFilter: 'blur(4px)'
+                    }}
+                >
+                    <ChevronLeft size={24} />
+                </button>
+
+                <button
+                    onClick={nextSlide}
+                    style={{
+                        position: 'absolute',
+                        right: '1rem',
+                        zIndex: 20,
+                        background: 'rgba(0,0,0,0.5)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        color: 'white',
+                        width: '44px',
+                        height: '44px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        backdropFilter: 'blur(4px)'
+                    }}
+                >
+                    <ChevronRight size={24} />
+                </button>
+
+                {/* Main Banner Content */}
+                <div style={{ width: '100%', maxWidth: '1280px', margin: '0 auto', padding: isMobile ? '2rem 1.25rem' : '3rem 2rem', position: 'relative', zIndex: 10 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.2fr 0.8fr', gap: '2rem', alignItems: 'center' }}>
+                        
+                        {/* Text & CTA */}
+                        <div>
+                            <span style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                background: 'rgba(239, 68, 68, 0.2)',
+                                border: '1px solid rgba(239, 68, 68, 0.4)',
+                                color: 'white',
+                                padding: '0.35rem 0.9rem',
+                                borderRadius: '100px',
+                                fontSize: '0.78rem',
+                                fontWeight: '800',
+                                marginBottom: '1rem',
+                                letterSpacing: '0.5px'
+                            }}>
+                                <Sparkles size={14} color="#f59e0b" /> {activeSlide.tag}
+                            </span>
+
+                            <h1 style={{
+                                fontSize: isMobile ? '2.2rem' : '3.4rem',
+                                fontWeight: '900',
+                                color: 'white',
+                                lineHeight: '1.1',
+                                marginBottom: '1rem',
+                                textShadow: '0 4px 20px rgba(0,0,0,0.5)'
+                            }}>
+                                {activeSlide.title}
+                            </h1>
+
+                            <p style={{
+                                fontSize: isMobile ? '0.9rem' : '1.15rem',
+                                color: 'rgba(255,255,255,0.85)',
+                                marginBottom: '1.75rem',
+                                maxWidth: '560px',
+                                lineHeight: '1.5'
+                            }}>
+                                {activeSlide.description}
+                            </p>
+
+                            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                                <Link
+                                    to={activeSlide.btnLink}
+                                    style={{
+                                        padding: '0.9rem 2rem',
+                                        background: 'var(--primary-red)',
+                                        color: 'white',
+                                        borderRadius: '10px',
+                                        fontWeight: '800',
+                                        fontSize: '0.95rem',
+                                        textDecoration: 'none',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        boxShadow: '0 8px 25px rgba(239, 68, 68, 0.4)'
+                                    }}
+                                >
+                                    {activeSlide.btnText}
+                                </Link>
+                                <Link
+                                    to="/shop"
+                                    style={{
+                                        padding: '0.9rem 1.5rem',
+                                        background: 'rgba(255,255,255,0.1)',
+                                        border: '1px solid rgba(255,255,255,0.25)',
+                                        color: 'white',
+                                        borderRadius: '10px',
+                                        fontWeight: '700',
+                                        fontSize: '0.95rem',
+                                        textDecoration: 'none',
+                                        backdropFilter: 'blur(6px)'
+                                    }}
+                                >
+                                    Explore Store Catalogue ➔
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Right Banner Image */}
                         {!isMobile && (
-                            <>
-                                <Heart position={[8, 3, -2]} rotation={[0, 0.2, Math.PI]} scale={0.08} color="#ff3333" speed={1.2} />
-                                <Heart position={[-8, -2, 0]} rotation={[0, -0.5, Math.PI]} scale={0.1} color="#ffb3b3" speed={0.7} />
-                            </>
-                        )}
-                    </Canvas>
-                </div>
-            ) : (
-                <div className="hero-background-gradient" />
-            )}
-
-            <div className="container hero-container" style={{ position: 'relative', zIndex: 10 }}>
-                <div className="hero-content-grid">
-                    <div className="hero-info">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={currentIndex}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 20 }}
-                                transition={{ duration: 0.5, ease: "easeOut" }}
-                            >
-                                <span className="hero-tag">{activeSlide.tag}</span>
-                                {activeSlide.isValentine ? (
-                                    <h1 className="hero-title valentine-title">
-                                        HAPPY <br />
-                                        <span className="valentine-italic">Valentine's</span> <br />
-                                        DAY
-                                    </h1>
-                                ) : (
-                                    <h1 className="hero-title">
-                                        {(activeSlide.heroTitle || activeSlide.name || '').split(' ').map((word, i) => (
-                                            <span key={i}>
-                                                {word} {i === 1 && <br />}
-                                            </span>
-                                        ))}
-                                    </h1>
-                                )}
-
-                                <p className="hero-description">
-                                    {activeSlide.description}
-                                </p>
-
-                                <div className="hero-actions">
-                                    <Link
-                                        to={activeSlide.isValentine ? activeSlide.btnLink : `/product/${activeSlide.id || activeSlide._id}`}
-                                        className="btn-primary"
-                                    >
-                                        {activeSlide.isValentine ? activeSlide.btnText : `Shop Now — ${activeSlide.price}`}
-                                    </Link>
-                                    {!activeSlide.isValentine && (
-                                        <Link to="/shop" className="btn-outline">
-                                            View Collection
-                                        </Link>
-                                    )}
-                                </div>
-                            </motion.div>
-                        </AnimatePresence>
-
-                        {heroSlides.length > 1 && (
-                            <div className="hero-indicators">
-                                {heroSlides.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setCurrentIndex(index)}
-                                        className={`indicator ${index === currentIndex ? 'active' : ''}`}
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <div style={{
+                                    position: 'relative',
+                                    width: '340px',
+                                    height: '340px',
+                                    borderRadius: '24px',
+                                    overflow: 'hidden',
+                                    border: '2px solid rgba(255,255,255,0.15)',
+                                    boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+                                }}>
+                                    <img
+                                        src={activeSlide.image}
+                                        alt={activeSlide.title}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     />
-                                ))}
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '1rem',
+                                        left: '1rem',
+                                        right: '1rem',
+                                        background: 'rgba(0,0,0,0.75)',
+                                        backdropFilter: 'blur(8px)',
+                                        padding: '0.75rem',
+                                        borderRadius: '12px',
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
+                                    }}>
+                                        <div>
+                                            <div style={{ fontSize: '0.7rem', color: '#aaa', textTransform: 'uppercase' }}>Festival Special</div>
+                                            <div style={{ fontSize: '0.85rem', fontWeight: '800', color: '#10b981' }}>{festivalConfig.discountTag || 'UP TO 70% OFF'}</div>
+                                        </div>
+                                        <Tag size={18} color="#f59e0b" />
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>
+                </div>
 
-                    <div className="hero-visual">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={currentIndex}
-                                initial={{ opacity: 0, scale: 0.8, rotate: activeSlide.isValentine ? 0 : -5 }}
-                                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                                exit={{ opacity: 0, scale: 1.1, rotate: activeSlide.isValentine ? 0 : 5 }}
-                                transition={{ duration: 0.6, ease: "easeOut" }}
-                                className="product-image-container"
-                            >
-                                <div className={activeSlide.isValentine ? "valentine-glow" : "image-glow"} />
-                                <img
-                                    src={activeSlide.image}
-                                    alt={activeSlide.title || activeSlide.name}
-                                    className={`hero-product-img ${activeSlide.isValentine ? 'valentine-img' : ''}`}
-                                    style={{ objectFit: 'contain', padding: isMobile ? '1rem' : '2rem' }}
-                                />
-                                {activeSlide.isValentine && (
-                                    <motion.div
-                                        initial={{ rotate: -20, scale: 0 }}
-                                        animate={{ rotate: -12, scale: 1 }}
-                                        transition={{ delay: 0.8, type: 'spring' }}
-                                        className="valentine-badge"
-                                    >
-                                        <div className="badge-small">Limited Offer</div>
-                                        <div className="badge-large">50% OFF</div>
-                                    </motion.div>
-                                )}
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
+                {/* Slider Dots */}
+                <div style={{
+                    position: 'absolute',
+                    bottom: '1rem',
+                    left: 0,
+                    right: 0,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    zIndex: 15
+                }}>
+                    {heroSlides.map((_, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => setCurrentIndex(idx)}
+                            style={{
+                                width: idx === currentIndex ? '28px' : '8px',
+                                height: '8px',
+                                borderRadius: '4px',
+                                background: idx === currentIndex ? 'var(--primary-red)' : 'rgba(255,255,255,0.3)',
+                                border: 'none',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease'
+                            }}
+                        />
+                    ))}
                 </div>
             </div>
+
+            {/* Amazon Signature Overlay Quick Category Cards Grid (4 Cards) */}
+            <div style={{ width: '100%', maxWidth: '1280px', margin: isMobile ? '1rem auto 0' : '-40px auto 0', padding: '0 1.25rem', position: 'relative', zIndex: 30 }}>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
+                    gap: '1.25rem'
+                }}>
+                    
+                    {/* Card 1: Fashion & Apparel Mini-Grid */}
+                    <div style={{ background: '#121214', border: '1px solid #222', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)' }}>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'white', marginBottom: '0.85rem' }}>
+                            👔 Trendy Fashion & Apparel
+                        </h3>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginBottom: '0.85rem' }}>
+                            {(menProducts.length > 0 ? menProducts : hotDeals.slice(0, 2)).map((p, i) => (
+                                <Link key={i} to={`/product/${p.id || p._id}`} style={{ textDecoration: 'none', background: '#1a1a1e', padding: '0.5rem', borderRadius: '8px', textAlign: 'center' }}>
+                                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '70px', objectFit: 'cover', borderRadius: '6px' }} />
+                                    <div style={{ fontSize: '0.7rem', color: '#ccc', fontWeight: '600', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
+                                </Link>
+                            ))}
+                        </div>
+                        <Link to="/shop?category=Men" style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            See all fashion offers <ArrowRight size={14} />
+                        </Link>
+                    </div>
+
+                    {/* Card 2: Today's Mega Deals & Festival Specials */}
+                    <div style={{ background: '#121214', border: '1px solid #222', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                            <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'white' }}>
+                                🏷️ Today's Mega Deals
+                            </h3>
+                            <span style={{ background: '#ef4444', color: 'white', fontSize: '0.65rem', fontWeight: '900', padding: '2px 6px', borderRadius: '4px' }}>
+                                LIVE
+                            </span>
+                        </div>
+                        <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px', padding: '0.75rem', marginBottom: '0.85rem' }}>
+                            <div style={{ fontSize: '0.75rem', color: '#aaa', marginBottom: '2px' }}>{festivalConfig.festivalName || 'Special Deal'}</div>
+                            <div style={{ fontSize: '1.2rem', fontWeight: '900', color: '#10b981' }}>{festivalConfig.discountTag || 'UP TO 70% OFF'}</div>
+                            <div style={{ fontSize: '0.7rem', color: '#888', marginTop: '4px' }}>Offer valid on selected bestseller items</div>
+                        </div>
+                        <Link to="/shop?tag=Hot Deal" style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            Explore all deals <ArrowRight size={14} />
+                        </Link>
+                    </div>
+
+                    {/* Card 3: Women & Accessories Collection */}
+                    <div style={{ background: '#121214', border: '1px solid #222', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)' }}>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'white', marginBottom: '0.85rem' }}>
+                            ✨ Women's & Accessories
+                        </h3>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginBottom: '0.85rem' }}>
+                            {(womenProducts.length > 0 ? womenProducts : hotDeals.slice(2, 4)).map((p, i) => (
+                                <Link key={i} to={`/product/${p.id || p._id}`} style={{ textDecoration: 'none', background: '#1a1a1e', padding: '0.5rem', borderRadius: '8px', textAlign: 'center' }}>
+                                    <img src={p.image} alt={p.name} style={{ width: '100%', height: '70px', objectFit: 'cover', borderRadius: '6px' }} />
+                                    <div style={{ fontSize: '0.7rem', color: '#ccc', fontWeight: '600', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
+                                </Link>
+                            ))}
+                        </div>
+                        <Link to="/shop?category=Women" style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            Explore Women's Store <ArrowRight size={14} />
+                        </Link>
+                    </div>
+
+                    {/* Card 4: Store Assurance & Fast Shipping */}
+                    <div style={{ background: '#121214', border: '1px solid #222', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.6)' }}>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: '800', color: 'white', marginBottom: '0.85rem' }}>
+                            🛡️ Store Trust Guarantee
+                        </h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '0.85rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: '#ccc' }}>
+                                <Truck size={16} color="#38bdf8" /> <span>Express 2-3 Day Shipping</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: '#ccc' }}>
+                                <ShieldCheck size={16} color="#10b981" /> <span>100% Verified Quality</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.78rem', color: '#ccc' }}>
+                                <RefreshCw size={16} color="#f59e0b" /> <span>Easy 30 Days Replacement</span>
+                            </div>
+                        </div>
+                        <Link to="/shop" style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--primary-red)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            Start Shopping Now <ArrowRight size={14} />
+                        </Link>
+                    </div>
+
+                </div>
+            </div>
+
         </section>
     );
-};
-
-export default Hero;
+}
