@@ -130,6 +130,23 @@ export default function AdminProducts() {
         setIsModalOpen(true);
     };
 
+    const toggleHeroStatus = async (product) => {
+        const pId = product.id || product._id;
+        const updatedIsHero = !product.isHero;
+        const savedLocal = localStorage.getItem('gsm_custom_products');
+        let currentLocal = savedLocal ? JSON.parse(savedLocal) : [];
+        currentLocal = currentLocal.map(p => (p.id === pId || p._id === pId) ? { ...p, isHero: updatedIsHero } : p);
+        localStorage.setItem('gsm_custom_products', JSON.stringify(currentLocal));
+        try {
+            await fetch(`${API_URL}/api/products?id=${pId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'x-admin-password': 'admin' },
+                body: JSON.stringify({ ...product, isHero: updatedIsHero })
+            });
+        } catch (err) {}
+        refetch();
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -144,7 +161,6 @@ export default function AdminProducts() {
                 images: (formData.images || []).filter(img => img && img.trim() !== '')
             };
 
-            // Update Local Storage Array
             const savedLocal = localStorage.getItem('gsm_custom_products');
             let currentLocal = savedLocal ? JSON.parse(savedLocal) : [];
 
@@ -155,7 +171,6 @@ export default function AdminProducts() {
             }
             localStorage.setItem('gsm_custom_products', JSON.stringify(currentLocal));
 
-            // Try updating backend API
             try {
                 const url = editingProduct
                     ? `${API_URL}/api/products?id=${editingProduct.id || editingProduct._id}`
@@ -235,7 +250,6 @@ export default function AdminProducts() {
         }
     };
 
-    // Calculate Discount %
     const spVal = parseFloat(formData.price.replace(/[^0-9.]/g, '') || 0);
     const mrpVal = parseFloat(formData.mrp.replace(/[^0-9.]/g, '') || 0);
     const cpVal = parseFloat(formData.costPrice || 0);
@@ -245,7 +259,6 @@ export default function AdminProducts() {
 
     return (
         <div style={{ paddingBottom: '3rem' }}>
-            {/* Page Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
                     <h1 style={{ fontSize: '2rem', fontWeight: '800' }}>Product Catalogue & Listing</h1>
@@ -303,7 +316,6 @@ export default function AdminProducts() {
                 </div>
             </div>
 
-            {/* Products Table */}
             {loading ? <div style={{ color: 'white' }}>Loading catalogue...</div> : (
                 <div style={{ background: '#111', border: '1px solid #222', borderRadius: '14px', padding: '1.5rem' }}>
                     {products.length === 0 ? (
@@ -367,7 +379,27 @@ export default function AdminProducts() {
                                                 </span>
                                             </td>
                                             <td style={{ padding: '0.85rem', textAlign: 'right' }}>
-                                                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                                                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                                    <button
+                                                        onClick={() => toggleHeroStatus(product)}
+                                                        title="Toggle Homepage Hero Banner Slider"
+                                                        style={{
+                                                            background: product.isHero ? 'rgba(245, 158, 11, 0.2)' : '#222',
+                                                            border: product.isHero ? '1px solid #f59e0b' : '1px solid #333',
+                                                            color: product.isHero ? '#f59e0b' : '#a1a1aa',
+                                                            cursor: 'pointer',
+                                                            padding: '0.4rem 0.75rem',
+                                                            borderRadius: '6px',
+                                                            fontSize: '0.78rem',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px',
+                                                            fontWeight: '700'
+                                                        }}
+                                                    >
+                                                        <Star size={14} fill={product.isHero ? '#f59e0b' : 'none'} color={product.isHero ? '#f59e0b' : '#a1a1aa'} />
+                                                        {product.isHero ? 'Hero Active' : '+ Hero'}
+                                                    </button>
                                                     <button
                                                         onClick={() => handleEdit(product)}
                                                         style={{ background: '#222', border: '1px solid #333', color: '#38bdf8', cursor: 'pointer', padding: '0.4rem 0.75rem', borderRadius: '6px', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '600' }}
@@ -391,12 +423,10 @@ export default function AdminProducts() {
                 </div>
             )}
 
-            {/* Flipkart / Amazon Style Professional Listing Modal */}
             {isModalOpen && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
                     <div style={{ background: '#121212', border: '1px solid #2a2a2a', borderRadius: '16px', width: '100%', maxWidth: '780px', maxHeight: '92vh', overflowY: 'auto', padding: '1.75rem', boxShadow: '0 20px 50px rgba(0,0,0,0.8)' }}>
                         
-                        {/* Header */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid #222', paddingBottom: '1rem' }}>
                             <div>
                                 <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -409,7 +439,6 @@ export default function AdminProducts() {
                             </button>
                         </div>
 
-                        {/* Navigation Tabs */}
                         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid #222', paddingBottom: '0.75rem', overflowX: 'auto' }}>
                             {[
                                 { id: 'basic', label: '📌 1. Basic Info' },
@@ -514,6 +543,33 @@ export default function AdminProducts() {
                                                 <option value="Exclusive">👑 Exclusive Premium</option>
                                             </select>
                                         </div>
+                                    </div>
+
+                                    <div style={{ background: '#18181b', padding: '1rem', borderRadius: '12px', border: '1px solid #27272a', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', fontWeight: '800', fontSize: '0.9rem', color: '#f59e0b' }}>
+                                            <input
+                                                type="checkbox"
+                                                name="isHero"
+                                                checked={!!formData.isHero}
+                                                onChange={handleInputChange}
+                                                style={{ width: '18px', height: '18px', accentColor: '#f59e0b', cursor: 'pointer' }}
+                                            />
+                                            <Star size={18} fill={formData.isHero ? '#f59e0b' : 'none'} color="#f59e0b" />
+                                            <span>Display product in Homepage Hero Slider Banner?</span>
+                                        </label>
+                                        {formData.isHero && (
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '0.78rem', color: '#aaa', marginBottom: '0.35rem' }}>Hero Banner Custom Slide Title (Optional)</label>
+                                                <input
+                                                    type="text"
+                                                    name="heroTitle"
+                                                    value={formData.heroTitle || ''}
+                                                    onChange={handleInputChange}
+                                                    placeholder="e.g. 🔥 LIMITED EDITION STREETWEAR HOODIE"
+                                                    style={{ width: '100%', padding: '0.65rem 0.85rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '0.85rem' }}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
