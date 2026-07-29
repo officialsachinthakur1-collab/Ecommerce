@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Edit2, Trash2, X, Image as ImageIcon, Tag, DollarSign, Package, Layers, Sparkles, Check, Info } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Image as ImageIcon, Upload, Sparkles, Check, Package, RefreshCw } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import API_URL from '../../config';
 
@@ -38,6 +38,51 @@ export default function AdminProducts() {
             ...prev,
             [name]: type === 'checkbox' ? checked : value
         }));
+    };
+
+    // Compress & Convert Selected Photo File to Data URL
+    const handleFileUpload = (file, target = 'main', index = 0) => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const rawBase64 = e.target.result;
+            const img = new Image();
+            img.src = rawBase64;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                const maxWidth = 800;
+                const maxHeight = 800;
+
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        width = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+
+                if (target === 'main') {
+                    setFormData(prev => ({ ...prev, image: compressedDataUrl }));
+                } else {
+                    const newImages = [...(formData.images || ['', '', ''])];
+                    newImages[index] = compressedDataUrl;
+                    setFormData(prev => ({ ...prev, images: newImages }));
+                }
+            };
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleSizeToggle = (size) => {
@@ -129,7 +174,7 @@ export default function AdminProducts() {
                 // API silent catch
             }
 
-            alert(editingProduct ? 'Product Updated Successfully!' : 'Product Listed Successfully like Amazon/Flipkart!');
+            alert(editingProduct ? 'Product Listing Updated Successfully!' : 'Product Listed Successfully like Amazon/Flipkart!');
             setIsModalOpen(false);
             setEditingProduct(null);
             refetch();
@@ -266,7 +311,7 @@ export default function AdminProducts() {
                             <Package size={54} style={{ marginBottom: '1rem', opacity: 0.4, color: 'var(--primary-red)' }} />
                             <h3 style={{ color: 'white', fontSize: '1.2rem', marginBottom: '0.5rem' }}>No Products Listed in Store</h3>
                             <p style={{ fontSize: '0.85rem', marginBottom: '1.5rem', maxWidth: '480px', margin: '0 auto 1.5rem' }}>
-                                Click "+ Add Product Listing" above to publish your products with Amazon & Flipkart style professional pricing, images & tags!
+                                Click "+ Add Product Listing" above to publish your products with Amazon & Flipkart style photo uploads, pricing & tags!
                             </p>
                             <button
                                 onClick={() => {
@@ -357,7 +402,7 @@ export default function AdminProducts() {
                                 <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                     <Sparkles color="var(--primary-red)" size={20} /> {editingProduct ? 'Edit Product Listing' : 'Amazon / Flipkart Product Listing Center'}
                                 </h3>
-                                <div style={{ fontSize: '0.78rem', color: '#888', marginTop: '2px' }}>Fill in details to publish high-converting product listings</div>
+                                <div style={{ fontSize: '0.78rem', color: '#888', marginTop: '2px' }}>Fill in details & upload product photos directly from phone/laptop</div>
                             </div>
                             <button onClick={() => setIsModalOpen(false)} style={{ background: '#222', border: 'none', color: '#aaa', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                                 <X size={18} />
@@ -369,7 +414,7 @@ export default function AdminProducts() {
                             {[
                                 { id: 'basic', label: '📌 1. Basic Info' },
                                 { id: 'pricing', label: '💰 2. Pricing & Stock' },
-                                { id: 'media', label: '🖼️ 3. Images & Media' },
+                                { id: 'media', label: '🖼️ 3. Photos & Media' },
                                 { id: 'details', label: '✨ 4. Highlights & Sizes' }
                             ].map(tab => (
                                 <button
@@ -573,50 +618,131 @@ export default function AdminProducts() {
                                             ⬅ Back
                                         </button>
                                         <button type="button" onClick={() => setActiveTab('media')} style={{ padding: '0.7rem 1.5rem', background: 'var(--primary-red)', border: 'none', color: 'white', borderRadius: '8px', fontWeight: '700', cursor: 'pointer' }}>
-                                            Next: Images & Media ➔
+                                            Next: Photos & Media ➔
                                         </button>
                                     </div>
                                 </div>
                             )}
 
-                            {/* TAB 3: IMAGES & MEDIA */}
+                            {/* TAB 3: PHOTOS & MEDIA (DIRECT UPLOAD + URL OPTION) */}
                             {activeTab === 'media' && (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                                    <div>
-                                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.35rem', fontWeight: '600' }}>Main Cover Image URL *</label>
-                                        <input
-                                            type="text"
-                                            name="image"
-                                            value={formData.image}
-                                            onChange={handleInputChange}
-                                            placeholder="https://..."
-                                            required
-                                            style={{ width: '100%', padding: '0.8rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white' }}
-                                        />
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                    
+                                    {/* Main Cover Photo Upload */}
+                                    <div style={{ background: '#18181b', padding: '1.25rem', borderRadius: '12px', border: '1px solid #27272a' }}>
+                                        <label style={{ display: 'block', fontSize: '0.9rem', color: 'white', marginBottom: '0.5rem', fontWeight: '700' }}>
+                                            📸 Main Cover Product Photo *
+                                        </label>
+                                        <div style={{ fontSize: '0.78rem', color: '#aaa', marginBottom: '1rem' }}>
+                                            Upload a photo directly from your device OR paste an image URL:
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                                            {/* Direct File Upload Button */}
+                                            <label style={{
+                                                padding: '0.75rem 1.25rem',
+                                                background: 'var(--primary-red)',
+                                                color: 'white',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer',
+                                                fontWeight: '700',
+                                                fontSize: '0.85rem',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem'
+                                            }}>
+                                                <Upload size={18} /> Upload Photo from Computer / Phone
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    style={{ display: 'none' }}
+                                                    onChange={(e) => handleFileUpload(e.target.files[0], 'main')}
+                                                />
+                                            </label>
+
+                                            <span style={{ fontSize: '0.8rem', color: '#666', fontWeight: '700' }}>OR</span>
+
+                                            <input
+                                                type="text"
+                                                name="image"
+                                                value={formData.image}
+                                                onChange={handleInputChange}
+                                                placeholder="Paste Image Link (https://...)"
+                                                style={{ flex: 1, minWidth: '220px', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '0.85rem' }}
+                                            />
+                                        </div>
+
+                                        {/* Cover Photo Preview */}
+                                        {formData.image && (
+                                            <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '1rem', background: '#080808', padding: '0.75rem', borderRadius: '8px', border: '1px solid #333' }}>
+                                                <img src={formData.image} alt="Cover Preview" style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #333' }} />
+                                                <div style={{ flex: 1 }}>
+                                                    <div style={{ fontSize: '0.85rem', fontWeight: '700', color: '#10b981' }}>✓ Main Cover Photo Attached</div>
+                                                    <div style={{ fontSize: '0.75rem', color: '#666' }}>Ready to display as primary product image</div>
+                                                </div>
+                                                <button type="button" onClick={() => setFormData(prev => ({ ...prev, image: '' }))} style={{ background: '#222', border: '1px solid #333', color: '#ef4444', padding: '0.4rem 0.75rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem' }}>
+                                                    Remove Photo
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
 
-                                    <div>
-                                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#aaa', marginBottom: '0.5rem', fontWeight: '600' }}>Additional Gallery Image URLs (Flipkart Style)</label>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                    {/* Additional Gallery Photos Upload (Flipkart Style) */}
+                                    <div style={{ background: '#18181b', padding: '1.25rem', borderRadius: '12px', border: '1px solid #27272a' }}>
+                                        <label style={{ display: 'block', fontSize: '0.9rem', color: 'white', marginBottom: '0.5rem', fontWeight: '700' }}>
+                                            🖼️ Additional Gallery Photos (Image 2, Image 3, Image 4)
+                                        </label>
+                                        <div style={{ fontSize: '0.78rem', color: '#aaa', marginBottom: '1rem' }}>
+                                            Add multiple angle photos for customer gallery view:
+                                        </div>
+
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                             {[0, 1, 2].map(idx => (
-                                                <input
-                                                    key={idx}
-                                                    type="text"
-                                                    value={(formData.images || [])[idx] || ''}
-                                                    onChange={(e) => handleGalleryImageChange(idx, e.target.value)}
-                                                    placeholder={`Gallery Image ${idx + 2} URL (https://...)`}
-                                                    style={{ width: '100%', padding: '0.75rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '0.85rem' }}
-                                                />
+                                                <div key={idx} style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                                                    <label style={{
+                                                        padding: '0.6rem 1rem',
+                                                        background: '#222',
+                                                        border: '1px solid #333',
+                                                        color: '#38bdf8',
+                                                        borderRadius: '8px',
+                                                        cursor: 'pointer',
+                                                        fontWeight: '600',
+                                                        fontSize: '0.8rem',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.4rem'
+                                                    }}>
+                                                        <Upload size={16} /> Upload Photo {idx + 2}
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            style={{ display: 'none' }}
+                                                            onChange={(e) => handleFileUpload(e.target.files[0], 'gallery', idx)}
+                                                        />
+                                                    </label>
+
+                                                    <input
+                                                        type="text"
+                                                        value={(formData.images || [])[idx] || ''}
+                                                        onChange={(e) => handleGalleryImageChange(idx, e.target.value)}
+                                                        placeholder={`OR Paste Gallery Image ${idx + 2} Link (https://...)`}
+                                                        style={{ flex: 1, minWidth: '220px', padding: '0.65rem', background: '#080808', border: '1px solid #333', borderRadius: '8px', color: 'white', fontSize: '0.85rem' }}
+                                                    />
+
+                                                    {(formData.images || [])[idx] && (
+                                                        <img src={(formData.images || [])[idx]} alt={`Gallery ${idx + 2}`} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #333' }} />
+                                                    )}
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* Image Thumbnails Live Preview Grid */}
+                                    {/* All Photos Preview Bar */}
                                     <div>
-                                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#888', marginBottom: '0.5rem' }}>Live Image Thumbnails Preview</label>
+                                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#888', marginBottom: '0.5rem' }}>All Attached Photos Live Gallery Preview</label>
                                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                                             {[formData.image, ...(formData.images || [])].filter(Boolean).map((imgUrl, i) => (
-                                                <div key={i} style={{ position: 'relative', width: '70px', height: '70px', borderRadius: '8px', overflow: 'hidden', border: i === 0 ? '2px solid var(--primary-red)' : '1px solid #333' }}>
+                                                <div key={i} style={{ position: 'relative', width: '75px', height: '75px', borderRadius: '8px', overflow: 'hidden', border: i === 0 ? '2px solid var(--primary-red)' : '1px solid #333' }}>
                                                     <img src={imgUrl} alt={`Preview ${i}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                     {i === 0 && <span style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'var(--primary-red)', color: 'white', fontSize: '0.6rem', textAlign: 'center', fontWeight: '700' }}>COVER</span>}
                                                 </div>
