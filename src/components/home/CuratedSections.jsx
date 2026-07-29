@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 import useMobile from '../../hooks/useMobile';
 
-const CuratedSections = ({ title, tag, limit = 4 }) => {
+const CuratedSections = ({ title, tag, category, limit = 8 }) => {
     const isMobile = useMobile();
     const { products: allProducts, loading } = useProducts();
 
@@ -17,9 +17,18 @@ const CuratedSections = ({ title, tag, limit = 4 }) => {
         </section>
     );
 
-    const products = allProducts
-        .filter(p => !tag || p.tag === tag)
-        .slice(0, limit);
+    let filtered = allProducts.filter(p => {
+        if (category && p.category !== category) return false;
+        if (tag && p.tag !== tag) return false;
+        return true;
+    });
+
+    // Fallback if tag/category filter produces 0 items: show general products list
+    if (filtered.length === 0) {
+        filtered = allProducts;
+    }
+
+    const products = filtered.slice(0, limit);
 
     if (products.length === 0) return null;
 
