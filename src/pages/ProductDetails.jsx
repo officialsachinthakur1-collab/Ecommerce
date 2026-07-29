@@ -112,25 +112,41 @@ export default function ProductDetails() {
     };
 
     return (
-        <div className="product-page-wrapper" style={{ background: '#09090b', color: 'white', minHeight: '100vh', paddingTop: '1.5rem', paddingBottom: '4rem' }}>
+        <div className="product-page-wrapper" style={{ background: '#09090b', color: 'white', minHeight: '100vh', paddingBottom: '4rem' }}>
             
-            {/* Breadcrumbs Navigation Bar (Amazon & Flipkart Style Flush Left) */}
-            <div className="container" style={{ marginBottom: '1.25rem' }}>
-                <nav style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: '#a1a1aa', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
-                    <Link to="/" style={{ color: '#a1a1aa', textDecoration: 'none' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>Home</Link>
-                    <span style={{ color: '#555' }}>›</span>
-                    <Link to="/shop" style={{ color: '#a1a1aa', textDecoration: 'none' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>Shop Store</Link>
-                    <span style={{ color: '#555' }}>›</span>
-                    <Link to={`/shop?category=${product.category || 'All'}`} style={{ color: '#a1a1aa', textDecoration: 'none' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>{product.category || 'Apparel'}</Link>
-                    {product.subCategory && (
-                        <>
-                            <span style={{ color: '#555' }}>›</span>
-                            <span style={{ color: '#a1a1aa' }}>{product.subCategory}</span>
-                        </>
-                    )}
-                    <span style={{ color: '#555' }}>›</span>
-                    <span style={{ color: '#ffffff', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '280px' }}>{product.name}</span>
-                </nav>
+            {/* Amazon & Flipkart Style Full-Width Left-Aligned Sub-Header Breadcrumbs Bar */}
+            <div style={{
+                width: '100%',
+                background: '#121215',
+                borderBottom: '1px solid #222',
+                padding: '0.65rem 1.5rem',
+                marginBottom: '2rem'
+            }}>
+                <div style={{ width: '100%', maxWidth: '1280px', margin: '0 auto' }}>
+                    <nav style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontSize: '0.8rem',
+                        color: '#a1a1aa',
+                        flexWrap: 'wrap',
+                        justifyContent: 'flex-start'
+                    }}>
+                        <Link to="/" style={{ color: '#a1a1aa', textDecoration: 'none', fontWeight: '600' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>Home</Link>
+                        <span style={{ color: '#555' }}>›</span>
+                        <Link to="/shop" style={{ color: '#a1a1aa', textDecoration: 'none', fontWeight: '600' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>Shop Store</Link>
+                        <span style={{ color: '#555' }}>›</span>
+                        <Link to={`/shop?category=${product.category || 'All'}`} style={{ color: '#a1a1aa', textDecoration: 'none', fontWeight: '600' }} onMouseEnter={(e) => e.target.style.color = '#ef4444'} onMouseLeave={(e) => e.target.style.color = '#a1a1aa'}>{product.category || 'Apparel'}</Link>
+                        {product.subCategory && (
+                            <>
+                                <span style={{ color: '#555' }}>›</span>
+                                <span style={{ color: '#a1a1aa' }}>{product.subCategory}</span>
+                            </>
+                        )}
+                        <span style={{ color: '#555' }}>›</span>
+                        <span style={{ color: '#ffffff', fontWeight: '700' }}>{product.name}</span>
+                    </nav>
+                </div>
             </div>
 
             <div className="container">
