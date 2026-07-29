@@ -23,6 +23,23 @@ export default function Hero() {
         };
     });
 
+    // Category Availability & Coming Soon Map
+    const [categoryStatusMap, setCategoryStatusMap] = useState(() => {
+        const saved = localStorage.getItem('gsm_category_status');
+        if (!saved) return {};
+        try {
+            const parsed = JSON.parse(saved);
+            const map = {};
+            parsed.forEach(item => {
+                map[item.id] = item.status;
+                map[item.name] = item.status;
+            });
+            return map;
+        } catch (e) {
+            return {};
+        }
+    });
+
     useEffect(() => {
         const handleFestivalUpdate = (e) => {
             if (e.detail) {
@@ -33,8 +50,27 @@ export default function Hero() {
             }
         };
 
+        const handleCategoryUpdate = () => {
+            const saved = localStorage.getItem('gsm_category_status');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    const map = {};
+                    parsed.forEach(item => {
+                        map[item.id] = item.status;
+                        map[item.name] = item.status;
+                    });
+                    setCategoryStatusMap(map);
+                } catch (e) {}
+            }
+        };
+
         window.addEventListener('gsm_festival_updated', handleFestivalUpdate);
-        return () => window.removeEventListener('gsm_festival_updated', handleFestivalUpdate);
+        window.addEventListener('gsm_categories_updated', handleCategoryUpdate);
+        return () => {
+            window.removeEventListener('gsm_festival_updated', handleFestivalUpdate);
+            window.removeEventListener('gsm_categories_updated', handleCategoryUpdate);
+        };
     }, []);
 
     // Construct Amazon Hero Slides
@@ -359,6 +395,8 @@ export default function Hero() {
                             { label: 'Jewelry', category: 'Jewelry', icon: '💎', img: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=300&q=80', gradient: 'linear-gradient(45deg, #eab308, #f97316)' },
                         ].map((story, i) => {
                             const targetLink = story.category ? `/shop?category=${story.category}` : `/shop?tag=${story.tag}`;
+                            const isComingSoon = story.category && categoryStatusMap[story.category] === 'COMING_SOON';
+
                             return (
                                 <Link
                                     key={i}
@@ -370,19 +408,41 @@ export default function Hero() {
                                         gap: '0.55rem',
                                         textDecoration: 'none',
                                         minWidth: isMobile ? '72px' : '85px',
-                                        flexShrink: 0
+                                        flexShrink: 0,
+                                        position: 'relative'
                                     }}
                                 >
+                                    {/* Coming Soon Glowing Badge */}
+                                    {isComingSoon && (
+                                        <span style={{
+                                            position: 'absolute',
+                                            top: '-6px',
+                                            right: '2px',
+                                            background: 'linear-gradient(45deg, #f59e0b, #ef4444)',
+                                            color: '#ffffff',
+                                            fontSize: '0.6rem',
+                                            fontWeight: '900',
+                                            padding: '2px 6px',
+                                            borderRadius: '100px',
+                                            boxShadow: '0 0 10px rgba(245, 158, 11, 0.8)',
+                                            zIndex: 10,
+                                            letterSpacing: '0.5px'
+                                        }}>
+                                            SOON
+                                        </span>
+                                    )}
+
                                     {/* Glowing Story Ring */}
                                     <div style={{
                                         padding: '3px',
-                                        background: story.gradient,
+                                        background: isComingSoon ? 'linear-gradient(45deg, #71717a, #3f3f46)' : story.gradient,
                                         borderRadius: '50%',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         boxShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                                        transition: 'transform 0.3s ease'
+                                        transition: 'transform 0.3s ease',
+                                        opacity: isComingSoon ? 0.85 : 1
                                     }}>
                                         <div style={{
                                             width: isMobile ? '64px' : '78px',
@@ -396,7 +456,7 @@ export default function Hero() {
                                             <img
                                                 src={story.img}
                                                 alt={story.label}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover', filter: isComingSoon ? 'grayscale(40%)' : 'none' }}
                                             />
                                             <span style={{
                                                 position: 'absolute',

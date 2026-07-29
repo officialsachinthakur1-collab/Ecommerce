@@ -1,15 +1,68 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ProductCard from '../components/common/ProductCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import useMobile from '../hooks/useMobile';
-import { Search, SlidersHorizontal, ChevronDown, X } from 'lucide-react';
+import { Search, SlidersHorizontal, ChevronDown, X, Sparkles, Bell } from 'lucide-react';
 
 const Shop = () => {
     const isMobile = useMobile();
     const [searchParams, setSearchParams] = useSearchParams();
     const { products: allProducts, loading } = useProducts();
+
+    // Category Availability Map from Admin
+    const [categoryStatusMap, setCategoryStatusMap] = useState(() => {
+        const saved = localStorage.getItem('gsm_category_status');
+        if (!saved) return {};
+        try {
+            const parsed = JSON.parse(saved);
+            const map = {};
+            parsed.forEach(item => {
+                map[item.id] = item.status;
+                map[item.name] = item.status;
+            });
+            return map;
+        } catch (e) {
+            return {};
+        }
+    });
+
+    const [notifyEmail, setNotifyEmail] = useState('');
+    const [notified, setNotified] = useState(false);
+
+    useEffect(() => {
+        const updateCategories = () => {
+            const saved = localStorage.getItem('gsm_category_status');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    const map = {};
+                    parsed.forEach(item => {
+                        map[item.id] = item.status;
+                        map[item.name] = item.status;
+                    });
+                    setCategoryStatusMap(map);
+                } catch (e) {}
+            }
+        };
+        window.addEventListener('gsm_categories_updated', updateCategories);
+        return () => window.removeEventListener('gsm_categories_updated', updateCategories);
+    }, []);
+
+    const handleNotifyMe = (e) => {
+        e.preventDefault();
+        if (!notifyEmail || !notifyEmail.includes('@')) {
+            alert('Please enter a valid email address!');
+            return;
+        }
+        const savedSubs = localStorage.getItem('gsm_coming_soon_subscribers') || '[]';
+        const parsedSubs = JSON.parse(savedSubs);
+        parsedSubs.push({ email: notifyEmail, category, date: new Date().toISOString() });
+        localStorage.setItem('gsm_coming_soon_subscribers', JSON.stringify(parsedSubs));
+        setNotified(true);
+        setNotifyEmail('');
+    };
 
     // States for filtering
     const category = searchParams.get('category') || 'All';
@@ -174,25 +227,36 @@ const Shop = () => {
                             <div style={{ marginBottom: '3rem' }}>
                                 <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>Category</h3>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', listStyle: 'none' }}>
-                                    {['All', 'Men', 'Women', 'Unisex', 'Chocolates', 'Food', 'Gifts', 'Accessories'].map(cat => (
-                                        <li key={cat}>
-                                            <button
-                                                onClick={() => setSearchParams({ category: cat })}
-                                                style={{
-                                                    background: 'transparent',
-                                                    border: 'none',
-                                                    color: category === cat ? 'white' : '#666',
-                                                    cursor: 'pointer',
-                                                    fontSize: '1rem',
-                                                    fontWeight: category === cat ? '600' : '400',
-                                                    padding: 0,
-                                                    transition: 'color 0.2s'
-                                                }}
-                                            >
-                                                {cat === 'All' ? 'All Products' : cat}
-                                            </button>
-                                        </li>
-                                    ))}
+                                    {['All', 'Men', 'Women', 'Footwear', 'Accessories', 'Jewelry', 'Electronics', 'Home', 'Gifts'].map(cat => {
+                                        const isCatSoon = cat !== 'All' && categoryStatusMap[cat] === 'COMING_SOON';
+                                        return (
+                                            <li key={cat}>
+                                                <button
+                                                    onClick={() => setSearchParams({ category: cat })}
+                                                    style={{
+                                                        background: 'transparent',
+                                                        border: 'none',
+                                                        color: category === cat ? 'white' : isCatSoon ? '#888' : '#aaa',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.95rem',
+                                                        fontWeight: category === cat ? '700' : '400',
+                                                        padding: 0,
+                                                        transition: 'color 0.2s',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.5rem'
+                                                    }}
+                                                >
+                                                    <span>{cat === 'All' ? 'All Products' : cat}</span>
+                                                    {isCatSoon && (
+                                                        <span style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: '4px', background: 'rgba(245,158,11,0.15)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.4)', fontWeight: '800' }}>
+                                                            Soon
+                                                        </span>
+                                                    )}
+                                                </button>
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             </div>
 
@@ -217,9 +281,109 @@ const Shop = () => {
                         </aside>
                     )}
 
-                    {/* Main Grid */}
+                    {/* Main Grid or Coming Soon Hero Section */}
                     <div style={{ flex: 1 }}>
-                        {filteredProducts.length > 0 ? (
+                        {(category !== 'All' && categoryStatusMap[category] === 'COMING_SOON') || (filteredProducts.length === 0 && !searchQuery) ? (
+                            /* Amazon/Flipkart Style VIP "Coming Soon" Launch Banner */
+                            <div style={{
+                                background: 'linear-gradient(135deg, #18181b 0%, #09090b 100%)',
+                                borderRadius: '24px',
+                                border: '1px solid #27272a',
+                                padding: isMobile ? '3rem 1.5rem' : '4rem 3rem',
+                                textAlign: 'center',
+                                boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+                            }}>
+                                <div style={{
+                                    display: 'inline-flex',
+                                    padding: '0.5rem 1.25rem',
+                                    borderRadius: '100px',
+                                    background: 'rgba(245, 158, 11, 0.15)',
+                                    border: '1px solid rgba(245, 158, 11, 0.4)',
+                                    color: '#f59e0b',
+                                    fontSize: '0.85rem',
+                                    fontWeight: '800',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '1px',
+                                    marginBottom: '1.25rem',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}>
+                                    <Sparkles size={16} /> 🚀 COMING SOON COLLECTION
+                                </div>
+
+                                <h2 style={{ fontSize: isMobile ? '1.8rem' : '2.4rem', fontWeight: '900', color: '#ffffff', marginBottom: '1rem' }}>
+                                    {category === 'All' ? 'New Collection' : category} Launching Soon!
+                                </h2>
+
+                                <p style={{ color: '#a1a1aa', fontSize: '1.05rem', maxWidth: '560px', margin: '0 auto 2rem auto', lineHeight: '1.6' }}>
+                                    We're hand-picking & stocking premium high-quality items for our <strong>{category}</strong> collection. Get ready for exclusive launch discounts!
+                                </p>
+
+                                {/* Interactive Notify Me Form */}
+                                <div style={{ maxWidth: '440px', margin: '0 auto 2.5rem auto' }}>
+                                    <form onSubmit={handleNotifyMe} style={{ display: 'flex', gap: '0.5rem', flexDirection: isMobile ? 'column' : 'row' }}>
+                                        <input
+                                            type="email"
+                                            placeholder="Enter your email to get VIP early access"
+                                            value={notifyEmail}
+                                            onChange={(e) => setNotifyEmail(e.target.value)}
+                                            style={{
+                                                flex: 1,
+                                                padding: '0.9rem 1.2rem',
+                                                borderRadius: '10px',
+                                                background: '#09090b',
+                                                border: '1px solid #333',
+                                                color: 'white',
+                                                fontSize: '0.9rem'
+                                            }}
+                                        />
+                                        <button
+                                            type="submit"
+                                            style={{
+                                                padding: '0.9rem 1.5rem',
+                                                borderRadius: '10px',
+                                                background: 'var(--primary-red)',
+                                                border: 'none',
+                                                color: 'white',
+                                                fontWeight: '800',
+                                                fontSize: '0.9rem',
+                                                cursor: 'pointer',
+                                                whiteSpace: 'nowrap',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '0.4rem'
+                                            }}
+                                        >
+                                            <Bell size={16} /> Notify Me
+                                        </button>
+                                    </form>
+                                    {notified && (
+                                        <div style={{ marginTop: '0.75rem', color: '#10b981', fontSize: '0.85rem', fontWeight: '700' }}>
+                                            ✓ You're on the VIP launch list! We'll notify you first.
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Back to All Live Products */}
+                                <button
+                                    onClick={() => setSearchParams({ category: 'All' })}
+                                    style={{
+                                        padding: '0.85rem 2rem',
+                                        borderRadius: '10px',
+                                        background: '#18181b',
+                                        border: '1px solid #444',
+                                        color: 'white',
+                                        fontWeight: '700',
+                                        fontSize: '0.95rem',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    🛍️ Explore Available Live Products
+                                </button>
+                            </div>
+                        ) : filteredProducts.length > 0 ? (
                             <div className="grid-3" style={{ gap: '2rem' }}>
                                 {filteredProducts.map((product) => (
                                     <ProductCard key={product.id} product={product} />
@@ -228,7 +392,7 @@ const Shop = () => {
                         ) : (
                             <div style={{ textAlign: 'center', padding: '5rem 0' }}>
                                 <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>No products found</h3>
-                                <p style={{ color: '#666' }}>Try adjusting your filters or search terms.</p>
+                                <p style={{ color: '#666' }}>Try adjusting your search terms or filters.</p>
                                 <button
                                     onClick={() => {
                                         setSearchQuery("");
