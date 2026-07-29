@@ -340,7 +340,9 @@ export default function Hero() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: isMobile ? '1.25rem' : '2.2rem',
+                        justifyContent: isMobile ? 'flex-start' : 'space-between',
+                        width: '100%',
+                        gap: isMobile ? '1.25rem' : '0.5rem',
                         overflowX: 'auto',
                         paddingBottom: '0.4rem',
                         scrollbarWidth: 'none',
