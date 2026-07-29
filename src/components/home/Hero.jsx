@@ -405,33 +405,12 @@ export default function Hero() {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
-                                        gap: '0.55rem',
+                                        gap: '0.4rem',
                                         textDecoration: 'none',
                                         minWidth: isMobile ? '72px' : '85px',
-                                        flexShrink: 0,
-                                        position: 'relative'
+                                        flexShrink: 0
                                     }}
                                 >
-                                    {/* Coming Soon Glowing Badge */}
-                                    {isComingSoon && (
-                                        <span style={{
-                                            position: 'absolute',
-                                            top: '-6px',
-                                            right: '2px',
-                                            background: 'linear-gradient(45deg, #f59e0b, #ef4444)',
-                                            color: '#ffffff',
-                                            fontSize: '0.6rem',
-                                            fontWeight: '900',
-                                            padding: '2px 6px',
-                                            borderRadius: '100px',
-                                            boxShadow: '0 0 10px rgba(245, 158, 11, 0.8)',
-                                            zIndex: 10,
-                                            letterSpacing: '0.5px'
-                                        }}>
-                                            SOON
-                                        </span>
-                                    )}
-
                                     {/* Glowing Story Ring */}
                                     <div style={{
                                         padding: '3px',
@@ -476,15 +455,33 @@ export default function Hero() {
                                         </div>
                                     </div>
 
-                                    <span style={{
-                                        fontSize: isMobile ? '0.75rem' : '0.82rem',
-                                        fontWeight: '700',
-                                        color: '#e4e4e7',
-                                        textAlign: 'center',
-                                        whiteSpace: 'nowrap'
-                                    }}>
-                                        {story.label}
-                                    </span>
+                                    {/* Category Title & Coming Soon Pill Below */}
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.15rem' }}>
+                                        <span style={{
+                                            fontSize: isMobile ? '0.75rem' : '0.82rem',
+                                            fontWeight: '700',
+                                            color: isComingSoon ? '#a1a1aa' : '#e4e4e7',
+                                            textAlign: 'center',
+                                            whiteSpace: 'nowrap'
+                                        }}>
+                                            {story.label}
+                                        </span>
+                                        {isComingSoon && (
+                                            <span style={{
+                                                fontSize: '0.62rem',
+                                                fontWeight: '800',
+                                                color: '#f59e0b',
+                                                background: 'rgba(245, 158, 11, 0.15)',
+                                                border: '1px solid rgba(245, 158, 11, 0.4)',
+                                                padding: '1px 6px',
+                                                borderRadius: '100px',
+                                                whiteSpace: 'nowrap',
+                                                marginTop: '1px'
+                                            }}>
+                                                Coming Soon
+                                            </span>
+                                        )}
+                                    </div>
                                 </Link>
                             );
                         })}
